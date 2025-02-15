@@ -5,12 +5,15 @@ import InteractiveCube from "./ui/InteractiveCube";
 
 window.renderInteractiveCube = (elementId) => {
   const container = document.getElementById(elementId);
-  const root = createRoot(container);
-  root.render(
-    <StrictMode>
-      <Canvas>
-        <InteractiveCube />
-      </Canvas>
-    </StrictMode>
-  );
+  if (container !== null) {
+    const root = createRoot(container);
+    root.render(
+      <StrictMode>
+        <Canvas>
+          <InteractiveCube />
+        </Canvas>
+      </StrictMode>
+    );
+    
+  }
 };

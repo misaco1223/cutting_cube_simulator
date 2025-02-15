@@ -1,15 +1,16 @@
 import React, { useRef } from "react";
-import { useThree, useFrame } from "@react-three/fiber";
+import { useThree, useFrame} from "@react-three/fiber";
 import * as THREE from "three";
+import {ClickableEdgesProps} from '../types/ThreeScene';
 
-const ClickableEdges = ({ onClick }) => {
-  const lineRef = useRef();
+const ClickableEdges = ({ onClick }: ClickableEdgesProps ) => {
+  const lineRef = useRef<THREE.LineSegments>(null);
   const { camera, gl, scene } = useThree();
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
 
   // マウスクリック時に Raycaster を使用
-  const handleMouseClick = (event) => {
+  const handleMouseClick = (event: MouseEvent) => {
     const rect = gl.domElement.getBoundingClientRect();
     mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
@@ -17,7 +18,7 @@ const ClickableEdges = ({ onClick }) => {
     raycaster.setFromCamera(mouse, camera);
     raycaster.params.Line = { threshold: 0.1 };
 
-    const intersects = raycaster.intersectObject(lineRef.current);
+    const intersects = lineRef.current ? raycaster.intersectObject(lineRef.current): [];
     if (intersects.length > 0) {
       const clickedPoint = intersects[0].point;
       console.log("交差した座標:", clickedPoint);

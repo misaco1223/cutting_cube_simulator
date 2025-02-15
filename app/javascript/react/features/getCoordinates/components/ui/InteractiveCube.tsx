@@ -1,12 +1,14 @@
 import React, {useState} from "react";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import ClickableEdges from "./ClickableEdges";
+import * as THREE from "three";
+import {InteractiveCubeProps} from '../types/ThreeScene';
 
 const InteractiveCube = () => {
-  const [clickedPoints, setPoints] = useState([]);
+  const [clickedPoints, setPoints] = useState<THREE.Vector3[]>([]);
 
   {/* クリックした座標を表示してセットする関数 */}
-  const handleEdgeClick = (clickedPoint) => {
+  const handleEdgeClick = (clickedPoint: THREE.Vector3) => {
     setPoints((prevPoints) => [...prevPoints, clickedPoint]);
   };
 
