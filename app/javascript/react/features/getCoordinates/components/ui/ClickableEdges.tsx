@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import { useThree, useFrame} from "@react-three/fiber";
+import React, { useRef, useEffect } from "react";
+import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import {ClickableEdgesProps} from '../types/ThreeScene';
 
@@ -26,10 +26,12 @@ const ClickableEdges = ({ onClick }: ClickableEdgesProps ) => {
     }
   };
 
-  // フレームごとに Raycaster を更新
-  useFrame(() => {
+  useEffect(() => {
     gl.domElement.addEventListener("click", handleMouseClick);
-  });
+    return () => {
+      gl.domElement.removeEventListener("click", handleMouseClick);
+    };
+  },[gl.domElement, handleMouseClick]);
 
   return (
     <lineSegments scale={[3,3,3]} ref={lineRef}>
