@@ -30,7 +30,7 @@ const InteractiveCube = () => {
           <boxGeometry args={[1, 1, 1]} />
           <meshNormalMaterial transparent opacity={0.2} />
         </mesh>
-        
+
         <ClickableEdges onClick={handleEdgeClick} />
   
         {clickedPoints.map((point, index) => (
@@ -43,7 +43,7 @@ const InteractiveCube = () => {
         <OrbitControls />
       </Canvas>
 
-      <div>
+      <div className="mt-4">
         <EditPointsForm points={clickedPoints} onUpdatePoints={handleUpdatePoints} />
       </div>
     </div>
