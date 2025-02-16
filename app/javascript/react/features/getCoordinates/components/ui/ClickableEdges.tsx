@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import {ClickableEdgesProps} from '../types/ThreeScene';
+import {ClickableEdgesProps} from '../../types/ThreeScene';
 
 const ClickableEdges = ({ onClick }: ClickableEdgesProps ) => {
   const lineRef = useRef<THREE.LineSegments>(null);
@@ -21,8 +21,18 @@ const ClickableEdges = ({ onClick }: ClickableEdgesProps ) => {
     const intersects = lineRef.current ? raycaster.intersectObject(lineRef.current): [];
     if (intersects.length > 0) {
       const clickedPoint = intersects[0].point;
-      console.log("交差した座標:", clickedPoint);
-      onClick(clickedPoint);
+      // console.log("交差した座標:", clickedPoint);
+
+      // 小数第4位に丸める関数
+      const roundToFourDecimals = (num: number) => Math.round(num * 10000) / 10000;
+
+    // 各座標を丸める
+      const roundedPoint = new THREE.Vector3(
+      roundToFourDecimals(clickedPoint.x),
+      roundToFourDecimals(clickedPoint.y),
+      roundToFourDecimals(clickedPoint.z)
+    );
+      onClick(roundedPoint);
     }
   };
 
