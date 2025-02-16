@@ -52,9 +52,9 @@ const EditPointsForm = ( {points, onUpdatePoints}: EditPointsFormProps) => {
 
             <button 
               onClick={() => handleRemovePoint(index)} 
-              className="text-red-500 mt-2 ml-8"
+              className="mt-2 ml-8 hover:text-red-600"
             >
-              <FontAwesomeIcon icon={faXmark} size="sm" />
+              削除<FontAwesomeIcon icon={faXmark} size="sm" />
             </button>
           </div>
         </div>
