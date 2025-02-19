@@ -21,10 +21,35 @@ export const vertices = [
   new THREE.Vector3(-1.5,  1.5,  1.5), // A
 ];
   
-export const labels = ['H', 'G', 'C', 'D', 'E', 'F', 'B', 'A'];
+export const vertexLabels = ['H', 'G', 'C', 'D', 'E', 'F', 'B', 'A'];
+
+export type Edge = [THREE.Vector3, THREE.Vector3];
+
+export const edges: Edge[] = [
+  [vertices[7], vertices[6]], // AB
+  [vertices[6], vertices[5]], // BF
+  [vertices[4], vertices[5]], // EF
+  [vertices[7], vertices[4]], // AE
+  [vertices[3], vertices[2]], // CD
+  [vertices[2], vertices[1]], // CG
+  [vertices[1], vertices[0]], // GH
+  [vertices[0], vertices[3]], // HD
+  [vertices[7], vertices[3]], // AD
+  [vertices[6], vertices[2]], // BC
+  [vertices[5], vertices[1]], // FG
+  [vertices[4], vertices[0]], // EH
+];
+
+export const edgeLabels = [
+  "AB", "BF", "EF", "AE",
+  "CD", "CG", "GH", "HD",
+  "AD", "BC", "FG", "EH"
+];
 
 export interface PointInfo {
   point: THREE.Vector3;
   isVertex: boolean;
-  vertexLabel: string;
+  vertexLabel?: string;
+  edgeLabel?: string;
+  edgeRatio? :string;
 }

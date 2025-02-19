@@ -4,7 +4,7 @@ import { OrbitControls, PerspectiveCamera,Text } from "@react-three/drei";
 import ClickableEdges from "./ClickableEdges";
 import * as THREE from "three";
 import EditPointsForm from "./EditPointsForm";
-import { vertices, labels } from "../../types/ThreeScene";
+import { vertices, vertexLabels } from "../../types/ThreeScene";
 
 const InteractiveCube = () => {
   const [clickedPoints, setPoints] = useState<THREE.Vector3[]>([]);
@@ -44,7 +44,7 @@ const InteractiveCube = () => {
         {vertices.map((vertex, index) => (
           <Text key={index} position={vertex} fontSize={0.4} color="black" anchorX="center" anchorY="middle"
           >
-            {labels[index]}
+            {vertexLabels[index]}
           </Text>
         ))}
 

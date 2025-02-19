@@ -1,6 +1,6 @@
 import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import InteractiveCube from "./ui/InteractiveCube";
+import InteractiveCube from "./components/ui/InteractiveCube";
 
 window.renderInteractiveCube = (elementId) => {
   const container = document.getElementById(elementId);
