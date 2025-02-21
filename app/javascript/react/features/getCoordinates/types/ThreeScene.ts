@@ -30,7 +30,7 @@ export const edges: Edge[] = [
   [vertices[6], vertices[5]], // BF
   [vertices[4], vertices[5]], // EF
   [vertices[7], vertices[4]], // AE
-  [vertices[3], vertices[2]], // CD
+  [vertices[2], vertices[3]], // CD
   [vertices[2], vertices[1]], // CG
   [vertices[1], vertices[0]], // GH
   [vertices[0], vertices[3]], // HD
@@ -48,8 +48,11 @@ export const edgeLabels = [
 
 export interface PointInfo {
   point: THREE.Vector3;
-  isVertex: boolean;
+  isVertex: boolean; //頂点or辺を表示するために使用
   vertexLabel?: string;
-  edgeLabel?: string;
-  edgeRatio? :string;
+  edgeLabel: string;
+  edgeRatio: { //頂点の場合も比を表示するため
+    left: string;
+    right: string;
+  }
 }
