@@ -32,11 +32,8 @@ export const checkPointInfo = (point: THREE.Vector3): PointInfo => {
 
     const crossProduct = new THREE.Vector3().crossVectors(edgeVector, pointVector);
     const isCollinear = crossProduct.length() < cTolerance;
-
-    console.log("i:", i, "foundVertexIndex:", foundVertexIndex, "t:", t, "辺:", edgeLabels[i], "延長線上の点である", isCollinear)
     
     if (foundVertexIndex !== -1){
-      console.log("t:", t, "辺:", edgeLabels[i] , "頂点:", vertexLabels[foundVertexIndex] ,"頂点と認識されました") 
       return {
         point: vertices[foundVertexIndex],
         isVertex: true,
@@ -45,11 +42,9 @@ export const checkPointInfo = (point: THREE.Vector3): PointInfo => {
         edgeRatio: {
           left: `${denominator}`,
           right: `${numerator}`
-        }
+        },
       };
     } else if ( isCollinear && foundVertexIndex == -1 ){
-        console.log("t:", t,  "辺:", edgeLabels[i] , "辺上の点と認識されました") 
-
         const divisor = gcd(Math.round(numerator * 1000), Math.round(denominator * 1000));
         
         const simplifiedDenominator = Math.round(denominator * 1000) / divisor;

@@ -1,13 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import {EditPointsFormProps} from '../../types/ThreeScene';
 import { useCheckPointsInfo } from '../../hooks/useCheckPointsInfo';
+import * as THREE from 'three';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashCan, faRotate } from '@fortawesome/free-solid-svg-icons';
+import { calculateRatioToPoint } from "../../hooks/calculateRatioToPoint";
 
 const EditPointsForm = ( {points, onUpdatePoints}: EditPointsFormProps) => {
-
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
+  const [leftRatios, setLeftRatios] = useState<{ [key: number]: string }>({});
+  const [rightRatios, setRightRatios] = useState<{ [key: number]: string }>({});
 
   useEffect(() => {
     checkPointInfo(points);
+    console.log("pointsは:", points);
   }, [points, checkPointInfo]);
   
 
@@ -19,6 +25,27 @@ const EditPointsForm = ( {points, onUpdatePoints}: EditPointsFormProps) => {
 
   const handleRemovePoint = (index: number) => {
     const newPoints = points.filter((_, i) => i !== index);
+    onUpdatePoints(newPoints);
+  };
+
+  const handleLeftRatioChange = (index: number, value: string) => {
+    setLeftRatios((prev) => ({ ...prev, [index]: value }));
+  };
+
+  const handleRightRatioChange = (index: number, value: string) => {
+    setRightRatios((prev) => ({ ...prev, [index]: value }));
+  };
+
+  const handleUpdateRatio = (index: number) => {
+    const left = leftRatios[index]|| "1";
+    const right = rightRatios[index] || "1";
+    const edgeLabel = pointsInfo[index].edgeLabel
+
+    const{ point } = calculateRatioToPoint(left, right, edgeLabel);
+    if (!point ) return;
+
+    const newPoints= [...points];
+    newPoints[index] = point;
     onUpdatePoints(newPoints);
   };
 
@@ -62,17 +89,30 @@ const EditPointsForm = ( {points, onUpdatePoints}: EditPointsFormProps) => {
                 </label>
               </div>
               <div>
-                { pointInfo.edgeRatio && (
-                  <label>
-                    <span>比</span>
-                    <input
-                      type="text"
-                      value={pointInfo.edgeRatio}
-                      readOnly
-                      className="border p-1 rounded w-40 ml-2 text-center"
-                    />
-                  </label>
-                )}
+                <span>比</span>
+                <label>
+                  <input
+                    type="text"
+                    value={leftRatios[index] ?? pointInfo.edgeRatio.left}
+                    onChange={(e) => handleLeftRatioChange(index, e.target.value)}
+                    className="border p-1 rounded w-20 mx-2 text-center"
+                  />
+                </label>
+                <span> : </span>
+                <label>
+                  <input
+                    type="text"
+                    value={rightRatios[index] ?? pointInfo.edgeRatio.right}
+                    onChange={(e) => handleRightRatioChange(index, e.target.value)}
+                    className="border p-1 rounded w-20 ml-2 text-center"
+                  />
+                </label>
+                <button
+                onClick={() => handleUpdateRatio(index)}
+                className="mt-2 ml-4 hover:text-blue-500"
+                >
+                  更新する<FontAwesomeIcon icon={faRotate} />
+                </button>
               </div>
             </div>
             <div>
@@ -80,7 +120,7 @@ const EditPointsForm = ( {points, onUpdatePoints}: EditPointsFormProps) => {
                 onClick={() => handleRemovePoint(index)} 
                 className="mt-2 ml-4 hover:text-red-600"
               >
-                削除
+                削除する<FontAwesomeIcon icon={faTrashCan} />
               </button>
             </div>
           </div>

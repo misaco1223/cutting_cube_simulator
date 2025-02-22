@@ -14,7 +14,7 @@ export const useCheckPointsInfo = () => {
         isVertex: pointInfo.isVertex,
         vertexLabel: pointInfo.vertexLabel,
         edgeLabel: pointInfo.edgeLabel,
-        edgeRatio: pointInfo.edgeRatio,
+        edgeRatio: pointInfo.edgeRatio
       };
     });
     setPointsInfo(updatedPointsInfo);

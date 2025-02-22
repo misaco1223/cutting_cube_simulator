@@ -7,7 +7,7 @@ import EditPointsForm from "./EditPointsForm";
 import { vertices, vertexLabels } from "../../types/ThreeScene";
 
 const InteractiveCube = () => {
-  const [clickedPoints, setPoints] = useState<THREE.Vector3[]>([]);
+  const [points, setPoints] = useState<THREE.Vector3[]>([]);
 
   const handleEdgeClick = (clickedPoint: THREE.Vector3) => {
     setPoints((prevPoints) => [...prevPoints, clickedPoint]);
@@ -34,7 +34,7 @@ const InteractiveCube = () => {
 
         <ClickableEdges onClick={handleEdgeClick} />
   
-        {clickedPoints.map((point, index) => (
+        {points.map((point, index) => (
           <mesh key={index} position={[point.x, point.y, point.z]}>
             <sphereGeometry args={[0.08, 32, 32]} />
             <meshBasicMaterial color="red" />
@@ -52,7 +52,7 @@ const InteractiveCube = () => {
       </Canvas>
 
       <div className="mt-4">
-        <EditPointsForm points={clickedPoints} onUpdatePoints={handleUpdatePoints} />
+        <EditPointsForm points={points} onUpdatePoints={handleUpdatePoints} />
       </div>
     </div>
   );
