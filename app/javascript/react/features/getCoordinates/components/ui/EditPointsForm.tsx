@@ -15,6 +15,22 @@ const EditPointsForm = ( {points, onUpdatePoints}: EditPointsFormProps) => {
     checkPointInfo(points);
     console.log("pointsは:", points);
   }, [points, checkPointInfo]);
+
+  useEffect(() => {
+    console.log("pointsInfo が更新されました:", pointsInfo);
+    const extractedPoints = pointsInfo.map(info => info.point);
+    console.log("extractedPoints:", extractedPoints);
+    
+    const isDifferent = points.some((point, index) => {
+      const extracted = extractedPoints[index];
+      return !extracted || point.x !== extracted.x || point.y !== extracted.y || point.z !== extracted.z;
+    });
+
+    if (isDifferent) {
+      console.log("pointsとpointsInfoに違いがあったので修正しました")
+      onUpdatePoints(extractedPoints);
+    }
+  }, [pointsInfo]);
   
 
   const handleInputChange = ( index: number, axis: "x" | "y" | "z", value: string ) => {
