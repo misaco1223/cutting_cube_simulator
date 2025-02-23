@@ -10,6 +10,10 @@ export interface EditPointsFormProps {
   onUpdatePoints: (points: THREE.Vector3[]) => void;
 }
 
+export interface SendPointsButtonProps {
+  points: THREE.Vector3[];
+}
+
 export const vertices = [
   new THREE.Vector3(-1.5, -1.5, -1.5), // H
   new THREE.Vector3( 1.5, -1.5, -1.5), // G

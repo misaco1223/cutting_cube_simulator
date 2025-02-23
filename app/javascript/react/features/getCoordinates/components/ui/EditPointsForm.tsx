@@ -67,7 +67,6 @@ const EditPointsForm = ( {points, onUpdatePoints}: EditPointsFormProps) => {
 
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
-      <h2 className="text-sm mb-2">選択した切断点</h2>
       {pointsInfo.map((pointInfo, index) => (
         <div key={index} className="mb-4">
           <h3 className="font-semibold">
@@ -76,37 +75,37 @@ const EditPointsForm = ( {points, onUpdatePoints}: EditPointsFormProps) => {
           <div className="flex space-x-2">
             <div className="space-y-1">
               <div className="flex space-x-2">
-                <label>
+                <label className="text-sm">
                   X:  
                   <input
                     type="number"
                     value={pointInfo.point.x}
                     onChange={(e) => handleInputChange(index, 'x', e.target.value)}
-                    className="border p-1 rounded w-20 ml-2"
+                    className="border p-1 rounded w-15 ml-2"
                   />
                 </label>
-                <label>
+                <label className="text-sm">
                   Y: 
                   <input
                     type="number"
                     value={pointInfo.point.y}
                     onChange={(e) => handleInputChange(index, 'y', e.target.value)}
-                    className="border p-1 rounded w-20 ml-2"
+                    className="border p-1 rounded w-15 ml-2"
                   />
                 </label>
-                <label>
+                <label className="text-sm">
                   Z: 
                   <input
                     type="number"
                     value={pointInfo.point.z}
                     onChange={(e) => handleInputChange(index, 'z', e.target.value)}
-                    className="border p-1 rounded w-20 ml-2"
+                    className="border p-1 rounded w-15 ml-2"
                   />
                 </label>
               </div>
-              <div>
+              <div className="flex">
                 <span>比</span>
-                <label>
+                <label className="text-sm">
                   <input
                     type="text"
                     value={leftRatios[index] ?? pointInfo.edgeRatio.left}
@@ -115,7 +114,7 @@ const EditPointsForm = ( {points, onUpdatePoints}: EditPointsFormProps) => {
                   />
                 </label>
                 <span> : </span>
-                <label>
+                <label className="text-sm">
                   <input
                     type="text"
                     value={rightRatios[index] ?? pointInfo.edgeRatio.right}
@@ -127,7 +126,7 @@ const EditPointsForm = ( {points, onUpdatePoints}: EditPointsFormProps) => {
                 onClick={() => handleUpdateRatio(index)}
                 className="mt-2 ml-4 hover:text-blue-500"
                 >
-                  更新する<FontAwesomeIcon icon={faRotate} />
+                  <FontAwesomeIcon icon={faRotate} />
                 </button>
               </div>
             </div>
@@ -136,7 +135,7 @@ const EditPointsForm = ( {points, onUpdatePoints}: EditPointsFormProps) => {
                 onClick={() => handleRemovePoint(index)} 
                 className="mt-2 ml-4 hover:text-red-600"
               >
-                削除する<FontAwesomeIcon icon={faTrashCan} />
+                <FontAwesomeIcon icon={faTrashCan} />
               </button>
             </div>
           </div>

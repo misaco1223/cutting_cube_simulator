@@ -5,6 +5,7 @@ import ClickableEdges from "./ClickableEdges";
 import * as THREE from "three";
 import EditPointsForm from "./EditPointsForm";
 import { vertices, vertexLabels } from "../../types/ThreeScene";
+import SendPointsButton from "./SendPointsButton";
 
 const InteractiveCube = () => {
   const [points, setPoints] = useState<THREE.Vector3[]>([]);
@@ -50,6 +51,10 @@ const InteractiveCube = () => {
 
         <OrbitControls />
       </Canvas>
+
+      <div className="mt-4">
+        <SendPointsButton points={points}/>
+      </div>
 
       <div className="mt-4">
         <EditPointsForm points={points} onUpdatePoints={handleUpdatePoints} />
