@@ -44,7 +44,7 @@ const ClickableEdges = ({ onClick }: ClickableEdgesProps ) => {
   },[gl.domElement, handleMouseClick]);
 
   return (
-    <lineSegments scale={[3,3,3]} ref={lineRef}>
+    <lineSegments scale= {[2, 2, 2]} ref={lineRef}>
       <edgesGeometry args={[new THREE.BoxGeometry(1, 1, 1)]} />
       <lineBasicMaterial color="black" />
     </lineSegments>

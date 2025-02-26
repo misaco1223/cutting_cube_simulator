@@ -15,14 +15,14 @@ export interface SendPointsButtonProps {
 }
 
 export const vertices = [
-  new THREE.Vector3(-1.5, -1.5, -1.5), // H
-  new THREE.Vector3( 1.5, -1.5, -1.5), // G
-  new THREE.Vector3( 1.5,  1.5, -1.5), // C
-  new THREE.Vector3(-1.5,  1.5, -1.5), // D
-  new THREE.Vector3(-1.5, -1.5,  1.5), // E
-  new THREE.Vector3( 1.5, -1.5,  1.5), // F
-  new THREE.Vector3( 1.5,  1.5,  1.5), // B
-  new THREE.Vector3(-1.5,  1.5,  1.5), // A
+  new THREE.Vector3(-1, -1, -1), // H
+  new THREE.Vector3( 1, -1, -1), // G
+  new THREE.Vector3( 1,  1, -1), // C
+  new THREE.Vector3(-1,  1, -1), // D
+  new THREE.Vector3(-1, -1,  1), // E
+  new THREE.Vector3( 1, -1,  1), // F
+  new THREE.Vector3( 1,  1,  1), // B
+  new THREE.Vector3(-1,  1,  1), // A
 ];
   
 export const vertexLabels = ['H', 'G', 'C', 'D', 'E', 'F', 'B', 'A'];

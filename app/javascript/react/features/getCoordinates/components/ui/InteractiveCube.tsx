@@ -23,12 +23,12 @@ const InteractiveCube = () => {
       <Canvas style={{ height: '300px'}}>
         <ambientLight intensity={0.1} />
         <directionalLight color="white" position={[0, 0, 5]} />
-        <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={75}/>
+        <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={50}/>
 
         {/* 遠近感のあるグリッド */}
-        <gridHelper args={[10, 10, 0x000000, 0x888888]} position={[0, -1.5, 0]}/>
+        <gridHelper args={[10, 10, 0x000000, 0x888888]} position={[0, -1, 0]}/>
     
-        <mesh scale={[3,3,3]}>
+        <mesh scale= {[2, 2, 2]} >
           <boxGeometry args={[1, 1, 1]} />
           <meshNormalMaterial transparent opacity={0.2} />
         </mesh>
@@ -37,7 +37,7 @@ const InteractiveCube = () => {
   
         {points.map((point, index) => (
           <mesh key={index} position={[point.x, point.y, point.z]}>
-            <sphereGeometry args={[0.08, 32, 32]} />
+            <sphereGeometry args={[0.05, 32, 32]} />
             <meshBasicMaterial color="red" />
           </mesh>
         ))}
