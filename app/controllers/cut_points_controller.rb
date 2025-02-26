@@ -2,16 +2,13 @@ class CutPointsController < ApplicationController
   protect_from_forgery with: :null_session #CRSFトークン攻撃を予防
 
   def create
-    cut_points = params[:cutPoints]
+    cut_points = params[:cutPoints].to_json
 
     if cut_points.present?
-      formatted_points = [
-        cut_points[0],
-        cut_points[1],
-        cut_points[2]
-    ]
+      result = `blender -b -P #{Rails.root.join('lib/python_scripts/cut_cube.py')} -- '#{cut_points}'`
+      puts "Blender実行結果: #{result}"
   
-      render json: { status: "success", formatted_points: formatted_points }
+      render json: { status: "success", formatted_points: cut_points }
     else
       render json: { status: "error", message: "Railsで受け取ることができませんでした。" }, status: :unprocessable_entity
     end

@@ -11,13 +11,13 @@ const SendPointsButton = ({ points }: SendPointsButtonProps)=> {
    return <div className="text-red-500 ml-4"> "切断点は3つに絞ってください"</div>;
 
   const sendPointsToRails = useCallback(() => {
-    console.log('送信する点は', points);
 
-    const cutPoints = points.map((point: THREE.Vector3) => ({
-      x: point.x,
-      y: point.y,
-      z: point.z
-    }));
+    const cutPoints = points.map((point: THREE.Vector3) => [
+      point.x,
+      point.y,
+      point.z
+    ]);
+    console.log('送信する点は', points);
 
     const csrfToken = document
     .querySelector<HTMLMetaElement>('meta[name="csrf-token"]')
