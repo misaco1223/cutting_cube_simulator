@@ -1,6 +1,7 @@
 import React, {useCallback} from "react";
 import * as THREE from "three";
-import { SendPointsButtonProps } from "../../types/ThreeScene"
+import { SendPointsButtonProps, faces } from "../../types/ThreeScene"
+import { isPointOnEdge } from "../../hooks/isPointOnEdge"
 
 const SendPointsButton = ({ points }: SendPointsButtonProps)=> {
 
@@ -8,7 +9,20 @@ const SendPointsButton = ({ points }: SendPointsButtonProps)=> {
     return <div className="ml-4 font-bold">切断点を3つ選択してください</div>;
 
   if (points.length > 3 )
-   return <div className="text-red-500 ml-4"> "切断点は3つに絞ってください"</div>;
+   return <div className="text-red-500 font-bold ml-4"> 切断点は3つに絞ってください</div>;
+  
+  const isOnSameFace = faces.some((face) => {
+    return points.every((point) =>
+      face.some((edge) => {
+        const { isCollinear } = isPointOnEdge(point, edge);
+        return isCollinear;  // 点が辺上にあればtrueを返す
+      })
+    );
+  });
+
+  if (points.length === 3 && isOnSameFace)
+    return <div className="text-red-500 font-bold ml-4">同じ面上の3点では切断できません</div>;
+    
 
   const sendPointsToRails = useCallback(() => {
 

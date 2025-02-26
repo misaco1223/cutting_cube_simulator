@@ -1,11 +1,10 @@
 import * as THREE from "three";
 import { edges, edgeLabels, vertices, vertexLabels, PointInfo } from "../types/ThreeScene";
 import { gcd }  from "./gcd";
+import { isPointOnEdge } from "./isPointOnEdge"
 
 export const checkPointInfo = (point: THREE.Vector3): PointInfo => {
   const vTolerance = 0.1;
-  const tTolerance = 0.05;
-  const cTolerance = 0.000001;
 
   for (let i = 0; i < edges.length; i++) {
 
@@ -16,22 +15,11 @@ export const checkPointInfo = (point: THREE.Vector3): PointInfo => {
       Math.abs(vertex.z - point.z) < vTolerance
     );
 
-    const [start, end] = edges[i];
-    const edgeVector = new THREE.Vector3().subVectors(end, start);
-    const pointVector = new THREE.Vector3().subVectors(point, start);
+    const { isCollinear, t } = isPointOnEdge(point, edges[i]);
 
-    let t = pointVector.dot(edgeVector) / edgeVector.dot(edgeVector);
-    if (t < tTolerance) {
-      t = 0;
-    } else if (t > 1 - tTolerance) {
-      t = 1;
-    }
-
+    // tの調整
     const denominator = t;  // startから点まで
-    const numerator = 1 - t; // endから点まで
-
-    const crossProduct = new THREE.Vector3().crossVectors(edgeVector, pointVector);
-    const isCollinear = crossProduct.length() < cTolerance;
+    const numerator = 1 - t; 
     
     if (foundVertexIndex !== -1){
       return {

@@ -50,6 +50,15 @@ export const edgeLabels = [
   "AD", "BC", "FG", "EH"
 ];
 
+export const faces = [
+  [edges[0], edges[1], edges[2], edges[3]], // 前面: AB, BF, EF, AE
+  [edges[4], edges[5], edges[6], edges[7]], // 背面: CD, CG, GH, HD
+  [edges[8], edges[7], edges[11], edges[3]], // 左面: AD, HD, EH, AE
+  [edges[9], edges[5], edges[10], edges[1]], // 右面: BC, CG, FG, BF
+  [edges[0], edges[9], edges[4], edges[8]], // 上面: AB, BC, CD, AD
+  [edges[2], edges[10], edges[6], edges[11]] // 底面: EF, FG, GH, EH
+];
+
 export interface PointInfo {
   point: THREE.Vector3;
   isVertex: boolean; //頂点or辺を表示するために使用
