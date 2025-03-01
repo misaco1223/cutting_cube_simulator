@@ -9,6 +9,7 @@ sys.path.append(script_dir)
 from parse_args import parse_args
 from cube import create_cube
 from cut_cube import cut_cube
+from export_gltf import export_gltf
 
 def clear_scene():
     """ Blenderのシーン内の全オブジェクトを削除する """
@@ -22,9 +23,16 @@ def main():
     cube = create_cube()
     objects = cut_cube(cube, points)
 
-    print("切断完了: 立方体を分割しました")
-    for obj in objects:
-        print(f"オブジェクト名: {obj.name}")
+    if len(objects) == 2:
+        print("切断完了: 立方体を分割しました")
+        for obj in objects:
+            print(f"オブジェクト名: {obj.name}")
+
+        shared_dir = os.path.join(script_dir, "../../shared")
+        os.makedirs(shared_dir, exist_ok=True)
+
+        export_path = os.path.join(shared_dir, "exported_cube.gltf")
+        export_gltf(export_path)    
 
 if __name__ == "__main__":
     main()

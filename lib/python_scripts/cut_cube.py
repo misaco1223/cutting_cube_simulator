@@ -6,10 +6,10 @@ def cut_cube(cube, points):
     point1, point2, point3 = points
 
     #もとのCubeを複製して残す
-    original_cube = cube.copy()
-    original_cube.data = cube.data.copy()
-    bpy.context.collection.objects.link(original_cube)
-    original_cube.name = "Cube"
+    # original_cube = cube.copy()
+    # original_cube.data = cube.data.copy()
+    # bpy.context.collection.objects.link(original_cube)
+    # original_cube.name = "Cube"
 
     # BMeshで切断
     bm = bmesh.new()
@@ -51,7 +51,8 @@ def cut_cube(cube, points):
     bpy.ops.object.mode_set(mode='OBJECT')
 
     # 切断後のオブジェクトを取得
-    separated_objects = [obj for obj in bpy.context.view_layer.objects if obj != original_cube]
+    # separated_objects = [obj for obj in bpy.context.view_layer.objects if obj != original_cube]
+    separated_objects = [obj for obj in bpy.context.view_layer.objects if obj]
 
     # 切断後のオブジェクトに Geometry001, Geometry002 を付ける
     for i, obj in enumerate(separated_objects):
