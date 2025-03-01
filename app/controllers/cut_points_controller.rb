@@ -5,7 +5,7 @@ class CutPointsController < ApplicationController
     cut_points = params[:cutPoints].to_json
 
     if cut_points.present?
-      result = `blender -b -P #{Rails.root.join('lib/python_scripts/cut_cube.py')} -- '#{cut_points}'`
+      result = `blender -b -P #{Rails.root.join('lib/python_scripts/main.py')} -- '#{cut_points}'`
       puts "Blender実行結果: #{result}"
   
       render json: { status: "success", formatted_points: cut_points }
