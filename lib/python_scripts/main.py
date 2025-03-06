@@ -9,7 +9,7 @@ sys.path.append(script_dir)
 from parse_args import parse_args
 from cube import create_cube
 from cut_cube import cut_cube
-from export_gltf import export_gltf
+from export_glb import export_glb
 
 def clear_scene():
     """ Blenderのシーン内の全オブジェクトを削除する """
@@ -29,11 +29,14 @@ def main():
             print(f"オブジェクト名: {obj.name}")
         print("id:", cut_id, "points:", points)
 
+        for obj in objects:
+            obj.select_set(True)
+
         shared_dir = os.path.join(script_dir, "../../shared")
         os.makedirs(shared_dir, exist_ok=True)
 
-        export_path = os.path.join(shared_dir, f"exported_cube_{cut_id}.gltf")
-        export_gltf(export_path)    
+        export_path = os.path.join(shared_dir, f"exported_cube_{cut_id}.glb")
+        export_glb(export_path, objects)    
 
 if __name__ == "__main__":
     main()
