@@ -19,7 +19,7 @@ def clear_scene():
 def main():
     clear_scene()
     
-    points = parse_args()
+    cut_id, points = parse_args()
     cube = create_cube()
     objects = cut_cube(cube, points)
 
@@ -27,11 +27,12 @@ def main():
         print("切断完了: 立方体を分割しました")
         for obj in objects:
             print(f"オブジェクト名: {obj.name}")
+        print("id:", cut_id, "points:", points)
 
         shared_dir = os.path.join(script_dir, "../../shared")
         os.makedirs(shared_dir, exist_ok=True)
 
-        export_path = os.path.join(shared_dir, "exported_cube.gltf")
+        export_path = os.path.join(shared_dir, f"exported_cube_{cut_id}.gltf")
         export_gltf(export_path)    
 
 if __name__ == "__main__":
