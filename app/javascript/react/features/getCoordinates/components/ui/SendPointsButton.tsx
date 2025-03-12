@@ -26,7 +26,7 @@ const SendPointsButton = ({ points }: SendPointsButtonProps)=> {
     }
 
     try {
-      const response = await fetch("/cut_cube", {
+      const response = await fetch("/api/cut_cube", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

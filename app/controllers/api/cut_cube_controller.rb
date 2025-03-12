@@ -1,4 +1,4 @@
-class CutCubeController < ApplicationController
+class Api::CutCubeController < ApplicationController
   protect_from_forgery with: :null_session #CRSFトークン攻撃を予防
 
   def create
