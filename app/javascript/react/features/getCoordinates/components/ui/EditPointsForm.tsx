@@ -72,16 +72,16 @@ const EditPointsForm = ( {points, onUpdatePoints}: EditPointsFormProps) => {
           <h3 className="font-semibold">
             {pointInfo.isVertex ? `切断点 ${index + 1}:頂点 ${pointInfo.vertexLabel}`: `切断点 ${index + 1}: 辺 ${pointInfo.edgeLabel}`}
           </h3>
-          <div className="flex space-x-2">
+          <div className="flex space-x-2 w-full">
             <div className="space-y-1">
-              <div className="flex space-x-2">
+              <div className="flex space-x-2 w-full">
                 <label className="text-sm">
                   X:  
                   <input
                     type="number"
                     value={pointInfo.point.x}
                     onChange={(e) => handleInputChange(index, 'x', e.target.value)}
-                    className="border p-1 rounded w-15 ml-2"
+                    className="border p-1 rounded w-full ml-2"
                   />
                 </label>
                 <label className="text-sm">
@@ -90,7 +90,7 @@ const EditPointsForm = ( {points, onUpdatePoints}: EditPointsFormProps) => {
                     type="number"
                     value={pointInfo.point.y}
                     onChange={(e) => handleInputChange(index, 'y', e.target.value)}
-                    className="border p-1 rounded w-15 ml-2"
+                    className="border p-1 rounded w-full ml-2"
                   />
                 </label>
                 <label className="text-sm">
@@ -99,7 +99,7 @@ const EditPointsForm = ( {points, onUpdatePoints}: EditPointsFormProps) => {
                     type="number"
                     value={pointInfo.point.z}
                     onChange={(e) => handleInputChange(index, 'z', e.target.value)}
-                    className="border p-1 rounded w-15 ml-2"
+                    className="border p-1 rounded w-full ml-2"
                   />
                 </label>
               </div>
@@ -130,7 +130,7 @@ const EditPointsForm = ( {points, onUpdatePoints}: EditPointsFormProps) => {
                 </button>
               </div>
             </div>
-            <div>
+            <div className="w-auto">
               <button 
                 onClick={() => handleRemovePoint(index)} 
                 className="mt-2 ml-4 hover:text-red-600"

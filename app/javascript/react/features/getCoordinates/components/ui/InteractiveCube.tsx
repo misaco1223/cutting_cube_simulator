@@ -52,11 +52,11 @@ const InteractiveCube = () => {
         <OrbitControls />
       </Canvas>
 
-      <div className="mt-4">
+      <div className="m-4">
         <SendPointsButton points={points}/>
       </div>
 
-      <div className="mt-4">
+      <div className="m-4">
         <EditPointsForm points={points} onUpdatePoints={handleUpdatePoints} />
       </div>
     </div>

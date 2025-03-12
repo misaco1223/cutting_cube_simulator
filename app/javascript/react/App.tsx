@@ -3,11 +3,11 @@ import Router from "./routes/Router";
 
 const App = () => {
   return(
-    <>
-    <BrowserRouter>
-      <Router/>
-    </BrowserRouter>
-    </>
+    <div className="container mx-auto mt-28 px-5">
+      <BrowserRouter>
+        <Router/>
+      </BrowserRouter>
+    </div>
   );
 };
 
