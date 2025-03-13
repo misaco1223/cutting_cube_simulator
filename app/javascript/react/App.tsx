@@ -1,5 +1,6 @@
 import { BrowserRouter } from "react-router-dom";
 import Router from "./routes/Router";
+import CookieConsent from "./features/cookie/CookieConsent";
 
 const App = () => {
   return(
@@ -7,6 +8,7 @@ const App = () => {
       <BrowserRouter>
         <Router/>
       </BrowserRouter>
+      <CookieConsent/>
     </div>
   );
 };

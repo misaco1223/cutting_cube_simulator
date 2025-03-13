@@ -1,9 +1,10 @@
 class Api::CutCubeController < ApplicationController
-  protect_from_forgery with: :null_session #CRSFトークン攻撃を予防
 
   def create
     cut_id = params[:id]
     cut_points = params[:points]
+    cookie_id = cookies[:guest_id]
+    puts "cookies[:guest_id]は: #{cookies[:guest_id]}"
 
     if cut_id.present? && cut_points.present?
       cut_data = { id: cut_id, points: cut_points}.to_json
