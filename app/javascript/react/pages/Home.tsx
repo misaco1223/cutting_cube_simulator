@@ -2,8 +2,7 @@ import InteractiveCube from "../features/getCoordinates/components/ui/Interactiv
 
 const Home = () => {
   return(
-    <div>
-      <h1 className="text-3xl font-bold underline">立方体の切断</h1>
+    <div className="container mx-auto mt-4 px-5">
       <InteractiveCube />
     </div>
   );
