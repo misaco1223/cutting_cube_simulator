@@ -14,8 +14,8 @@ const SendPointsButton = ({ points }: SendPointsButtonProps)=> {
       id: crypto.randomUUID(),
       points: points.map((point: THREE.Vector3) => [
       point.x,
+      -point.z,
       point.y,
-      point.z
     ])};
 
     const csrfToken = document
