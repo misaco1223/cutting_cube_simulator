@@ -1,8 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
-const CutCubeModel = ({ glbUrl, selectedGeometry }: { glbUrl: string, selectedGeometry: "all" | "geometry1" | "geometry2" }) => {
+interface CutCubeProps {
+    glbUrl: string;
+    cutPoints: THREE.Vector3[];
+    selectedGeometry: "all" | "geometry1" | "geometry2";
+}
+
+const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry }: CutCubeProps) => {
   const { scene } = useGLTF(glbUrl);
   const [ref1, setRef1] = useState<THREE.Mesh | null>(null);
   const [ref2, setRef2] = useState<THREE.Mesh | null>(null);
@@ -31,8 +37,20 @@ const CutCubeModel = ({ glbUrl, selectedGeometry }: { glbUrl: string, selectedGe
     });
   }, [scene]);
 
+  const spheres = useMemo(() => {
+    return cutPoints.map((point, index) => (
+      <mesh key={index} position={[point.x, point.y, point.z]}>
+        <sphereGeometry args={[0.03, 32, 32]} />
+        <meshStandardMaterial color="#FF3333" />
+      </mesh>
+    ));
+  }, [cutPoints]);
+
+  console.log("ref1",ref1, "ref2",ref2);
+
   return (
     <group>
+      {spheres}
       <primitive object={scene} />
       {selectedGeometry === "all" || selectedGeometry === "geometry1" ? (
         ref1 && <primitive object={ref1} /> // ref1がnullでない場合のみ表示

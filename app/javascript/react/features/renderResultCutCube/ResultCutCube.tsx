@@ -2,12 +2,13 @@ import { useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import CutCubeModel from "./CutCubeModel";
-import { useGetGlbUrl } from "./useGetGlbUrl";
+import { useGetCutCube } from "./useGetCutCube";
 
 const ResultCutCube = ({ id }: { id: string | undefined }) => {
-  const glbUrl = useGetGlbUrl(id);
+  const { glbUrl, cutPoints } = useGetCutCube(id);
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
   if (!glbUrl) return null;
+  if (!cutPoints) return null;
   const toggleGeometry = () => {
     if (selectedGeometry === "all") {
       setSelectedGeometry("geometry1");
@@ -47,7 +48,7 @@ const ResultCutCube = ({ id }: { id: string | undefined }) => {
         <OrbitControls />
 
         {/* GLTFで読み込んだ3Dモデル */}
-        <CutCubeModel glbUrl={glbUrl} selectedGeometry={selectedGeometry}/>
+        <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry}/>
       </Canvas>
     </div>
   );

@@ -39,7 +39,8 @@ class Api::CutCubeController < ApplicationController
   def show
     cut_cube = CutCube.find_by(id: params[:id]) # IDで切断データを取得
     if cut_cube
-      render json: { glb_url: url_for(cut_cube.gltf_file) }, status: :ok
+      cut_points = JSON.parse(cut_cube.cut_points)
+      render json: { glb_url: url_for(cut_cube.gltf_file), cut_points: cut_points}, status: :ok
     else
       render json: { error: 'CutCube not found' }, status: :not_found
     end

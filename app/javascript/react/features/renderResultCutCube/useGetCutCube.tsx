@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import * as THREE from "three"
 
-export const useGetGlbUrl = (id: string | undefined) => {
+export const useGetCutCube = (id: string | undefined) => {
   const [glbUrl, setGlbUrl] = useState<string | null>(null);
+  const [cutPoints, setCutPoints] = useState<THREE.Vector3[] | null>(null);
 
   useEffect(() => {
     const fetchCutCube = async (id: string | undefined) => {
@@ -19,6 +21,16 @@ export const useGetGlbUrl = (id: string | undefined) => {
         if (data.glb_url) {
           setGlbUrl(data.glb_url);
         }
+        if (data.cut_points) {
+          const transformedPoints = data.cut_points.map((point: number[]) => {
+            return new THREE.Vector3(
+              point[0],
+              point[2],
+              -point[1]
+            );
+          });
+          setCutPoints(transformedPoints); // cutPointsに格納
+        }
       } catch (error) {
         console.error("cut_cubeの取得に失敗しました", error);
       }
@@ -27,5 +39,5 @@ export const useGetGlbUrl = (id: string | undefined) => {
     fetchCutCube(id);
   }, [id]);
 
-  return glbUrl;
+  return { glbUrl, cutPoints };
 };
