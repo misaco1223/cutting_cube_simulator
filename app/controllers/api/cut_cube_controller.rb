@@ -30,9 +30,18 @@ class Api::CutCubeController < ApplicationController
       File.delete(shared_glb_url) if File.exist?(shared_glb_url)
       puts "GLBファイル削除済み: #{shared_glb_url}"
 
-      render json: { status: "success", formatted_points: cut_data, cut_cube_id: cut_cube.id }, status: :ok
+      render json: { status: "success", cut_cube_id: cut_cube.id }, status: :ok
     else
       render json: { status: "error", message: "切断失敗" }, status: :unprocessable_entity
+    end
+  end
+
+  def show
+    cut_cube = CutCube.find_by(id: params[:id]) # IDで切断データを取得
+    if cut_cube
+      render json: { glb_url: url_for(cut_cube.gltf_file) }, status: :ok
+    else
+      render json: { error: 'CutCube not found' }, status: :not_found
     end
   end
 end

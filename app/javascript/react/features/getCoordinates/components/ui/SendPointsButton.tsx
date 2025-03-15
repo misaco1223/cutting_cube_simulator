@@ -2,9 +2,11 @@ import React, {useCallback, useState} from "react";
 import * as THREE from "three";
 import { SendPointsButtonProps, faces } from "../../types/ThreeScene"
 import { isPointOnEdge } from "../../hooks/isPointOnEdge"
+import { useNavigate } from "react-router-dom";
 
 const SendPointsButton = ({ points }: SendPointsButtonProps)=> {
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const sendPointsToRails = useCallback(async() => {
     setIsLoading(true);
@@ -41,6 +43,9 @@ const SendPointsButton = ({ points }: SendPointsButtonProps)=> {
       const data = await response.json();
       console.log("切断点が送信されました:", data);
       setIsLoading(false);
+      const cut_cube_id = JSON.parse(data.cut_cube_id);
+      console.log("cut_cube_idは", cut_cube_id);
+      if (cut_cube_id) { navigate(`/result/${cut_cube_id}`); }
     } catch (error) {
       console.error("送信エラー:", error);
       setIsLoading(false); 
