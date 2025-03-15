@@ -43,7 +43,7 @@ const InteractiveCube = () => {
         ))}
 
         {vertices.map((vertex, index) => (
-          <Text key={index} position={vertex} fontSize={0.4} color="black" anchorX="center" anchorY="middle"
+          <Text key={index} position={vertex} fontSize={0.2} color="black" anchorX="center" anchorY="middle"
           >
             {vertexLabels[index]}
           </Text>

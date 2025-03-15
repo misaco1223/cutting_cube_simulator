@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, Text } from "@react-three/drei";
 import * as THREE from "three";
+import {vertices, vertexLabels} from "../getCoordinates/types/ThreeScene";
 
 interface CutCubeProps {
     glbUrl: string;
@@ -51,6 +52,23 @@ const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry }: CutCubeProps) => 
   return (
     <group>
       {spheres}
+      {vertices.map((vertex, index) => (
+        <Text
+          key={index}
+          position={vertex} // 頂点の位置にラベルを配置
+          fontSize={0.2} // フォントサイズを設定
+          color="black" // ラベルの色を黒に設定
+          anchorX="center" // X軸方向の配置を中央に設定
+          anchorY="middle" // Y軸方向の配置を中央に設定
+        >
+          {vertexLabels[index]}
+        </Text>
+      ))}
+      <lineSegments scale={[2, 2, 2]}>
+        <edgesGeometry args={[new THREE.BoxGeometry(1, 1, 1)]} />
+        <lineBasicMaterial color="black" />
+      </lineSegments>
+      
       <primitive object={scene} />
       {selectedGeometry === "all" || selectedGeometry === "geometry1" ? (
         ref1 && <primitive object={ref1} /> // ref1がnullでない場合のみ表示
