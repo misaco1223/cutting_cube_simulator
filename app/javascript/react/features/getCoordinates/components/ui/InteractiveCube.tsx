@@ -20,7 +20,7 @@ const InteractiveCube = () => {
 
   return (
     <div>
-      <Canvas style={{ height: '300px'}}>
+      <Canvas style={{ height: '400px'}}>
         <ambientLight intensity={0.1} />
         <directionalLight color="white" position={[0, 0, 5]} />
         <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={50}/>
