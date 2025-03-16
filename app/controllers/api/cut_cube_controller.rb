@@ -39,8 +39,14 @@ class Api::CutCubeController < ApplicationController
   def show
     cut_cube = CutCube.find_by(id: params[:id]) # IDで切断データを取得
     if cut_cube
-      cut_points = JSON.parse(cut_cube.cut_points)
-      render json: { glb_url: url_for(cut_cube.gltf_file), cut_points: cut_points}, status: :ok
+      cut_cube = {
+        glb_url: url_for(cut_cube.gltf_file),
+        cut_points: JSON.parse(cut_cube.cut_points),
+        title: cut_cube.title,
+        memo: cut_cube.memo,
+        created_at: cut_cube.created_at
+      }
+      render json: { cut_cube: cut_cube }, status: :ok
     else
       render json: { error: 'CutCube not found' }, status: :not_found
     end
@@ -50,14 +56,26 @@ class Api::CutCubeController < ApplicationController
     cut_cubes = current_user.cut_cubes.all.order(created_at: :desc)
   
     if cut_cubes.any?
-      cut_cube = {
+      cut_cubes = {
+        ids: cut_cubes.map { |cut_cube| cut_cube.id },
         glb_urls: cut_cubes.map { |cut_cube| url_for(cut_cube.gltf_file)},
         cut_points: cut_cubes.map { |cut_cube| JSON.parse(cut_cube.cut_points)},
-        title: "Title",
-        memo: "Memo",
+        titles: cut_cubes.map { |cut_cube| cut_cube.title },
+        memos: cut_cubes.map { |cut_cube| cut_cube.memo },
         created_at: cut_cubes.map { |cut_cube| cut_cube.created_at }
       }
-      render json: { cut_cube: cut_cube }, status: :ok
+      render json: { cut_cubes: cut_cubes }, status: :ok
+    else
+      render json: { error: 'CutCube not found' }, status: :not_found
+    end
+  end
+
+  def destroy
+    cut_cube = CutCube.find_by(id: params[:id])
+    if cut_cube
+      cut_cube.destroy
+      cut_cube.gltf_file.purge
+      render json: { status: "success", message: 'CutCube deleted successfully' }, status: :ok
     else
       render json: { error: 'CutCube not found' }, status: :not_found
     end

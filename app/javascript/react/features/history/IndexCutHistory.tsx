@@ -2,7 +2,7 @@ import HistoryCard from "./HistoryCard";
 import { useGetCutCube } from "./useGetCutCube";
 
 const IndexCutHistory = () => {
-  const { glbUrls, cutPoints, createdAt, title, memo } = useGetCutCube();
+  const { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos } = useGetCutCube();
 
   if (!glbUrls || !cutPoints || glbUrls.length !== cutPoints.length) return null;
 
@@ -14,7 +14,7 @@ const IndexCutHistory = () => {
       <div className="space-y-4">
       { glbUrls.length === 0 ? <p className="m-4">履歴はありません</p>
       : glbUrls.map((glbUrl, index) => (
-          <HistoryCard key={index} glbUrl={glbUrl} cutPoints={cutPoints[index]} createdAt={createdAt[index]} title={title[index]} memo={memo[index]}/>
+          <HistoryCard key={index} cutCubeId={cutCubeIds[index]} glbUrl={glbUrl} cutPoints={cutPoints[index]} createdAt={createdAt[index]} title={titles[index]} memo={memos[index]}/>
       ))}
       </div>
     </div>

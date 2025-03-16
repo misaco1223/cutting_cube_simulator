@@ -4,8 +4,12 @@ import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { useGLTF, Text } from "@react-three/drei";
 import * as THREE from "three";
 import {vertices, vertexLabels} from "../getCoordinates/types/ThreeScene";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 interface CutCubeProps {
+    cutCubeId: string;
     glbUrl: string;
     cutPoints: THREE.Vector3[];
     createdAt: string;
@@ -13,7 +17,7 @@ interface CutCubeProps {
     memo: string;
 }
 
-const HistoryCard = ({ glbUrl, cutPoints, createdAt, title, memo }: CutCubeProps) => {
+const HistoryCard = ({ cutCubeId, glbUrl, cutPoints, createdAt, title, memo }: CutCubeProps) => {
   const { scene } = useGLTF(glbUrl);
 
   useEffect(() => {
@@ -45,6 +49,7 @@ const HistoryCard = ({ glbUrl, cutPoints, createdAt, title, memo }: CutCubeProps
     }
   
   }, [scene]);
+  
 
   const spheres = useMemo(() => {
     return cutPoints.map((point, index) => (
@@ -73,7 +78,21 @@ const HistoryCard = ({ glbUrl, cutPoints, createdAt, title, memo }: CutCubeProps
   );
 
   const transformedCreatedAt = new Date(createdAt);
-const formattedCreatedAt = `${transformedCreatedAt.getFullYear()}年${transformedCreatedAt.getMonth() + 1}月${transformedCreatedAt.getDate()}日`;
+  const formattedCreatedAt = `${transformedCreatedAt.getFullYear()}年${transformedCreatedAt.getMonth() + 1}月${transformedCreatedAt.getDate()}日`;
+
+  const handleRemoveCutCube = async(cutCubeId: string) => {
+    try {
+      const response = await fetch(`/api/cut_cube/${cutCubeId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      const data = await response.json();
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="w-full flex border border-gray-200 px-2 py-6 rounded-lg shadow-md">
@@ -94,9 +113,18 @@ const formattedCreatedAt = `${transformedCreatedAt.getFullYear()}年${transforme
       </Canvas>
       </div>
       <div className="w-full">
-        <h2 className="text-lg font-bold mb-2">{title}</h2>
+        <h2 className="text-lg font-bold mb-2">{title || "No Title"}</h2>
         <p className="text-gray-500">{memo}</p>
         <p className="text-gray-500">{formattedCreatedAt}作成</p>
+        <div className="flex items-center space-x-4 mt-6">
+          <Link to={`/result/${cutCubeId}`} className="text-blue-500 hover:underline">詳細を見る</Link>
+          <button 
+            onClick={() => handleRemoveCutCube(cutCubeId)} 
+                className="hover:text-red-600"
+          >
+            <FontAwesomeIcon icon={faTrashCan} />
+          </button>
+        </div>
       </div>
     </div>
   );
