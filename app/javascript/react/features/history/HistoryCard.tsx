@@ -1,38 +1,37 @@
-import { useEffect, useMemo, useState } from "react";
-import { useGLTF, Text } from "@react-three/drei";
+import { useEffect, useMemo} from "react";
 import { Canvas } from "@react-three/fiber";
+import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import { useGLTF, Text } from "@react-three/drei";
 import * as THREE from "three";
 import {vertices, vertexLabels} from "../getCoordinates/types/ThreeScene";
-import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 
 interface CutCubeProps {
     glbUrl: string;
     cutPoints: THREE.Vector3[];
-    selectedGeometry: "all" | "geometry1" | "geometry2";
+    createdAt: string;
+    title: string;
+    memo: string;
 }
 
-const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry }: CutCubeProps) => {
+const HistoryCard = ({ glbUrl, cutPoints, createdAt, title, memo }: CutCubeProps) => {
   const { scene } = useGLTF(glbUrl);
-  const [ref1, setRef1] = useState<THREE.Mesh | null>(null);
-  const [ref2, setRef2] = useState<THREE.Mesh | null>(null);
 
   useEffect(() => {
+    let meshFound = false;
     scene.traverse((object) => {
-        console.log("オブジェクトの構成:", object); // objectをそのまま表示
-        console.dir(object);
       if (object instanceof THREE.Mesh) {
+        meshFound = true;  // Meshが見つかった場合はフラグをtrueに
+  
         let material = new THREE.MeshBasicMaterial({ color: "white" });
-
+  
         if (object.name === "Geometry001") {
           material.color.set("#B6FF01");
-          setRef1(object); // ref1の更新
         } else if (object.name === "Geometry002") {
           material.color.set("#4689FF");
-          setRef2(object); // ref2の更新
         }
-
+  
         object.material = material;
-
+  
         // エッジ（線）を追加
         const cutEdges = new THREE.EdgesGeometry(object.geometry, 0.1);
         const cutLineMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 3 });
@@ -40,6 +39,11 @@ const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry }: CutCubeProps) => 
         object.add(cutLine);
       }
     });
+    // Meshが一度も見つからなかった場合
+    if (meshFound === false) {
+      window.location.reload();
+    }
+  
   }, [scene]);
 
   const spheres = useMemo(() => {
@@ -68,9 +72,13 @@ const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry }: CutCubeProps) => 
     []
   );
 
+  const transformedCreatedAt = new Date(createdAt);
+const formattedCreatedAt = `${transformedCreatedAt.getFullYear()}年${transformedCreatedAt.getMonth() + 1}月${transformedCreatedAt.getDate()}日`;
+
   return (
-    <div>
-      <Canvas style={{ height: "400px" }}>
+    <div className="w-full flex border border-gray-200 px-2 py-6 rounded-lg shadow-md">
+      <div style={{ height: "150px" , width: "200px" }}>
+      <Canvas>
         <ambientLight intensity={0.3} />
         <directionalLight color="white" position={[0, 0, 5]} intensity={1} />
         <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={50} />
@@ -83,15 +91,15 @@ const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry }: CutCubeProps) => 
           <lineBasicMaterial color="black" />
         </lineSegments>
         <primitive object={scene} />
-          {selectedGeometry === "all" || selectedGeometry === "geometry1" ? (
-            ref1 && <primitive object={ref1} /> // ref1がnullでない場合のみ表示
-          ) : null}
-            {selectedGeometry === "all" || selectedGeometry === "geometry2" ? (
-                ref2 && <primitive object={ref2} /> // ref2がnullでない場合のみ表示
-          ) : null}
       </Canvas>
+      </div>
+      <div className="w-full">
+        <h2 className="text-lg font-bold mb-2">{title}</h2>
+        <p className="text-gray-500">{memo}</p>
+        <p className="text-gray-500">{formattedCreatedAt}作成</p>
+      </div>
     </div>
   );
 };
 
-export default CutCubeModel;
+export default HistoryCard;

@@ -22,7 +22,9 @@ const Header = () => {
           ) : (
             <li className="flex items-center space-x-4">
               <div className="flex space-x-4">
-                <FontAwesomeIcon icon={faClockRotateLeft} size="xl"/>
+                <Link to="/history" className="hover:text-gray-300 transition duration-300">
+                  <FontAwesomeIcon icon={faClockRotateLeft} size="xl"/>
+                </Link>
                 <FontAwesomeIcon icon={faHeart} size="xl" />
               </div>
               <span>{userName ?? "ゲスト"} さん</span>

@@ -7,8 +7,8 @@ import { useGetCutCube } from "./useGetCutCube";
 const ResultCutCube = ({ id }: { id: string | undefined }) => {
   const { glbUrl, cutPoints } = useGetCutCube(id);
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
-  if (!glbUrl) return null;
-  if (!cutPoints) return null;
+  if (!glbUrl || !cutPoints) return null;
+
   const toggleGeometry = () => {
     if (selectedGeometry === "all") {
       setSelectedGeometry("geometry1");
@@ -32,24 +32,18 @@ const ResultCutCube = ({ id }: { id: string | undefined }) => {
         </span>
       </div>
       <button
-          onClick={toggleGeometry}
-          className="px-6 py-2 rounded-md text-white bg-red-500 hover:bg-red-400 transition-colors duration-200"
-        >
-          {selectedGeometry === "all"
-            ? "立体1を見る"
-            : selectedGeometry === "geometry1"
-            ? "立体2を見る"
-            : "全体を見る"}
-        </button>
-      <Canvas style={{ height: "400px" }}>
-        <ambientLight intensity={0.3} />
-        <directionalLight color="white" position={[0, 0, 5]} intensity={1} />
-        <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={50} />
-        <OrbitControls />
-
-        {/* GLTFで読み込んだ3Dモデル */}
+        onClick={toggleGeometry}
+        className="px-6 py-2 rounded-md text-white bg-red-500 hover:bg-red-400 transition-colors duration-200"
+      >
+        {selectedGeometry === "all"
+          ? "立体1を見る"
+          : selectedGeometry === "geometry1"
+          ? "立体2を見る"
+          : "全体を見る"}
+      </button>
+      <div>
         <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry}/>
-      </Canvas>
+      </div>
     </div>
   );
 };

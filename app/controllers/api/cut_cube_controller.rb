@@ -45,4 +45,21 @@ class Api::CutCubeController < ApplicationController
       render json: { error: 'CutCube not found' }, status: :not_found
     end
   end
+
+  def index
+    cut_cubes = current_user.cut_cubes.all.order(created_at: :desc)
+  
+    if cut_cubes.any?
+      cut_cube = {
+        glb_urls: cut_cubes.map { |cut_cube| url_for(cut_cube.gltf_file)},
+        cut_points: cut_cubes.map { |cut_cube| JSON.parse(cut_cube.cut_points)},
+        title: "Title",
+        memo: "Memo",
+        created_at: cut_cubes.map { |cut_cube| cut_cube.created_at }
+      }
+      render json: { cut_cube: cut_cube }, status: :ok
+    else
+      render json: { error: 'CutCube not found' }, status: :not_found
+    end
+  end
 end
