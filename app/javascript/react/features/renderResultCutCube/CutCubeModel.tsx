@@ -45,8 +45,8 @@ const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry }: CutCubeProps) => 
   const spheres = useMemo(() => {
     return cutPoints.map((point, index) => (
       <mesh key={index} position={[point.x, point.y, point.z]}>
-        <sphereGeometry args={[0.03, 32, 32]} />
-        <meshStandardMaterial color="#FF3333" />
+        <sphereGeometry args={[0.05, 32, 32]} />
+        <meshBasicMaterial color="#FF3333" />
       </mesh>
     ));
   }, [cutPoints]);
@@ -70,7 +70,7 @@ const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry }: CutCubeProps) => 
 
   return (
     <div>
-      <Canvas style={{ height: "400px" }}>
+      <Canvas style={{ height: "500px" }} className="border border-gray-500">
         <ambientLight intensity={0.3} />
         <directionalLight color="white" position={[0, 0, 5]} intensity={1} />
         <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={50} />

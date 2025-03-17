@@ -75,11 +75,13 @@ const SendPointsButton = ({ points }: SendPointsButtonProps)=> {
       {isLoading ? (
         <p>切断中... しばらくお待ちください。</p>
       ) : (
-        <button 
+        <button
           onClick={sendPointsToRails}
-          className="button bg-green-700 bold text-white rounded mt-2 ml-4 py-2 px-4 hover:bg-green-700"
+          className="relative overflow-hidden bg-gradient-to-b from-green-300 to-green-600 font-bold rounded-lg mt-2 ml-4 py-2 px-4 shadow-lg hover:from-green-300 hover:to-green-500 active:shadow-inner"
         >
           3点で切断する
+          {/* 擬似的な光沢エフェクト */}
+          <span className="absolute inset-0 bg-white opacity-20 mix-blend-overlay rounded-lg"></span>
         </button>
       )}
     </div>

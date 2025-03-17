@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import * as THREE from "three"
+import * as THREE from "three";
 
 export const useGetCutCube = (id: string|undefined) => {
   const [glbUrl, setGlbUrl] = useState<string|null>(null);
@@ -41,7 +41,7 @@ export const useGetCutCube = (id: string|undefined) => {
     };
 
     fetchCutCube(id);
-  }, [id, title, memo]);
+  }, [id]);
 
-  return { id ,glbUrl, cutPoints, title, memo, createdAt };
+  return { glbUrl, cutPoints, title, memo, createdAt };
 };

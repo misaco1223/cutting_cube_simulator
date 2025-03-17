@@ -37,7 +37,7 @@ class Api::CutCubeController < ApplicationController
   end
 
   def show
-    cut_cube = CutCube.find_by(id: params[:id]) # IDで切断データを取得
+    cut_cube = current_user.cut_cubes.find_by(id: params[:id]) # IDで切断データを取得
     if cut_cube
       cut_cube = {
         glb_url: url_for(cut_cube.gltf_file),
@@ -71,11 +71,21 @@ class Api::CutCubeController < ApplicationController
   end
 
   def destroy
-    cut_cube = CutCube.find_by(id: params[:id])
+    cut_cube = current_user.cut_cubes.find_by(id: params[:id])
     if cut_cube
       cut_cube.destroy
       cut_cube.gltf_file.purge
       render json: { status: "success", message: 'CutCube deleted successfully' }, status: :ok
+    else
+      render json: { error: 'CutCube not found' }, status: :not_found
+    end
+  end
+
+  def update
+    cut_cube = current_user.cut_cubes.find_by(id: params[:id])
+    if cut_cube
+      cut_cube.update(title: params[:title], memo: params[:memo])
+      render json: { status: "success", message: 'CutCube updated successfully' }, status: :ok
     else
       render json: { error: 'CutCube not found' }, status: :not_found
     end

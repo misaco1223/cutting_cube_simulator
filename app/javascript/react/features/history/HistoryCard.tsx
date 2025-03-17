@@ -54,8 +54,8 @@ const HistoryCard = ({ cutCubeId, glbUrl, cutPoints, createdAt, title, memo }: C
   const spheres = useMemo(() => {
     return cutPoints.map((point, index) => (
       <mesh key={index} position={[point.x, point.y, point.z]}>
-        <sphereGeometry args={[0.03, 32, 32]} />
-        <meshStandardMaterial color="#FF3333" />
+        <sphereGeometry args={[0.08, 32, 32]} />
+        <meshBasicMaterial color="#FF3333" />
       </mesh>
     ));
   }, [cutPoints]);
@@ -77,8 +77,16 @@ const HistoryCard = ({ cutCubeId, glbUrl, cutPoints, createdAt, title, memo }: C
     []
   );
 
-  const transformedCreatedAt = new Date(createdAt);
-  const formattedCreatedAt = `${transformedCreatedAt.getFullYear()}年${transformedCreatedAt.getMonth() + 1}月${transformedCreatedAt.getDate()}日`;
+  const formattedDate = createdAt ? new Date(createdAt).toLocaleString("ja-JP", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: undefined,
+    hour12: false,
+  }).replace(/\//g, "-")
+  : "";
 
   const handleRemoveCutCube = async(cutCubeId: string) => {
     try {
@@ -113,9 +121,9 @@ const HistoryCard = ({ cutCubeId, glbUrl, cutPoints, createdAt, title, memo }: C
       </Canvas>
       </div>
       <div className="w-full">
-        <h2 className="text-lg font-bold mb-2">{title || "No Title"}</h2>
-        <p className="text-gray-500">{memo}</p>
-        <p className="text-gray-500">{formattedCreatedAt}作成</p>
+        <h2 className="text-md font-bold mb-2">{title || "No Title"}</h2>
+        <p className="text-gray-500 py-2 text-md">{memo}</p>
+        <p className="text-gray-500 text-xs">{formattedDate}</p>
         <div className="flex items-center space-x-4 mt-6">
           <Link to={`/result/${cutCubeId}`} className="text-blue-500 hover:underline">詳細を見る</Link>
           <button 
