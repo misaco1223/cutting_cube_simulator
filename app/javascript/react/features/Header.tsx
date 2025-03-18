@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRightFromBracket, faClockRotateLeft, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faRightFromBracket, faClockRotateLeft, faBookmark, faSchool } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from "../contexts/AuthContext";
 
 const Header = () => {
@@ -15,27 +15,25 @@ const Header = () => {
           <img src="/logo.png" alt="ロゴ" className="h-full" />
         </Link>
         <ul className="flex space-x-4 justify-end">
-          {!isLoggedIn ? (
-            <li>
+          <li className="flex items-center space-x-4">
+            <div className="flex space-x-4">
+              <FontAwesomeIcon icon={faSchool} size="xl" />
+              <Link to="/history" className="hover:text-gray-300 transition duration-300">
+                <FontAwesomeIcon icon={faClockRotateLeft} size="xl"/>
+              </Link>
+              <FontAwesomeIcon icon={faBookmark} size="xl" />
+            </div>
+            {!isLoggedIn ? (
               <Link to="/login" className="hover:text-gray-200">ログイン</Link>
-            </li>
-          ) : (
-            <li className="flex items-center space-x-4">
+            ) : (
               <div className="flex space-x-4">
-                <Link to="/history" className="hover:text-gray-300 transition duration-300">
-                  <FontAwesomeIcon icon={faClockRotateLeft} size="xl"/>
+                <span>{userName ?? "ゲスト"} さん</span>
+                <Link to="/" onClick={logout}>
+                  <FontAwesomeIcon icon={faRightFromBracket} size="xl" className="hover:text-gray-300 transition duration-300"/>
                 </Link>
-                <FontAwesomeIcon icon={faHeart} size="xl" />
               </div>
-              <span>{userName ?? "ゲスト"} さん</span>
-              <button
-                onClick={logout}
-                className="hover:text-gray-300 transition duration-300"
-              >
-                <FontAwesomeIcon icon={faRightFromBracket} size="xl" />
-              </button>
-            </li>
-          )}
+            )}
+          </li>
         </ul>
       </nav>
     </header>

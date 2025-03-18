@@ -18,8 +18,6 @@ const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry }: CutCubeProps) => 
 
   useEffect(() => {
     scene.traverse((object) => {
-        console.log("オブジェクトの構成:", object); // objectをそのまま表示
-        console.dir(object);
       if (object instanceof THREE.Mesh) {
         let material = new THREE.MeshBasicMaterial({ color: "white" });
 

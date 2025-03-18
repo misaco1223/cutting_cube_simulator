@@ -30,14 +30,27 @@ class Api::CutCubeController < ApplicationController
       File.delete(shared_glb_url) if File.exist?(shared_glb_url)
       puts "GLBファイル削除済み: #{shared_glb_url}"
 
-      render json: { status: "success", cut_cube_id: cut_cube.id }, status: :ok
+      render_cut_cube = {
+        id: cut_cube.id,
+        glb_url: url_for(cut_cube.gltf_file),
+        cut_points: JSON.parse(cut_cube.cut_points),
+        title: cut_cube.title,
+        memo: cut_cube.memo,
+        created_at: cut_cube.created_at
+      }
+
+      render json: { status: "success", cut_cube: render_cut_cube }, status: :ok
     else
       render json: { status: "error", message: "切断失敗" }, status: :unprocessable_entity
     end
   end
 
   def show
-    cut_cube = current_user.cut_cubes.find_by(id: params[:id]) # IDで切断データを取得
+    cut_cube = if current_user.present? 
+                 current_user.cut_cubes.find_by(id: params[:id])
+               else CutCube.find_by(id: params[:id])
+               end
+
     if cut_cube
       cut_cube = {
         glb_url: url_for(cut_cube.gltf_file),
@@ -53,9 +66,13 @@ class Api::CutCubeController < ApplicationController
   end
 
   def index
-    cut_cubes = current_user.cut_cubes.all.order(created_at: :desc)
+    cut_cubes = if current_user.present?
+      current_user.cut_cubes.order(created_at: :desc)
+    elsif cookies[:guest_id].present?
+      CutCube.where(cookie_id: cookies[:guest_id]).order(created_at: :desc)
+    end
   
-    if cut_cubes.any?
+    if cut_cubes.present?
       cut_cubes = {
         ids: cut_cubes.map { |cut_cube| cut_cube.id },
         glb_urls: cut_cubes.map { |cut_cube| url_for(cut_cube.gltf_file)},
@@ -71,7 +88,12 @@ class Api::CutCubeController < ApplicationController
   end
 
   def destroy
-    cut_cube = current_user.cut_cubes.find_by(id: params[:id])
+    cut_cube = if current_user.present?
+      current_user.cut_cubes.find_by(id: params[:id])
+    else
+      CutCube.find_by(id: params[:id])
+    end
+
     if cut_cube
       cut_cube.destroy
       cut_cube.gltf_file.purge
@@ -82,7 +104,12 @@ class Api::CutCubeController < ApplicationController
   end
 
   def update
-    cut_cube = current_user.cut_cubes.find_by(id: params[:id])
+    cut_cube = if current_user.present?
+      current_user.cut_cubes.find_by(id: params[:id])
+    else
+      CutCube.find_by(id: params[:id])
+    end
+
     if cut_cube
       cut_cube.update(title: params[:title], memo: params[:memo])
       render json: { status: "success", message: 'CutCube updated successfully' }, status: :ok

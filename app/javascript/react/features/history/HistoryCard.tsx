@@ -96,6 +96,9 @@ const HistoryCard = ({ cutCubeId, glbUrl, cutPoints, createdAt, title, memo }: C
         credentials: "include",
       });
       const data = await response.json();
+      const storedCutCubes = JSON.parse(localStorage.getItem("cutCube") || "[]");
+      const updatedCutCubes = storedCutCubes.filter((cutCube: any) => String(cutCube.id) !== cutCubeId);
+      localStorage.setItem("cutCube", JSON.stringify(updatedCutCubes));
       window.location.reload();
     } catch (error) {
       console.log(error);

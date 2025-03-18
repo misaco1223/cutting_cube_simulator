@@ -13,4 +13,10 @@ class Api::CookiesController < ApplicationController
     end
     render json: { message: "Cookieを生成しました" }, status: :ok
   end
+
+  def index
+    if cookies[:guest_id].present?
+     render json: {message: "Cookieが確認できました"}, status: :ok
+    end
+  end
 end

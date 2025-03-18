@@ -30,7 +30,7 @@ const InteractiveCube = () => {
     
         <mesh scale= {[2, 2, 2]} >
           <boxGeometry args={[1, 1, 1]} />
-          <meshNormalMaterial transparent opacity={0.2} />
+          <meshBasicMaterial transparent opacity={0.2} />
         </mesh>
 
         <ClickableEdges onClick={handleEdgeClick} />

@@ -7,11 +7,24 @@ const CookieConsent = () => {
   const [isAccepted,  setIsAccepted] = useState(() => {
     return localStorage.getItem("cookieAccepted") === "true";
   });
-  
   const [isHide, setIsHide] = useState(false);
+
+  useEffect(()=>{
+    const fetchGetCookie = async() => {
+      try {
+        const response = await fetch('/api/cookies', { method: "GET" });
+        if (!response.ok) throw new Error("cookiesへのfetchに失敗しました");
+        const data = await response.json();
+        console.log("cookieの取得に成功しました", data);
+        setIsHide(true);
+      } catch (error) {
+        console.error("cookieの取得に失敗しました", error);
+        localStorage.removeItem("cookieAccepted")
+        setIsAccepted(false);
+      }
+    };
   
-  useEffect(() => {
-    if (isAccepted) {localStorage.setItem("cookieAccepted", "true");}
+    if (isAccepted) { fetchGetCookie() }
   }, [isAccepted]);
 
   const handleAccept = async() => {
@@ -21,12 +34,12 @@ const CookieConsent = () => {
       if (!response.ok) throw new Error("cookiesへのfetchに失敗しました");
       const data = await response.json();
       console.log("cookieの取得に成功しました", data);
-      setIsAccepted(true)
+      localStorage.setItem("cookieAccepted", "true");
+      setIsHide(true)
     } catch (error) {
       console.error("cookieの取得に失敗しました", error);
     }
   };
-
 
   const handleHideBanner = () => {
     setIsHide(true);
@@ -37,7 +50,7 @@ const CookieConsent = () => {
   return (
     <div className="cookie-banner fixed bottom-0 left-0 w-full bg-gray-900 text-white p-4">
       <div className="mx-auto items-center justify-center text-center">
-        <p className="w-full text-center">このサイトでは 切断履歴を保存するために Cookie を使用します。よろしいですか？</p>
+        <p className="w-full text-center">このサイトでは Cookie を使用します。<br/>よろしいですか？</p>
         <button onClick={handleAccept} className="px-4 py-2 bg-blue-500 text-white rounded mt-2 mx-2">
           承諾する
         </button>

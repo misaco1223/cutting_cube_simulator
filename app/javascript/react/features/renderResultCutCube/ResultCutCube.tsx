@@ -48,9 +48,19 @@ const ResultCutCube = ({ id }: { id: string | undefined }) => {
         body: JSON.stringify({ title: currentTitle, memo: currentMemo }),
       });
 
-      if (!response.ok) {
-        throw new Error("更新に失敗しました");
-      }
+      if (!response.ok) throw new Error("更新に失敗しました");
+
+      const storedCutCubes = JSON.parse(localStorage.getItem("cutCube") || "[]");
+      const updatedCutCubes = storedCutCubes.map((cutCube: any) => {
+        console.log("typeof cutCube.id:", typeof cutCube.id, "value:", cutCube.id); //出力 number
+        console.log("typeof id:", typeof id, "value:", id);
+        if (String(cutCube.id) === id) {
+          return { ...cutCube, title: currentTitle, memo: currentMemo };
+        }
+        return cutCube;
+      });
+      localStorage.setItem("cutCube", JSON.stringify(updatedCutCubes));
+
     } catch (error) {
       console.error("更新エラー:", error);
     }

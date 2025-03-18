@@ -43,8 +43,27 @@ const SendPointsButton = ({ points }: SendPointsButtonProps)=> {
       const data = await response.json();
       console.log("切断点が送信されました:", data);
       setIsLoading(false);
-      const cut_cube_id = JSON.parse(data.cut_cube_id);
-      console.log("cut_cube_idは", cut_cube_id);
+
+      const cut_cube_id = data.cut_cube.id;
+      const newCutCube = {
+        id: cut_cube_id,
+        glbUrl: data.cut_cube.glb_url,
+        cutPoints: data.cut_cube.cut_points,
+        title: data.cut_cube.title,
+        memo: data.cut_cube.memo,
+        createdAt: data.cut_cube.created_at,
+      };
+      try {
+        const storedCutCubes = JSON.parse(localStorage.getItem("cutCube") || "[]");
+        if (!storedCutCubes.some((cutCube: any) => cutCube.id === cut_cube_id)) {
+          storedCutCubes.push(newCutCube);
+          localStorage.setItem("cutCube", JSON.stringify(storedCutCubes));
+        }
+      } catch (e) {
+        if (e instanceof DOMException && e.name === "QuotaExceededError") {
+          console.error("LocalStorageの容量がオーバーしました");
+        }
+      }
       if (cut_cube_id) { navigate(`/result/${cut_cube_id}`); }
     } catch (error) {
       console.error("送信エラー:", error);
