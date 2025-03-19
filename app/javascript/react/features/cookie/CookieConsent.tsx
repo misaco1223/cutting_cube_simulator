@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 
 console.log("承認状況は", localStorage.getItem("cookieAccepted"))
 // localStorage.removeItem("cookieAccepted"); console.log("承認状況をnullにしました");
@@ -8,6 +9,7 @@ const CookieConsent = () => {
     return localStorage.getItem("cookieAccepted") === "true";
   });
   const [isHide, setIsHide] = useState(false);
+  const { isLoggedIn } = useAuth();
 
   useEffect(()=>{
     const fetchGetCookie = async() => {
@@ -44,6 +46,11 @@ const CookieConsent = () => {
   const handleHideBanner = () => {
     setIsHide(true);
   };
+
+  useEffect(()=>{
+   if ( isLoggedIn )
+     handleAccept();
+  },[isLoggedIn]);
 
   if (isAccepted || isHide) return null;
 

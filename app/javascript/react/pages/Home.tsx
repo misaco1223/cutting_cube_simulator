@@ -1,10 +1,14 @@
 import InteractiveCube from "../features/getCoordinates/components/ui/InteractiveCube";
+import ScrollMessage from "../features/ScrollMessage"
 
 const Home = () => {
   return(
-    <div className="container mx-auto mt-4 px-5">
-      <InteractiveCube />
-    </div>
+    <>
+      <ScrollMessage/>
+      <div className="container mx-auto mt-4 px-5">
+        <InteractiveCube />
+      </div>
+    </>
   );
 };
 

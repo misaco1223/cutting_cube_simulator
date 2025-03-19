@@ -1,12 +1,11 @@
 // features/cookie/Header.tsx
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRightFromBracket, faClockRotateLeft, faBookmark, faSchool } from '@fortawesome/free-solid-svg-icons';
+import { faRightToBracket, faClockRotateLeft, faCircleUser, faSchool, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from "../contexts/AuthContext";
 
 const Header = () => {
-  const { isLoggedIn, userName, logout } = useAuth();
+  const { isLoggedIn } = useAuth();
 
   return (
     <header className="bg-yellow-300 py-2 px-6 w-full h-24">
@@ -17,21 +16,29 @@ const Header = () => {
         <ul className="flex space-x-4 justify-end">
           <li className="flex items-center space-x-4">
             <div className="flex space-x-4">
-              <FontAwesomeIcon icon={faSchool} size="xl" />
-              <Link to="/history" className="hover:text-gray-300 transition duration-300">
-                <FontAwesomeIcon icon={faClockRotateLeft} size="xl"/>
+              <Link to="/board" className="hover:text-gray-300 flex flex-col space-y-1">
+                <FontAwesomeIcon icon={faSchool} size="lg" />
+                <span className="text-xs text-gray-600">まなび</span>
               </Link>
-              <FontAwesomeIcon icon={faBookmark} size="xl" />
+              <Link to="/history" className="hover:text-gray-300 flex flex-col space-y-1">
+                <FontAwesomeIcon icon={faClockRotateLeft} size="lg"/>
+                <span className="text-xs text-gray-600">りれき</span>
+              </Link>
+              <Link to="/hint" className="hover:text-gray-300 flex flex-col space-y-1">
+                <FontAwesomeIcon icon={faCircleQuestion} size="lg"/>
+                <span className="text-xs text-gray-600">ヒント</span>
+              </Link>
             </div>
             {!isLoggedIn ? (
-              <Link to="/login" className="hover:text-gray-200">ログイン</Link>
+              <Link to="/login" className="flex flex-col space-y-1 hover:text-gray-200">
+                <FontAwesomeIcon icon={faRightToBracket} size="lg" className="hover:text-gray-300 transition duration-300"/>
+                <span className="text-xs text-gray-600">ログイン</span>
+              </Link>
             ) : (
-              <div className="flex space-x-4">
-                <span>{userName ?? "ゲスト"} さん</span>
-                <Link to="/" onClick={logout}>
-                  <FontAwesomeIcon icon={faRightFromBracket} size="xl" className="hover:text-gray-300 transition duration-300"/>
-                </Link>
-              </div>
+              <Link to="/mypage" className="flex flex-col space-y-1">
+                <FontAwesomeIcon icon={faCircleUser} size="lg" className="hover:text-gray-300 transition duration-300"/>
+                <span className="text-xs text-gray-600">マイページ</span>
+              </Link>
             )}
           </li>
         </ul>

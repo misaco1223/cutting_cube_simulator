@@ -2,10 +2,10 @@ import { useState, useMemo, startTransition  } from "react";
 import HistoryCard from "./HistoryCard";
 import { useGetCutCube } from "./useGetCutCube";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faAngleRight, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 const IndexCutHistory = () => {
-  const { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos } = useGetCutCube();
+  const { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isStorageUser } = useGetCutCube();
   if (!glbUrls || !cutPoints || glbUrls.length !== cutPoints.length) return null;
 
   const itemsPerPage = 5;
@@ -40,6 +40,12 @@ const IndexCutHistory = () => {
       {/* 切断履歴 */}
       <div className="m-4 items-center">
         <h1 className="text-2xl font-bold">切断履歴</h1>
+        { isStorageUser ?
+          <span className="text-red-500 text-xs flex mt-2 items-center">
+            <FontAwesomeIcon icon={faTriangleExclamation} className="mr-2" />
+            <p>ログイン前 / Cookie 承認前の切断データは引き継げません。<br/>最大５つまで表示されます。</p>
+          </span>
+        : ""}
       </div>
       <div className="space-y-4">
       { glbUrls.length === 0 ? <p className="m-4">履歴はありません</p>
