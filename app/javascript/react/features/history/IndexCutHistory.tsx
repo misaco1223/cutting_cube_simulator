@@ -43,7 +43,7 @@ const IndexCutHistory = () => {
         { isStorageUser ?
           <span className="text-red-500 text-xs flex mt-2 items-center">
             <FontAwesomeIcon icon={faTriangleExclamation} className="mr-2" />
-            <p>ログイン前 / Cookie 承認前の切断データは引き継げません。<br/>最大５つまで表示されます。</p>
+            <p>ログイン前 / Cookie 承認前の切断データは引き継げません。<br/>最大５つまで表示されます。<br/>データは保持されません。</p>
           </span>
         : ""}
       </div>
