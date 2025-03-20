@@ -6,7 +6,7 @@ import * as THREE from "three";
 import {vertices, vertexLabels} from "../getCoordinates/types/ThreeScene";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faTrashCan, faBookmark } from '@fortawesome/free-solid-svg-icons';
 
 interface CutCubeProps {
     cutCubeId: string;
@@ -127,8 +127,13 @@ const HistoryCard = ({ cutCubeId, glbUrl, cutPoints, createdAt, title, memo }: C
         <h2 className="text-md font-bold mb-2">{title || "No Title"}</h2>
         <p className="text-gray-500 py-2 text-md">{memo}</p>
         <p className="text-gray-500 text-xs">{formattedDate}</p>
-        <div className="flex items-center space-x-4 mt-6">
+        <div className="flex items-center space-x-6 mt-6">
           <Link to={`/result/${cutCubeId}`} className="text-blue-500 hover:underline">詳細を見る</Link>
+          <button 
+                className="hover:text-red-600"
+          >
+            <FontAwesomeIcon icon={faBookmark} />
+          </button>
           <button 
             onClick={() => handleRemoveCutCube(cutCubeId)} 
                 className="hover:text-red-600"

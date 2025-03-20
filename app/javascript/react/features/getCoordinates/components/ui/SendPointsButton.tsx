@@ -4,7 +4,7 @@ import { SendPointsButtonProps, faces } from "../../types/ThreeScene"
 import { isPointOnEdge } from "../../hooks/isPointOnEdge"
 import { useNavigate } from "react-router-dom";
 
-const SendPointsButton = ({ points }: SendPointsButtonProps)=> {
+const SendPointsButton = ({ points, isCollect }: SendPointsButtonProps)=> {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -57,6 +57,11 @@ const SendPointsButton = ({ points }: SendPointsButtonProps)=> {
         const storedCutCubes = JSON.parse(localStorage.getItem("cutCube") || "[]");
         if (!storedCutCubes.some((cutCube: any) => cutCube.id === cut_cube_id)) {
           storedCutCubes.push(newCutCube);
+      
+          // localStorageの長さが5を超えていた場合、一番古いものを削除
+          if (storedCutCubes.length > 5) {
+            storedCutCubes.shift(); // 配列の最初の要素（最も古いデータ）を削除
+          }
           localStorage.setItem("cutCube", JSON.stringify(storedCutCubes));
         }
       } catch (e) {
@@ -71,12 +76,6 @@ const SendPointsButton = ({ points }: SendPointsButtonProps)=> {
     }
   }, [points]);
 
-  if (points.length < 3 )
-    return <div className="ml-4 font-bold">切断点を3つ選択してください</div>;
-
-  if (points.length > 3 )
-    return <div className="text-red-500 font-bold ml-4">切断点は3つに絞ってください</div>;
-
   const isOnSameFace = faces.some((face) => {
     return points.every((point) =>
       face.some((edge) => {
@@ -86,23 +85,21 @@ const SendPointsButton = ({ points }: SendPointsButtonProps)=> {
     );
   });
 
-  if (points.length === 3 && isOnSameFace)
-    return <div className="text-red-500 font-bold ml-4">同じ面上の3点では切断できません</div>;
-
   return (
     <div>
-      {isLoading ? (
-        <p>切断中... しばらくお待ちください。</p>
-      ) : (
-        <button
-          onClick={sendPointsToRails}
-          className="relative overflow-hidden bg-gradient-to-b from-green-300 to-green-600 font-bold rounded-lg mt-2 ml-4 py-2 px-4 shadow-lg hover:from-green-300 hover:to-green-500 active:shadow-inner"
-        >
-          3点で切断する
-          {/* 擬似的な光沢エフェクト */}
-          <span className="absolute inset-0 bg-white opacity-20 mix-blend-overlay rounded-lg"></span>
-        </button>
-      )}
+      { points.length < 3 && <div className="ml-4 font-bold">切断点を3つ選択してください</div> }
+      { points.length > 3 && <div className="ml-4 text-red-500">切断点は3つに絞ってください</div> }
+      { points.length === 3 && isOnSameFace &&  <div className="ml-4 text-red-500">同じ面上の3点では切断できません</div>}
+      { !isLoading && points.length === 3 && !isOnSameFace && (
+        Object.values(isCollect).every((item) => item === true)
+        ? ( <button 
+              onClick={sendPointsToRails}
+              className="bg-gray-800 hover:bg-red-500 text-white rounded px-4 py-2">
+              3点で切断する
+            </button>)
+        : ( <div className="ml-4 text-red-500">切断点を更新して最新の状態にしてください</div>
+      ))}
+      { isLoading && <p>切断中... しばらくお待ちください。</p> }
     </div>
   );
 }

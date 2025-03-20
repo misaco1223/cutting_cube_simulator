@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import BasicEducation from "../features/board/BasicEducation";
 
 const Board = () => {
   const { isLoggedIn, logout, userName } = useAuth();
-  const [selectedTab, setSelectedTab] = useState<"board" | "learning">("board");
+  const [selectedTab, setSelectedTab] = useState<"board" | "learning">("learning");
 
   const tabLabels: Record<"board" | "learning", string> = {
     board: "みんなの切断を見る",
@@ -28,7 +29,7 @@ const Board = () => {
       </div>
       <div className="mt-2 px-4">
         { selectedTab === "learning"
-          ? <p>準備中...</p>
+          ? <BasicEducation/>
           : isLoggedIn
             ? <p>準備中...</p>
             : <p>ログインが必要です</p>

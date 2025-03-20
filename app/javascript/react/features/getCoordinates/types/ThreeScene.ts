@@ -8,10 +8,13 @@ export interface ClickableEdgesProps {
 export interface EditPointsFormProps {
   points: THREE.Vector3[];
   onUpdatePoints: (points: THREE.Vector3[]) => void;
+  isCollect:{ [key: number]: boolean };
+  setIsCollect: React.Dispatch<React.SetStateAction<{ [key: number]: boolean }>>;
 }
 
 export interface SendPointsButtonProps {
   points: THREE.Vector3[];
+  isCollect:{ [key: number]: boolean };
 }
 
 export const vertices = [

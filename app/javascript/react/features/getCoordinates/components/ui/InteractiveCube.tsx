@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import {useState} from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera,Text } from "@react-three/drei";
 import ClickableEdges from "./ClickableEdges";
@@ -9,6 +9,7 @@ import SendPointsButton from "./SendPointsButton";
 
 const InteractiveCube = () => {
   const [points, setPoints] = useState<THREE.Vector3[]>([]);
+  const [isCollect, setIsCollect] = useState<{ [key: number]: boolean }>({});
 
   const handleEdgeClick = (clickedPoint: THREE.Vector3) => {
     setPoints((prevPoints) => [...prevPoints, clickedPoint]);
@@ -20,10 +21,10 @@ const InteractiveCube = () => {
 
   return (
     <div>
-      <Canvas style={{ height: '400px'}}>
+      <Canvas style={{ height: '300px'}}>
         <ambientLight intensity={0.1} />
         <directionalLight color="white" position={[0, 0, 5]} />
-        <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={50}/>
+        <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={40}/>
 
         {/* 遠近感のあるグリッド */}
         <gridHelper args={[10, 10, 0x000000, 0x888888]} position={[0, -1, 0]}/>
@@ -38,7 +39,8 @@ const InteractiveCube = () => {
         {points.map((point, index) => (
           <mesh key={index} position={[point.x, point.y, point.z]}>
             <sphereGeometry args={[0.05, 32, 32]} />
-            <meshBasicMaterial color="red" />
+            <meshBasicMaterial color="red"/>
+            <Text fontSize={0.2} color="black" anchorX="left" anchorY="bottom">点{index+1}</Text>
           </mesh>
         ))}
 
@@ -53,11 +55,11 @@ const InteractiveCube = () => {
       </Canvas>
 
       <div className="m-4">
-        <SendPointsButton points={points}/>
+        <SendPointsButton points={points} isCollect = {isCollect}/>
       </div>
 
       <div className="m-4">
-        <EditPointsForm points={points} onUpdatePoints={handleUpdatePoints} />
+        <EditPointsForm points={points} onUpdatePoints={handleUpdatePoints} isCollect={isCollect} setIsCollect={setIsCollect} />
       </div>
     </div>
   );

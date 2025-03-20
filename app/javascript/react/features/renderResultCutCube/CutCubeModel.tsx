@@ -45,6 +45,7 @@ const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry }: CutCubeProps) => 
       <mesh key={index} position={[point.x, point.y, point.z]}>
         <sphereGeometry args={[0.05, 32, 32]} />
         <meshBasicMaterial color="#FF3333" />
+        <Text fontSize={0.2} color="black" anchorX="left" anchorY="bottom">点{index+1}</Text>
       </mesh>
     ));
   }, [cutPoints]);

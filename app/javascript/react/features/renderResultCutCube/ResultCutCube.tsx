@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import CutCubeModel from "./CutCubeModel";
 import { useGetCutCube } from "./useGetCutCube";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil } from "@fortawesome/free-solid-svg-icons";
+import { faPencil, faBookmark } from "@fortawesome/free-solid-svg-icons";
+import { useCheckPointsInfo} from "../getCoordinates/hooks/useCheckPointsInfo"
 
 const ResultCutCube = ({ id }: { id: string | undefined }) => {
   const { glbUrl, cutPoints, title, memo, createdAt } = useGetCutCube(id);
+  const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
 
   // 編集用の状態
@@ -18,6 +20,11 @@ const ResultCutCube = ({ id }: { id: string | undefined }) => {
     setCurrentTitle(title || "No Title");
     setCurrentMemo(memo || "No Memo");
   }, [title, memo]);
+
+  useEffect(() => {
+    if (!cutPoints) return;
+    checkPointInfo(cutPoints);
+  },[cutPoints]);
 
   if (!glbUrl || !cutPoints) return null;
 
@@ -133,25 +140,56 @@ const ResultCutCube = ({ id }: { id: string | undefined }) => {
         <span className="text-xs text-gray-500">{formattedDate}</span>
       </div>
 
-      {/* 切り替えボタン */}
-      <div className="mt-4 mb-2 flex justify-end"  role="tablist">
-        {(["all", "geometry1", "geometry2"] as const).map((tab) => (
-          <button
-            key={tab}
-            role="tab"
-            className={`px-2 py-2 border-b-2 text-sm ${
-              selectedGeometry === tab ? "border-blue-500 font-semibold" : ""
-            }`}
-            onClick={() => setSelectedGeometry(tab)}
-          >
-            {tabLabels[tab]}
-          </button>
-        ))}
+      
+      <div className="mt-4 mb-2 flex space-x-8 justify-end"  role="tablist">
+        <button  className="hover:text-red-600">
+          <FontAwesomeIcon icon={faBookmark}/>
+        </button>
+        {/* 切り替えボタン */}
+        <div>
+          {(["all", "geometry1", "geometry2"] as const).map((tab) => (
+            <button
+              key={tab}
+              role="tab"
+              className={`px-2 py-2 border-b-2 text-sm ${
+                selectedGeometry === tab ? "border-blue-500 font-semibold" : ""
+              }`}
+              onClick={() => setSelectedGeometry(tab)}
+            >
+              {tabLabels[tab]}
+            </button>
+          ))}
+        </div>
       </div>
-
+  
       {/* 3Dモデル表示 */}
       <div>
         <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry}/>
+      </div>
+
+      {/* 座標表示 */}
+      <div className="mt-4">
+        {pointsInfo.map((pointInfo, index) => (
+          <div key={index} className="w-full p-2 mb-2 rounded-sm border">
+            <h3 className="w-full text-sm mb-2">切断点 {index + 1}</h3>
+            <div className="w-full flex space-x-2 justify-between">
+              <div className="w-full flex justify-start space-x-2 ">
+                {pointInfo.isVertex
+                ? ( <span className="font-semibold w-16 my-auto">頂点 {pointInfo.vertexLabel}</span> )
+                : ( <>
+                      <span className="font-semibold w-16 flex my-auto">辺 {pointInfo.edgeLabel}</span>
+                      <div className="flex w-full">
+                        <span className="my-auto">比</span>
+                        <span className="text-sm border p-1 rounded w-20 mx-2 text-center">{pointInfo.edgeRatio.left}</span>
+                        <span> : </span>
+                        <span className="text-sm border p-1 rounded w-20 mx-2 text-center">{pointInfo.edgeRatio.right}</span>
+                      </div>
+                    </>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
