@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     resources :cookies, only: [:create, :index]
     resources :users, only: [:create]
     resource :sessions, only: [:create, :destroy]
+    resources :bookmarks, only: [:create, :index, :destroy]
   end
 
   get '*path', to: 'application#frontend', constraints: ->(req) {!req.xhr? && req.format.html?}
