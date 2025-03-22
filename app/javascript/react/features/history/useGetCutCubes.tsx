@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import * as THREE from "three";
 
-export const useGetCutCube = () => {
+export const useGetCutCubes = () => {
   const [cutCubeIds, setCutCubeIds] = useState<string[]>([]);
   const [glbUrls, setGlbUrls] = useState<string[]>([]);
   const [cutPoints, setCutPoints] = useState<THREE.Vector3[][]>([]);
@@ -9,6 +9,7 @@ export const useGetCutCube = () => {
   const [memos, setMemos] = useState<string[]>([]);
   const [createdAt, setCreatedAt] = useState<string[]>([]);
   const [isStorageUser, setIsStorageUser] = useState(false);
+  const [bookmarkIds, setBookmarkIds] = useState<(string|null)[]>([]);
 
   const loadHistoryFromStorage = () => {
     const storedCutCubes = JSON.parse(localStorage.getItem("cutCube") || "[]");
@@ -30,7 +31,7 @@ export const useGetCutCube = () => {
     }
   };
 
-  const fetchCutCube = async () => {
+  const fetchCutCubes = async () => {
     try {
       const response = await fetch(`/api/cut_cube`, {
         method: "GET",
@@ -54,6 +55,7 @@ export const useGetCutCube = () => {
         setTitles(data.cut_cubes.titles);
         setMemos(data.cut_cubes.memos);
         setCreatedAt(data.cut_cubes.created_at);
+        setBookmarkIds(data.bookmark_ids);
       } else {
         console.log("データなし");
       }
@@ -65,8 +67,8 @@ export const useGetCutCube = () => {
   };
 
   useEffect(() => {
-    fetchCutCube();  
+    fetchCutCubes();  
   }, []);
 
-  return { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isStorageUser};
+  return { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isStorageUser, bookmarkIds, setBookmarkIds};
 };

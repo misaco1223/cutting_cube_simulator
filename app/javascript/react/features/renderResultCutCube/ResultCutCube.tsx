@@ -4,11 +4,14 @@ import { useGetCutCube } from "./useGetCutCube";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { useCheckPointsInfo} from "../getCoordinates/hooks/useCheckPointsInfo"
+import { useAuth } from "../../contexts/AuthContext"
 
 const ResultCutCube = ({ id }: { id: string | undefined }) => {
-  const { glbUrl, cutPoints, title, memo, createdAt } = useGetCutCube(id);
+  const { glbUrl, cutPoints, title, memo, createdAt, bookmarkId, setBookmarkId } = useGetCutCube(id);
+  console.log("bookmarkIdは", bookmarkId);
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
+  const { isLoggedIn } = useAuth();
 
   // 編集用の状態
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -73,6 +76,38 @@ const ResultCutCube = ({ id }: { id: string | undefined }) => {
     }
   };
 
+  const handleCreateBookmark = async(id: string) => {
+    try {
+      const response = await fetch('/api/bookmarks', {
+        method: "POST", 
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({cut_cube_id: id})
+      });
+      const data = await response.json();
+      setBookmarkId(data.bookmark_id);
+      console.log("ブックマークを作成しました")
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleRemoveBookmark = async(bookmarkId: string) => {
+    try {
+      const response = await fetch(`/api/bookmarks/${bookmarkId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      const data = await response.json();
+      setBookmarkId(null);
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div>
       {/* タイトル・メモ編集エリア */}
@@ -106,7 +141,7 @@ const ResultCutCube = ({ id }: { id: string | undefined }) => {
           />
         </div>
 
-        <div className="flex items-center px-4 mt-4 space-x-2">
+        <div className="flex items-center px-1 mt-2 space-x-2">
           {isEditingMemo ? (
             <textarea
               value={currentMemo}
@@ -140,11 +175,23 @@ const ResultCutCube = ({ id }: { id: string | undefined }) => {
         <span className="text-xs text-gray-500">{formattedDate}</span>
       </div>
 
-      
+      {/*ボタン*/}
       <div className="mt-4 mb-2 flex space-x-8 justify-end"  role="tablist">
-        <button  className="hover:text-red-600">
-          <FontAwesomeIcon icon={faBookmark}/>
-        </button>
+        {isLoggedIn && id && (
+          !bookmarkId
+          ? ( <button 
+                onClick={() => handleCreateBookmark(id)} 
+                className="hover:text-red-600">
+                <span className="text-xs text-gray-600 px-2">ブックマークに追加</span>
+                <FontAwesomeIcon icon={faBookmark} />
+              </button>)
+          : ( <button
+                onClick={() => handleRemoveBookmark(bookmarkId)} 
+                className="hover:text-red-600">
+                <span className="text-xs text-gray-600 px-2">ブックマークから削除</span>
+                <FontAwesomeIcon icon={faBookmark} className="text-red-500" />
+              </button>)
+        )}
         {/* 切り替えボタン */}
         <div>
           {(["all", "geometry1", "geometry2"] as const).map((tab) => (

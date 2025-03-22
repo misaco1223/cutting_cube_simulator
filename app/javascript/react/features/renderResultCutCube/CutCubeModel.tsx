@@ -69,7 +69,7 @@ const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry }: CutCubeProps) => 
 
   return (
     <div>
-      <Canvas style={{ height: "500px" }} className="border border-gray-500">
+      <Canvas style={{ height: "400px" }} className="border border-gray-500">
         <ambientLight intensity={0.3} />
         <directionalLight color="white" position={[0, 0, 5]} intensity={1} />
         <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={50} />

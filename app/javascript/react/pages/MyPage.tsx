@@ -1,7 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookmark, faRightFromBracket, faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import { faBookmark, faRightFromBracket, faEllipsis, faQ, faStar, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from "../contexts/AuthContext";
 import { Link } from "react-router-dom";
+import BookmarksCarousel from "../features/bookmark/BookmarksCarousel"
 
 const MyPage = () => {
   const { isLoggedIn, logout, userName } = useAuth();
@@ -29,16 +30,29 @@ const MyPage = () => {
       <div className="m-4">
         { !isLoggedIn
         ? <p>ログインが必要です</p>
-        : ( <div>
+        : ( <>
+            <div>
               <span><FontAwesomeIcon icon={faBookmark} className="mr-2" /> あなたの切断コレクション</span>
-              <div className="container w-full h-60 bg-white rounded-md border">
-                <p className="m-4">準備中...</p>
+              <div className="container mt-2 w-full h-200 bg-white">
+                <BookmarksCarousel/>
               </div>
-              <span><FontAwesomeIcon icon={faBookmark} className="mr-2 mt-4" /> みんなの切断コレクション</span>
-              <div className="container w-full h-60 bg-white rounded-md border">
+            </div>
+            <div className="my-6">
+              <div className="flex space-x-4">
+              <span><FontAwesomeIcon icon={faQ} className="mr-2" /> あなたの問題</span>
+                <span className="text-xs text-gray-600 pt-1"><FontAwesomeIcon icon={faPlus} />問題を作成する</span>
+              </div>
+              <div className="container mt-2 w-full h-200 bg-white">
                 <p className="m-4">準備中...</p>
               </div>
             </div>
+            <div className="my-6">
+              <span><FontAwesomeIcon icon={faStar} className="mr-2"/> みんなの問題コレクション(公開中)</span>
+              <div className="container mt-2 w-full h-60 bg-white">
+                <p className="m-4">準備中...</p>
+              </div>
+            </div>
+            </>
         )}
       </div>
     </div>

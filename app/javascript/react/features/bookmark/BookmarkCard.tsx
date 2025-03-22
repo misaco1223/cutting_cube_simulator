@@ -1,19 +1,19 @@
-import { useEffect, useMemo} from "react";
+import { useEffect, useMemo, useState} from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { useGLTF, Text } from "@react-three/drei";
 import * as THREE from "three";
 import {vertices, vertexLabels} from "../getCoordinates/types/ThreeScene";
 
-interface CutCubeProps {
-  glbUrl: string;
-  cutPoints: THREE.Vector3[];
-  createdAt: string;
-  title: string;
-  memo: string;
+interface BookmarkProps {
+    glbUrl: string;
+    cutPoints: THREE.Vector3[];
+    createdAt: string;
+    title: string;
+    memo: string;
 }
 
-const HistoryCard = ({ glbUrl, cutPoints, createdAt, title, memo }: CutCubeProps) => {
+const BookmarkCard = ({ glbUrl, cutPoints, createdAt, title, memo }: BookmarkProps) => {
   const { scene } = useGLTF(glbUrl);
 
   useEffect(() => {
@@ -84,30 +84,30 @@ const HistoryCard = ({ glbUrl, cutPoints, createdAt, title, memo }: CutCubeProps
   : "";
 
   return (
-    <div className="flex">
-      <div style={{ height: "150px" , width: "200px" }}>
-      <Canvas>
-        <ambientLight intensity={0.3} />
-        <directionalLight color="white" position={[0, 0, 5]} intensity={1} />
-        <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={50} />
-        <OrbitControls />
+    <div>
+      <div style={{ height: "150px" , width: "100%"}}>
+        <Canvas>
+            <ambientLight intensity={0.3} />
+            <directionalLight color="white" position={[0, 0, 5]} intensity={1} />
+            <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={50} />
+            <OrbitControls />
 
-        {spheres}
-        {vertexLabelsMemo}
-        <lineSegments scale={[2, 2, 2]}>
-          <edgesGeometry args={[new THREE.BoxGeometry(1, 1, 1)]} />
-          <lineBasicMaterial color="black" />
-        </lineSegments>
-        <primitive object={scene} />
-      </Canvas>
+            {spheres}
+            {vertexLabelsMemo}
+            <lineSegments scale={[2, 2, 2]}>
+            <edgesGeometry args={[new THREE.BoxGeometry(1, 1, 1)]} />
+            <lineBasicMaterial color="black" />
+            </lineSegments>
+            <primitive object={scene} />
+        </Canvas>
       </div>
-      <div className="w-full">
+      <div className="p-4 w-full">
         <h2 className="text-md font-bold mb-2">{title || "No Title"}</h2>
-        <p className="text-gray-500 py-2 text-md">{memo}</p>
+        <p className="text-gray-500 my-2 text-md line-clamp-3 overflow-hidden">{memo}</p>
         <p className="text-gray-500 text-xs">{formattedDate}</p>
       </div>
     </div>
   );
 };
 
-export default HistoryCard;
+export default BookmarkCard;

@@ -53,7 +53,7 @@ const LoginForm = () => {
       const data = await response.json();
       console.log("ログイン成功:", data.user.name);
       login({ name: data.user.name });
-      navigate("/");
+      navigate("/mypage");
     } catch(error){
       console.error("通信エラー", error);
       setPassword("");

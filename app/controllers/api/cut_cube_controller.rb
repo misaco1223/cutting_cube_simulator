@@ -51,15 +51,23 @@ class Api::CutCubeController < ApplicationController
                else CutCube.find_by(id: params[:id])
                end
 
-    if cut_cube
-      cut_cube = {
+    if cut_cube.present?
+      cut_cube_data = {
         glb_url: url_for(cut_cube.gltf_file),
         cut_points: JSON.parse(cut_cube.cut_points),
         title: cut_cube.title,
         memo: cut_cube.memo,
         created_at: cut_cube.created_at
       }
-      render json: { cut_cube: cut_cube }, status: :ok
+
+      if current_user.present?
+        bookmark = Bookmark.find_by(user_id: current_user.id, cut_cube_id: params[:id])
+        bookmark_id = bookmark&.id
+      else
+        bookmark_id = nil  # ログインしていない場合、Bookmark されていない
+      end
+
+      render json: { cut_cube: cut_cube_data, bookmark_id: bookmark_id }, status: :ok
     else
       render json: { error: 'CutCube not found' }, status: :not_found
     end
@@ -73,7 +81,7 @@ class Api::CutCubeController < ApplicationController
     end
   
     if cut_cubes.present?
-      cut_cubes = {
+      cut_cubes_data = {
         ids: cut_cubes.map { |cut_cube| cut_cube.id },
         glb_urls: cut_cubes.map { |cut_cube| url_for(cut_cube.gltf_file)},
         cut_points: cut_cubes.map { |cut_cube| JSON.parse(cut_cube.cut_points)},
@@ -81,7 +89,14 @@ class Api::CutCubeController < ApplicationController
         memos: cut_cubes.map { |cut_cube| cut_cube.memo },
         created_at: cut_cubes.map { |cut_cube| cut_cube.created_at }
       }
-      render json: { cut_cubes: cut_cubes }, status: :ok
+      if current_user.present?
+        bookmarks = Bookmark.where(user_id: current_user.id, cut_cube_id: cut_cubes.ids)
+        bookmark_ids = cut_cubes.map { |cut_cube| bookmarks.find_by(cut_cube_id: cut_cube.id)&.id }
+      else
+        bookmark_ids=[]
+      end
+
+      render json: { cut_cubes: cut_cubes_data, bookmark_ids: bookmark_ids }, status: :ok
     else
       render json: { error: 'CutCube not found' }, status: :not_found
     end
