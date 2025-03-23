@@ -43,7 +43,7 @@ const IndexCutHistory = () => {
   //履歴の削除
   const handleRemoveCutCube = async(cutCubeId: string) => {
     try {
-      const response = await fetch(`/api/cut_cube/${cutCubeId}`, {
+      const response = await fetch(`/api/cut_cubes/${cutCubeId}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

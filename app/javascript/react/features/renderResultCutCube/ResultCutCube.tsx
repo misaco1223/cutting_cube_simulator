@@ -52,7 +52,7 @@ const ResultCutCube = ({ id }: { id: string | undefined }) => {
     if (!id) return;
 
     try {
-      const response = await fetch(`/api/cut_cube/${id}`, {
+      const response = await fetch(`/api/cut_cubes/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: currentTitle, memo: currentMemo }),

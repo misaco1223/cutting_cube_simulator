@@ -1,4 +1,4 @@
-class Api::CutCubeController < ApplicationController
+class Api::CutCubesController < ApplicationController
 
   def create
     cut_id = params[:id]

@@ -13,8 +13,13 @@ class CutCube < ApplicationRecord
     where(user_id: nil)
       .where("cookie_id IS NULL AND created_at < ?", 1.day.ago)
       .find_each(batch_size: 1000) do |record|
-        record.gltf_file.purge if record.gltf_file.attached?
-        record.destroy
+        ActiveRecord::Base.transaction do
+          if record.gltf_file.attached?
+            record.gltf_file.purge
+            ActiveStorage::Attachment.where(record: record).destroy_all
+          end
+          record.destroy
+        end
       end
   end
 end

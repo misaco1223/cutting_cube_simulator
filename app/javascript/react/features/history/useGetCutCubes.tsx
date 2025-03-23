@@ -33,7 +33,7 @@ export const useGetCutCubes = () => {
 
   const fetchCutCubes = async () => {
     try {
-      const response = await fetch(`/api/cut_cube`, {
+      const response = await fetch(`/api/cut_cubes`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
