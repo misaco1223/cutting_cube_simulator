@@ -80,6 +80,7 @@ test:
 #
 production:
   <<: *default
-  database: r3_f_blender_rails_production
-  username: r3_f_blender_rails
-  password: <%= ENV["R3_F_BLENDER_RAILS_DATABASE_PASSWORD"] %>
+  # database: r3_f_blender_rails_production
+  # username: r3_f_blender_rails
+  # password: <%= ENV["R3_F_BLENDER_RAILS_DATABASE_PASSWORD"] %>
+  url: <%= ENV['DATABASE_URL'] %>
