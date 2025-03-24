@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  rails:
+    build:
+      context: .
+      dockerfile: Dockerfile.rails
+    ports:
+      - "80:3000"
+    volumes:
+      - .:/app
+    environment:
+      - RAILS_ENV=production
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b '0.0.0.0'"
+    depends_on:
+      - blender
+      
+  blender:
+    image: linuxserver/blender
+    build:
+      context: .
+      dockerfile: Dockerfile.blender
+    volumes:
+      - ./lib/python_scripts:/scripts
+    command: ["blender", "-b", "-P", "/scripts/process.py"]

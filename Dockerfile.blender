@@ -1,0 +1,3 @@
+# Dockerfile.blender
+FROM linuxserver/blender
+WORKDIR /scripts
