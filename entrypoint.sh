@@ -2,13 +2,9 @@
 # exit on error
 set -o errexit
 
-bundle install
-bundle exec rails assets:precompile
-bundle exec rails db:migrate
+rm -f tmp/pids/server.pid
 
-rm -rf node_modules package-lock.json
-npm install -g npm
-npm run build
+bundle exec rails db:migrate
 
 # サーバー起動（最終的に必要なコマンドを実行）
 exec "$@"
