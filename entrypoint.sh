@@ -6,7 +6,8 @@ bundle install
 bundle exec rails assets:precompile
 bundle exec rails db:migrate
 
-npm install
+rm -rf node_modules package-lock.json
+npm install -g npm
 npm run build
 
 # サーバー起動（最終的に必要なコマンドを実行）
