@@ -23,9 +23,6 @@ ENV PATH="/opt/blender-3.4.1-linux-x64:${PATH}"
 
 WORKDIR /app
 
-ENV BUNDLE_DEPLOYMENT=true
-ENV BUNDLE_PATH=/gems
-
 COPY Gemfile Gemfile.lock ./
 RUN bundle install
 
