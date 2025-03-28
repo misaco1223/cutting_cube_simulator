@@ -1,3 +1,4 @@
+require 'open3'
 class Api::CutCubesController < ApplicationController
 
   def create
@@ -8,10 +9,24 @@ class Api::CutCubesController < ApplicationController
 
     if cut_id.present? && cut_points.present?
       cut_data = { id: cut_id, points: cut_points}.to_json
-      result = `blender -b -P #{Rails.root.join('lib/python_scripts/main.py')} -- '#{cut_data}'`
+      puts `which blender`
+      # result = `blender -b -P #{Rails.root.join('lib/python_scripts/main.py')} -- '#{cut_data}'`
       # result = `docker-compose run --rm blender blender -b -P /scripts/main.py -- '#{cut_data}'`
       # result = `docker exec blender blender -b -P /scripts/main.py -- '#{cut_data}'`
-      puts "Blender実行結果: #{result}"
+      # puts "Blender実行結果: #{result}"
+
+      # script_path = Rails.root.join('lib/python_scripts/main.py').to_s
+      # puts "script_path: #{script_path}"
+      command = "blender -b -P /app/lib/python_scripts/main.py -- '#{cut_data}'"
+      stdout, stderr, status = Open3.capture3(command)
+      puts "Blender標準出力: #{stdout}"
+      puts "Blenderエラー出力: #{stderr}"
+
+      if status.success?
+        puts "Blenderスクリプトは正常に実行されました"
+      else
+         puts "Blenderスクリプトにエラーがあります"
+      end
 
       glb_file_name = "exported_cube_#{cut_id}.glb"
       shared_glb_url = Rails.root.join('shared', glb_file_name)
