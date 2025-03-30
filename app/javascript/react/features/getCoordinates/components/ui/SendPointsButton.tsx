@@ -3,6 +3,8 @@ import * as THREE from "three";
 import { SendPointsButtonProps, faces } from "../../types/ThreeScene"
 import { isPointOnEdge } from "../../hooks/isPointOnEdge"
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const SendPointsButton = ({ points, isCollect }: SendPointsButtonProps)=> {
   const [isLoading, setIsLoading] = useState(false);
@@ -99,7 +101,12 @@ const SendPointsButton = ({ points, isCollect }: SendPointsButtonProps)=> {
             </button>)
         : ( <div className="ml-4 text-red-500">切断点を更新して最新の状態にしてください</div>
       ))}
-      { isLoading && <p>切断中... しばらくお待ちください。</p> }
+      { isLoading && 
+        <div className="flex space-x-4">
+          <p>切断中... しばらくお待ちください。</p>
+          <FontAwesomeIcon icon={faSpinner} className="my-auto animate-spin text-blue-500" />
+        </div>
+      }
     </div>
   );
 }
