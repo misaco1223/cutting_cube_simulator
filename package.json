@@ -13,7 +13,7 @@
     "typescript": "^5.7.3"
   },
   "scripts": {
-    "build": "npx tailwindcss -i ./app/javascript/styles/index.css -o ./public/assets/builds/tailwind.css --minify && esbuild app/javascript/react/index.tsx --bundle --sourcemap=false --format=esm --outdir=public/assets/builds --public-path=/assets --loader:.js=jsx --loader:.ts=ts --loader:.tsx=tsx  --minify",
+    "build": "npx tailwindcss -i ./app/javascript/styles/index.css -o ./public/assets/builds/tailwind.css --minify && esbuild app/javascript/react/index.tsx --bundle --format=esm --outdir=public/assets/builds --public-path=/assets --loader:.js=jsx --loader:.ts=ts --loader:.tsx=tsx  --minify",
     "dev": "npx tailwindcss -i ./app/javascript/styles/index.css -o ./public/assets/builds/tailwind.css --watch --minify & esbuild app/javascript/react/index.tsx --bundle --sourcemap --format=esm --outdir=public/assets/builds --public-path=/assets --loader:.js=jsx --loader:.ts=ts --loader:.tsx=tsx --watch  --minify"
   },
   "dependencies": {
