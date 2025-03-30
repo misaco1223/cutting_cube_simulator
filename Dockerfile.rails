@@ -2,12 +2,54 @@
 FROM ruby:3.2
 
 RUN apt-get update -qq && apt-get install -y \
-  nodejs \
-  npm \
+  xvfb \
   build-essential \
-  libpq-dev
+  libpq-dev \
+  libxss1 \
+  libxext6 \
+  libxrender1 \
+  libxxf86vm1 \
+  libxfixes3 \
+  libx11-dev \
+  libxtst6 \
+  libxkbcommon0 \
+  libxi6 \
+  libgl1-mesa-glx \
+  libglib2.0-0 \
+  wget \
+  curl \
+  gnupg2 \
+  bash
+
+# Node.jsのインストール
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g yarn
+
+# x86_64版Blenderのインストール
+RUN wget https://mirror.clarkson.edu/blender/release/Blender3.4/blender-3.4.1-linux-x64.tar.xz \
+    && tar -xf blender-3.4.1-linux-x64.tar.xz -C /opt \
+    && rm blender-3.4.1-linux-x64.tar.xz
+
+ENV PATH="/opt/blender-3.4.1-linux-x64:${PATH}"
+RUN mkdir -p /app/shared && chmod 777 /app/shared
 
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
 RUN bundle install
+
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+
+COPY . .
+
+RUN yarn build
+
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+ENTRYPOINT ["/app/entrypoint.sh"]
+
+EXPOSE 3000
+
+CMD ["bin/rails", "server", "-b", "0.0.0.0"]
