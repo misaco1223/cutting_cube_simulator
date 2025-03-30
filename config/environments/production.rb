@@ -50,6 +50,7 @@ Rails.application.configure do
   # config.assume_ssl = true
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
+  # config.force_ssl = ENV["FORCE_SSL"] == "true"
   config.force_ssl = true
 
   # Skip http-to-https redirect for the default health check endpoint.
@@ -97,6 +98,9 @@ Rails.application.configure do
   config.active_record.attributes_for_inspect = [ :id ]
 
   # Enable DNS rebinding protection and other `Host` header attacks.
+  # config.hosts << "localhost"
+  # config.hosts << "127.0.0.1"
+  config.hosts << "cut-cube-simulator.onrender.com"
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com
   #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`

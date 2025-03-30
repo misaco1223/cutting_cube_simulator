@@ -11,14 +11,14 @@ services:
     environment:
       - RAILS_ENV=production
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b '0.0.0.0'"
-    depends_on:
-      - blender
-      
-  blender:
-    image: linuxserver/blender
-    build:
-      context: .
-      dockerfile: Dockerfile.blender
+  db:
+    image: postgres:15
+    restart: always
     volumes:
-      - ./lib/python_scripts:/scripts
-    command: ["blender", "-b", "-P", "/scripts/process.py"]
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: myapp_production 
+volumes:
+  postgres_data:
