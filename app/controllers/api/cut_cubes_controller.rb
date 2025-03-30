@@ -9,6 +9,7 @@ class Api::CutCubesController < ApplicationController
 
     if cut_id.present? && cut_points.present?
       cut_data = { id: cut_id, points: cut_points}.to_json
+      # puts `which blender`
       # result = `blender -b -P #{Rails.root.join('lib/python_scripts/main.py')} -- '#{cut_data}'`
       # result = `docker-compose run --rm blender blender -b -P /scripts/main.py -- '#{cut_data}'`
       # result = `docker exec blender blender -b -P /scripts/main.py -- '#{cut_data}'`
