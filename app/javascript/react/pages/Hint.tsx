@@ -1,6 +1,6 @@
 const Hint = () => {
   return(
-    <div className="container p-4">
+    <div className="container mx-auto w-full mt-4 px-5">
         <div className="m-4 items-center">
             <h1 className="text-2xl font-bold">このサイトの使い方</h1>
         </div>

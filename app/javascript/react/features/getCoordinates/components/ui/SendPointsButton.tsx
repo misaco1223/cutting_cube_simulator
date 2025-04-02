@@ -89,8 +89,8 @@ const SendPointsButton = ({ points, isCollect }: SendPointsButtonProps)=> {
 
   return (
     <div>
-      { points.length < 3 && <div className="ml-4 font-bold">切断点を3つ選択してください</div> }
-      { points.length > 3 && <div className="ml-4 text-red-500">切断点は3つに絞ってください</div> }
+      { points.length < 3 && <div className="font-bold">立方体から切断点を3つ選択してください</div> }
+      { points.length > 3 && <div className="text-red-500">切断点は3つに絞ってください</div> }
       { points.length === 3 && isOnSameFace &&  <div className="ml-4 text-red-500">同じ面上の3点では切断できません</div>}
       { !isLoading && points.length === 3 && !isOnSameFace && (
         Object.values(isCollect).every((item) => item === true)
@@ -99,7 +99,7 @@ const SendPointsButton = ({ points, isCollect }: SendPointsButtonProps)=> {
               className="bg-gray-800 hover:bg-red-500 text-white rounded px-4 py-2">
               3点で切断する
             </button>)
-        : ( <div className="ml-4 text-red-500">切断点を更新して最新の状態にしてください</div>
+        : ( <div className="text-red-500">切断点を更新して最新の状態にしてください</div>
       ))}
       { isLoading && 
         <div className="flex space-x-4">

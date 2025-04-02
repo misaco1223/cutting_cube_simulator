@@ -81,7 +81,7 @@ const EditPointsForm = ( {points, onUpdatePoints, isCollect, setIsCollect}: Edit
   return (
     <div>
       {pointsInfo.map((pointInfo, index) => (
-        <div key={index} className="w-full p-2 mb-2 rounded-sm border">
+        <div key={index} className="w-full p-4 mb-2 rounded-sm border">
           <h3 className="w-full text-sm mb-2">切断点 {index + 1}</h3>
           <div className="w-full flex space-x-2 justify-between">
             <div className="w-full flex justify-start space-x-2 ">
@@ -89,7 +89,7 @@ const EditPointsForm = ( {points, onUpdatePoints, isCollect, setIsCollect}: Edit
               ? ( <span className="font-semibold w-16 my-auto">頂点 {pointInfo.vertexLabel}</span> )
               : ( <>
                     <span className="font-semibold w-16 flex my-auto">辺 {pointInfo.edgeLabel}</span>
-                    <div className="flex w-full">
+                    <div className="flex w-full my-auto">
                       <span className="my-auto">比</span>
                       <label className="text-sm">
                         <input
@@ -128,7 +128,7 @@ const EditPointsForm = ( {points, onUpdatePoints, isCollect, setIsCollect}: Edit
                       className="flex flex-col hover:text-blue-500"
                     >
                       <FontAwesomeIcon icon={faRotate} />
-                      <span className="text-xs text-left text-gray-600">更新</span>
+                      <span className="text-xs mx-auto text-gray-600">更新</span>
                     </button>
                 )}
                 </>
