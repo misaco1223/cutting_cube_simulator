@@ -1,42 +1,22 @@
-import { useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
-import BasicEducation from "../features/board/BasicEducation";
+import { useParams } from "react-router-dom";
+import ShowBoard from "../features/board/show/showBoard";
+import {Link} from "react-router-dom";
 
 const Board = () => {
-  const { isLoggedIn, logout, userName } = useAuth();
-  const [selectedTab, setSelectedTab] = useState<"board" | "learning">("learning");
-
-  const tabLabels: Record<"board" | "learning", string> = {
-    board: "みんなの切断を見る",
-    learning: "切断の基本を学ぶ",
-  };
-
+  const { id } = useParams<{ id: string }>();
+  if(!id) return;
   return(
-    <div className="container p-4">
-      <div className="flex justify-start"  role="tablist">
-        {(["board", "learning" ] as const).map((tab) => (
-          <button
-            key={tab}
-            role="tab"
-            className={`px-2 py-2 border-b-2 space-x-4 ${
-              selectedTab=== tab ? "border-blue-500 font-semibold text-xl" : "text-md"
-            }`}
-            onClick={() => setSelectedTab(tab)}
-          >
-            {tabLabels[tab]}
-          </button>
-        ))}
-      </div>
-      <div className="mt-2 px-4">
-        { selectedTab === "learning"
-          ? <BasicEducation/>
-          : isLoggedIn
-            ? <p>準備中...</p>
-            : <p>ログインが必要です</p>
-        }
+    <div className="container mx-auto w-full mt-4 px-2">
+      <ShowBoard id={id}/>
+      <div className="mt-12 mb-4">
+        <button
+          onClick={() => window.history.back()}
+          className="justify-start px-4 py-2 bg-gray-300 text-black rounded-md"
+        > 戻る
+        </button>
       </div>
     </div>
-  )
+  );
 };
 
 export default Board;

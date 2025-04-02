@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import CutCubeModel from "./CutCubeModel";
 import { useGetCutCube } from "./useGetCutCube";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil, faBookmark } from "@fortawesome/free-solid-svg-icons";
+import { faPencil, faBookmark} from "@fortawesome/free-solid-svg-icons";
 import { useCheckPointsInfo} from "../getCoordinates/hooks/useCheckPointsInfo"
 import { useAuth } from "../../contexts/AuthContext"
 
-const ResultCutCube = ({ id }: { id: string | undefined }) => {
+const ResultCutCube = ({ id }: { id: string}) => {
   const { glbUrl, cutPoints, title, memo, createdAt, bookmarkId, setBookmarkId } = useGetCutCube(id);
   console.log("bookmarkIdは", bookmarkId);
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
@@ -176,19 +176,20 @@ const ResultCutCube = ({ id }: { id: string | undefined }) => {
       </div>
 
       {/*ボタン*/}
-      <div className="mt-4 mb-2 flex space-x-8 justify-end"  role="tablist">
+      <div className="mt-4 mb-2 flex space-x-4 justify-end"  role="tablist">
+        {/*ブックマークボタン*/}
         {isLoggedIn && id && (
           !bookmarkId
           ? ( <button 
                 onClick={() => handleCreateBookmark(id)} 
               >
-                <span className="text-xs text-gray-600 px-2">ブックマークに追加</span>
+                <span className="text-xs text-gray-600 mr-2">ブックマークに追加</span>
                 <FontAwesomeIcon icon={faBookmark} className="hover:text-yellow-500"/>
               </button>)
           : ( <button
                 onClick={() => handleRemoveBookmark(bookmarkId)} 
               >
-                <span className="text-xs text-gray-600 px-2">ブックマークから削除</span>
+                <span className="text-xs text-gray-600 mr-2">ブックマークから削除</span>
                 <FontAwesomeIcon icon={faBookmark} className="text-yellow-500 hover:text-yellow-100" />
               </button>)
         )}

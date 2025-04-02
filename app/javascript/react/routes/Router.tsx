@@ -6,7 +6,9 @@ import Result from "../pages/Result"
 import History from "../pages/History"
 import MyPage from "../pages/MyPage"
 import Hint from "../pages/Hint"
-import Board from "../pages/Board"
+import Boards from "../pages/Boards"
+import CreateBoard from "../features/board/create/CreateBoard"
+import Board from "../pages/Board";
 
 const Router = () => {
   return (
@@ -18,7 +20,9 @@ const Router = () => {
       <Route path="/history" element={<History/>} />
       <Route path="/mypage" element={<MyPage/>} />
       <Route path="/hint" element={<Hint/>} />
-      <Route path="/board" element={<Board/>}/>
+      <Route path="/boards" element={<Boards/>}/>
+      <Route path="/board/new/*" element={<CreateBoard/>}/>
+      <Route path="/board/:id" element={<Board/>}/>
     </Routes>
   )
 };

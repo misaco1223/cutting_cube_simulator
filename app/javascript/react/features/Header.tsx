@@ -16,7 +16,7 @@ const Header = () => {
         <ul className="flex space-x-4 justify-end">
           <li className="flex items-center space-x-4">
             <div className="flex space-x-4">
-              <Link to="/board" className="hover:text-gray-300 flex flex-col space-y-1">
+              <Link to="/boards" className="hover:text-gray-300 flex flex-col space-y-1">
                 <FontAwesomeIcon icon={faSchool} size="lg" />
                 <span className="text-xs text-gray-600">まなび</span>
               </Link>
