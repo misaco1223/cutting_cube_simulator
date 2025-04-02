@@ -8,6 +8,7 @@ class CutCube < ApplicationRecord
   validates :gltf_file, presence: true
 
   has_many :bookmarks, dependent: :destroy
+  has_many :boards, dependent: :destroy
 
   def self.delete_expired_guest_data
     where(user_id: nil)

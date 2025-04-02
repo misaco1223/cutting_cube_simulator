@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_03_22_062227) do
+ActiveRecord::Schema[7.2].define(version: 2025_03_30_142426) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,20 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_22_062227) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "boards", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "cut_cube_id"
+    t.text "question", null: false
+    t.text "answer", null: false
+    t.text "explanation"
+    t.boolean "published", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cut_cube_id"], name: "index_boards_on_cut_cube_id"
+    t.index ["user_id", "cut_cube_id"], name: "index_boards_on_user_id_and_cut_cube_id"
+    t.index ["user_id"], name: "index_boards_on_user_id"
   end
 
   create_table "bookmarks", force: :cascade do |t|
@@ -75,6 +89,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_22_062227) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "boards", "cut_cubes"
+  add_foreign_key "boards", "users"
   add_foreign_key "bookmarks", "cut_cubes"
   add_foreign_key "bookmarks", "users"
   add_foreign_key "cut_cubes", "users"
