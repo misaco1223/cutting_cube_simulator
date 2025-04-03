@@ -108,7 +108,7 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
                 aria-controls="accordion-collapse-body-1"
               >
                 <span>答えを開く</span>
-                <FontAwesomeIcon icon={faCaretDown}className={`transition-transform ${isAccordionOpen ? "rotate-180" : ""}`}  />
+                <FontAwesomeIcon icon={faCaretDown} className={`transition-transform ${isAccordionOpen ? "rotate-180" : ""}`}  />
           </button>
           </h2>
           <div id="accordion-collapse-body-1"

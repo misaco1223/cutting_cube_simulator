@@ -26,9 +26,9 @@ const BasicEducation = () => {
 
         <div className="mb-4 border-2 rounded-md p-4">
          <h2 className="font-bold text-lg space-y-1">練習問題</h2>
-         <img src="/example_question_1.png" className="w-full" />
+         <img src="/example_question_1.png" className="w-80" />
          <h2 className="font-bold text-lg space-y-1 mt-4">切断の手順を確認</h2>
-         <img src="/example_explanation_1.png" className="w-full" />
+         <img src="/example_explanation_1.png" className="w-80" />
          <p>点1と点2はどちらも立方体の上の面にあるので結んで切断線になります。</p>
          <p>同様に、点1と点3、点2と点3もそれぞれ結びます。</p>
          <p>立方体の表面だけに切断線ができました。これで切断は完了です。</p>

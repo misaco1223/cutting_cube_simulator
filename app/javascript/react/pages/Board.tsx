@@ -1,12 +1,11 @@
 import { useParams } from "react-router-dom";
 import ShowBoard from "../features/board/show/showBoard";
-import {Link} from "react-router-dom";
 
 const Board = () => {
   const { id } = useParams<{ id: string }>();
   if(!id) return;
   return(
-    <div className="container mx-auto w-full mt-4 px-2">
+    <div className="container mx-auto w-full mt-4 px-4">
       <ShowBoard id={id}/>
       <div className="mt-12 mb-4">
         <button

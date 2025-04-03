@@ -1,5 +1,5 @@
 import InteractiveCube from "../features/getCoordinates/components/ui/InteractiveCube";
-import ScrollMessage from "../features/ScrollMessage"
+import ScrollMessage from "./ScrollMessage"
 
 const Home = () => {
   return(

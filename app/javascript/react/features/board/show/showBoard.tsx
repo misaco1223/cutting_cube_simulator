@@ -74,7 +74,7 @@ const ShowBoard = ({ id }: { id: string }) => {
   };
 
   return (
-    <div className="w-full bg-white p-4 rounded-lg shadow-lg">
+    <div className="w-full bg-white p-10 rounded-lg shadow-lg">
     {/*ヘッダー*/}
     <div className="header my-4 text-md flex justify-between w-full">
         <div className="justify-start flex space-x-2">
@@ -207,7 +207,6 @@ const ShowBoard = ({ id }: { id: string }) => {
                 </div>
             ):(
                 <div className="my-4 items-center space-y-4">
-                    <h1 className="text-md font-bold">答え</h1>
                     <span className="text-lg font-semibold">{currentAnswer}</span>
                 </div>
             )
@@ -269,8 +268,7 @@ const ShowBoard = ({ id }: { id: string }) => {
                 </div>
             ):(
                 <div className="mt-4 mb-2 items-center space-y-4">
-                    <h1 className="text-md font-bold">解説</h1>
-                    <span className="text-md whitespace-pre-line">{currentExplanation}</span>
+                  <span className="text-md whitespace-pre-line">{currentExplanation}</span>
                 </div>
             )
             }

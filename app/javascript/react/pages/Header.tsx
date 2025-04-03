@@ -1,4 +1,3 @@
-// features/cookie/Header.tsx
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightToBracket, faClockRotateLeft, faCircleUser, faSchool, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';

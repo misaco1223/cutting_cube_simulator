@@ -40,19 +40,13 @@ const MyPage = () => {
             </div>
             <div className="my-6">
               <div className="flex space-x-4">
-              <span><FontAwesomeIcon icon={faQ} className="mr-2" /> あなたの問題</span>
+              <span><FontAwesomeIcon icon={faQ} className="mr-2" /> あなたの問題コレクション</span>
                 <Link to="/board/new" className="flex flex-col">
-                  <span className="text-xs text-red-600 pt-1"><FontAwesomeIcon icon={faPlus} />問題を作成する</span>
+                  <span className="text-xs font-semibold text-red-600 pt-1"><FontAwesomeIcon icon={faPlus} />問題を作成する</span>
                 </Link>
               </div>
               <div className="container mt-2 w-full h-200 bg-white">
                 <MyBoardsCarousel/>
-              </div>
-            </div>
-            <div className="my-6">
-              <span><FontAwesomeIcon icon={faStar} className="mr-2"/> みんなの問題(公開中のみ)</span>
-              <div className="container mt-2 w-full h-60 bg-white">
-                <p className="m-4">準備中...</p>
               </div>
             </div>
             </>

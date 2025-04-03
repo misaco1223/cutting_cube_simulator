@@ -9,6 +9,8 @@ import Hint from "../pages/Hint"
 import Boards from "../pages/Boards"
 import CreateBoard from "../features/board/create/CreateBoard"
 import Board from "../pages/Board";
+import { PrivacyPolicy } from "../pages/Footer";
+import { ServiceTerms } from "../pages/Footer";
 
 const Router = () => {
   return (
@@ -23,6 +25,8 @@ const Router = () => {
       <Route path="/boards" element={<Boards/>}/>
       <Route path="/board/new/*" element={<CreateBoard/>}/>
       <Route path="/board/:id" element={<Board/>}/>
+      <Route path="/privacy_policy" element={<PrivacyPolicy/>} />
+      <Route path="/service_terms" element={<ServiceTerms/>} />
     </Routes>
   )
 };
