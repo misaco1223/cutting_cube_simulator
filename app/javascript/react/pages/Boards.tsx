@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import BasicEducation from "../features/board/index/BasicEducation";
-import IndexBoards from "../features/board/index/IndexBoards"
+import BasicEducation from "../features/board/main/BasicEducation";
+import IndexBoards from "../features/board/main/IndexBoards"
 
 const Boards = () => {
   const { isLoggedIn } = useAuth();
