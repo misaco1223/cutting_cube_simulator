@@ -39,7 +39,7 @@ const Boards = () => {
             ? <BasicEducation/>
             : isLoggedIn
               ? <IndexBoards/>
-              : <p className="ml-4">ログインが必要です</p>
+              : <p>ログインが必要です</p>
           }
           </div>
         </div>

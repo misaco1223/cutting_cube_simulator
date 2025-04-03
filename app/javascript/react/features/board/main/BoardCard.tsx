@@ -59,9 +59,14 @@ const BoardCard = ({ userName, cutPoints, createdAt, question }: BoardProps) => 
   }).replace(/\//g, "-")
   : "";
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayString = today.toISOString().split('T')[0];
+
   return (
     <div className="w-full p-4">
       {/*ヘッダー*/}
+      {formattedDate>= todayString && <span className="bg-yellow-400 text-gray-600 text-xs p-1">NEW</span>}
       <div className="header my-4 text-md flex justify-between w-full">
         <div className="justify-start flex space-x-2">
           <FontAwesomeIcon icon={faCircleUser} size="lg" className="hover:text-gray-300 transition duration-300"/>

@@ -21,8 +21,8 @@ export const Footer = () => {
 
 export const ServiceTerms = ()=>{
     return(
-      <div className="mx-4 my-6">
-        <h1 className="text-xl font-bold mt-8 mb-4">利用規約</h1>
+      <div className="m-4 p-4">
+        <h1 className="text-xl font-bold my-4">利用規約</h1>
 
         <h2 className="text-md font-semibold mt-4">第1条（目的）</h2>
         <p>本規約は、当社（以下「運営者」といいます。）が提供するWebアプリケーション（以下「本サービス」といいます。）の利用条件を定めるものです。</p>
@@ -65,8 +65,8 @@ export const ServiceTerms = ()=>{
 
 export const PrivacyPolicy = ()=>{
     return(
-      <div className="mx-4 my-6">
-        <h1 className="text-xl font-bold mt-8 mb-4">プライバシーポリシー</h1>
+      <div className="m-4 p-4">
+        <h1 className="text-xl font-bold my-4">プライバシーポリシー</h1>
     
         <h2 className="text-md font-semibold mt-4">第1条（収集する情報）</h2>
         <ul className="list-disc pl-6">
