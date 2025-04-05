@@ -9,9 +9,10 @@ interface BoardProps {
     cutPoints: THREE.Vector3[];
     createdAt: string;
     question: string;
+    tag: string;
 }
 
-const MyBoardCard = ({ cutPoints, createdAt, question }: BoardProps) => {
+const MyBoardCard = ({ cutPoints, createdAt, question, tag }: BoardProps) => {
 
   const spheres = useMemo(() => {
     return cutPoints.map((point, index) => (
@@ -52,6 +53,9 @@ const MyBoardCard = ({ cutPoints, createdAt, question }: BoardProps) => {
 
   return (
     <div>
+      {tag &&
+        (<span className="bg-orange-100 text-gray-700 font-bold text-xs px-4 py-2"> {tag} </span>)
+      }
       <Canvas style={{ height: "150px" , width: "100%"}}>
         <ambientLight intensity={0.3} />
         <directionalLight color="white" position={[0, 0, 5]} intensity={1} />

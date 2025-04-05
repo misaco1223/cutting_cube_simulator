@@ -13,9 +13,10 @@ interface BoardProps {
   cutPoints: THREE.Vector3[];
   createdAt: string;
   question: string;
+  tag: string;
 }
 
-const BoardCard = ({ userName, cutPoints, createdAt, question }: BoardProps) => {
+const BoardCard = ({ userName, cutPoints, createdAt, question, tag }: BoardProps) => {
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
   const spheres = useMemo(() => {
     return cutPoints.map((point, index) => (
@@ -66,7 +67,10 @@ const BoardCard = ({ userName, cutPoints, createdAt, question }: BoardProps) => 
   return (
     <div className="w-full p-4">
       {/*ヘッダー*/}
-      {formattedDate>= todayString && <span className="bg-yellow-400 text-gray-600 text-xs p-1">NEW</span>}
+      <div className="flex space-x-2">
+        {formattedDate>= todayString && <span className="bg-yellow-400 text-gray-600 text-xs p-1">NEW</span>}
+        {tag && <span className="bg-orange-100 text-gray-600 text-xs p-1">{tag}</span>}
+      </div>
       <div className="header my-4 text-md flex justify-between w-full">
         <div className="justify-start flex space-x-2">
           <FontAwesomeIcon icon={faCircleUser} size="lg" className="hover:text-gray-300 transition duration-300"/>
@@ -78,7 +82,7 @@ const BoardCard = ({ userName, cutPoints, createdAt, question }: BoardProps) => 
       </div>
       <div className="w-full">
         {/*切断前立体*/}
-        <div style={{ height: "150px" , width: "100%" }}>
+        <div style={{ height: "150px" , width: "75%" }} className="mx-auto">
           <Canvas style={{ height: "100%" }} className="border border-gray-500">
             <ambientLight intensity={0.3} />
             <directionalLight color="white" position={[0, 0, 5]} intensity={1} />
@@ -101,7 +105,7 @@ const BoardCard = ({ userName, cutPoints, createdAt, question }: BoardProps) => 
           </Canvas>
         </div>
         {/*問題*/}
-        <div className="mt-4">
+        <div className="mt-4 max-w-1/2">
           <h2 className="text-md my-2 font-bold whitespace-pre-line">
             <FontAwesomeIcon icon={faQ} className="mx-2"/>
             {question}

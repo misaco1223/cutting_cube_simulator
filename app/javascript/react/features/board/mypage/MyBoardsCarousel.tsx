@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const MyBoardsCarousel= () => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { boardIds, cutPoints, questions, createdAt, published, setPublished } = useGetMyBoards();
+  const { boardIds, cutPoints, questions, createdAt, published, setPublished, tags } = useGetMyBoards();
   const [showMoreButton, setShowMoreButton] = useState(false);
 
   useEffect(() => {
@@ -76,7 +76,7 @@ const MyBoardsCarousel= () => {
   };
 
   return (
-    <div className="relative flex h-full w-full p-2 max-w-5xl mx-auto">
+    <div className="relative flex h-full w-full p-2 max-w-full">
       <div  ref={scrollRef}
         className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory p-2 scrollbar-hide"
       >
@@ -84,6 +84,7 @@ const MyBoardsCarousel= () => {
         <div key={boardId} className="shrink-0">
           <div className="w-48 h-full border border-gray-200 p-2 rounded-lg shadow-md flex flex-grow flex-col justify-between ">
             <MyBoardCard
+              tag={tags[index]}
               cutPoints={cutPoints[index]}
               question={questions[index]}
               createdAt={createdAt[index]}

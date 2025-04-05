@@ -7,6 +7,7 @@ export const useGetBoards = () => {
   const [cutPoints, setCutPoints] = useState<THREE.Vector3[][]>([]);
   const [questions, setQuestions] = useState<string[]>([]);
   const [createdAt, setCreatedAt] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
 
   const fetchBoards = async () => {
     try {
@@ -32,6 +33,7 @@ export const useGetBoards = () => {
       
         setQuestions(data.boards.questions);
         setCreatedAt(data.boards.created_at);
+        setTags(data.boards.tags);
       } else {
         console.log("データなし");
       }
@@ -44,5 +46,5 @@ export const useGetBoards = () => {
     fetchBoards();  
   }, []);
 
-  return { userNames, boardIds, cutPoints, createdAt, questions };
+  return { userNames, boardIds, cutPoints, createdAt, questions, tags };
 };

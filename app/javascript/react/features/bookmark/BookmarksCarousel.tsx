@@ -56,7 +56,7 @@ const BookmarksCarousel= () => {
   }
 
   return (
-    <div className="relative flex h-full w-full p-2 max-w-5xl mx-auto">
+    <div className="relative flex h-full w-full p-2 max-w-full">
       <div  ref={scrollRef}
         className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory p-2 scrollbar-hide"
       >
