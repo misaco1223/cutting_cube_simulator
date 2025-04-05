@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import BoardCubeModel from "../create/BoardCubeModel";
 import CutCubeModel from "../../renderResultCutCube/CutCubeModel"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretDown, faCircleUser } from "@fortawesome/free-solid-svg-icons";
+import { faCaretDown, faCircleUser, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { useCheckPointsInfo} from "../../getCoordinates/hooks/useCheckPointsInfo"
 import { useGetBoard } from "./useGetBoard";
 import { faPencil, faStar } from "@fortawesome/free-solid-svg-icons";
+import TagDropDown from "../../tag/TagDropdown"
 
 const ShowBoard = ({ id }: { id: string }) => {
-  const { userName, glbUrl, cutPoints, question, answer, explanation, createdAt, published, setPublished, isOwner } = useGetBoard(id);
+  const { userName, glbUrl, cutPoints, question, answer, explanation, createdAt, published, setPublished, isOwner, tag, setTag } = useGetBoard(id);
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
@@ -52,7 +53,7 @@ const ShowBoard = ({ id }: { id: string }) => {
   }).replace(/\//g, "-")
   : "";
 
-  const handleBoardUpdate = async () => {
+  const handleBoardUpdate = async (overrideTag?: string) => {
     if (!id) return;
 
     try {
@@ -63,7 +64,8 @@ const ShowBoard = ({ id }: { id: string }) => {
           question: currentQuestion,
           answer: currentAnswer,
           explanation: currentExplanation,
-          published: published
+          published: published,
+          tag: overrideTag ?? null,
         }),
       });
 
@@ -86,12 +88,29 @@ const ShowBoard = ({ id }: { id: string }) => {
         </div>
     </div>
 
-    {/* スター */}
-    <div className="flex justify-end">
+    {/* タグとスターといいね */}
+    <div className="flex justify-end space-x-4">
+      {isOwner ? (
+        <TagDropDown
+          selectedTag={tag}
+          setSelectedTag={(selectedTag) => {
+            setTag(selectedTag);
+            handleBoardUpdate(selectedTag); // タグ変更と同時にAPIを呼び出す
+          }}
+        />
+      ): (
+        <span className="bg-orange-100 text-gray-700 font-bold text-xs px-4 py-2"> {tag} </span>
+      )}
       <button className="flex flex-col space-y-1">
         <FontAwesomeIcon icon={faStar} className="hover:text-yellow-500"/>
-        <span className="text-xs text-gray-600 mr-2">いいね</span>
+        <span className="text-xs text-gray-600 mr-2">お気に入り</span>
       </button>
+      <div className="flex space-x-1">
+        <button className="flex flex-col space-y-1">
+          <FontAwesomeIcon icon={faThumbsUp} className="hover:text-yellow-500"/>
+          <span className="text-xs text-gray-600 mr-2">数</span>
+        </button>
+      </div>
     </div>
 
     {/* 問題文 */}
@@ -101,7 +120,7 @@ const ShowBoard = ({ id }: { id: string }) => {
         <div className="flex items-center space-x-2">
             {isEditingQuestion ? (
             <textarea
-                value={currentQuestion || question}
+                value={currentQuestion !== null ? currentQuestion : question}
                 onChange={(e) => setCurrentQuestion(e.target.value)}
                 onBlur={() => {
                     setIsEditingQuestion(false);
@@ -181,7 +200,7 @@ const ShowBoard = ({ id }: { id: string }) => {
                 <div className="flex items-center space-x-2">
                 {isEditingAnswer ? (
                     <textarea
-                    value={currentAnswer || answer}
+                    value={currentAnswer !== null ? currentAnswer : answer}
                     onChange={(e) => setCurrentAnswer(e.target.value)}
                     onBlur={() => {
                         setIsEditingAnswer(false);
@@ -242,7 +261,7 @@ const ShowBoard = ({ id }: { id: string }) => {
                 <div className="flex items-center space-x-2">
                 {isEditingExplanation ? (
                     <textarea
-                    value={currentExplanation || explanation || "解説なし"}
+                    value={currentExplanation !== null ? currentExplanation : explanation || "解説なし"}
                     onChange={(e) => setCurrentExplanation(e.target.value)}
                     onBlur={() => {
                         setIsEditingExplanation(false);
