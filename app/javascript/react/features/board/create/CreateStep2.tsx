@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
 import { useCheckPointsInfo} from "../../getCoordinates/hooks/useCheckPointsInfo"
 import { useNavigate} from "react-router-dom";
+import TagDropdown from "../../tag/TagDropdown";
 
 interface CreateStep2Props {
   glbUrl: string | "";
@@ -15,11 +16,13 @@ interface CreateStep2Props {
   setAnswer: (a: string) => void;
   explanation: string | "";
   setExplanation: (e: string) => void;
+  tag: string | "";
+  setTag: (e: string) => void;
   onNext: () => void;
   onBack: () => void;
 }
 
-const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnswer, explanation, setExplanation, onNext, onBack }: CreateStep2Props) => {
+const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnswer, explanation, setExplanation, tag, setTag, onNext, onBack }: CreateStep2Props) => {
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
   const [errorMessage, setErrorMessage] = useState("");
@@ -137,6 +140,13 @@ const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnsw
               className="w-full px-1 h-28 text-md border border-gray-500 focus:outline-none focus:border-blue-500"
             />
             <FontAwesomeIcon icon={faPencil} size="xs" className="text-gray-500"/>
+          </div>
+        </div>
+
+        <div className="space-y-1">
+          <div className="flex items-center space-x-2">
+            <h1 className="text-lg font-bold">タグ設定</h1>
+            <TagDropdown selectedTag={tag} setSelectedTag={setTag}/>
           </div>
         </div>
       </div>

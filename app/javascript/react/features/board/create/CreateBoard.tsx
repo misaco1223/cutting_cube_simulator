@@ -13,6 +13,7 @@ const CreateBoard = () => {
   const [answer, setAnswer] = useState<string>("");
   const [explanation, setExplanation] = useState<string>("");
   const [published, setPublished] = useState(false);
+  const [tag, setTag] = useState<string>("");
   const navigate = useNavigate();
 
   const selectedIndex = cutCubeIds.indexOf(cutCubeId || "");
@@ -51,6 +52,8 @@ const CreateBoard = () => {
             setAnswer={setAnswer}
             explanation={explanation}
             setExplanation={setExplanation} 
+            tag={tag}
+            setTag={setTag}
             onNext={() => navigate("/board/new/step3")}
             onBack={() => navigate("/board/new/step1")}
           />
@@ -66,6 +69,7 @@ const CreateBoard = () => {
             question={question}
             answer={answer}
             explanation={explanation}
+            tag={tag}
             published={published}
             setPublished={setPublished}
             onBack={() => navigate("/board/new/step2")}

@@ -14,12 +14,13 @@ interface CreateStep3Props {
   question: string | "";
   answer: string | "";
   explanation: string | "";
+  tag: string|"";
   published: boolean;
   setPublished: (p: boolean) => void;
   onBack: () => void;
 }
 
-const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanation, published, setPublished, onBack }: CreateStep3Props) => {
+const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanation, tag, published, setPublished, onBack }: CreateStep3Props) => {
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
@@ -53,7 +54,7 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ board: boardParams }),
+        body: JSON.stringify({ board: boardParams, tag: tag }),
       });
         const data = await response.json();
         console.log("問題を作成しました");
@@ -71,6 +72,10 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
 
       {/*問題*/}
       <div className="bg-white m-4 p-4 border-2 rounded-md shadow-lg">
+        {/*タグ*/}
+        {tag &&
+          <span className="bg-orange-100 text-gray-700 font-bold text-xs px-4 py-2"> {tag} </span>
+        }
         {/* 問題文 */}
         <div className="mt-4 mb-2 p-2 items-center space-y-4">
           <h1 className="text-md font-bold mb-4">問題</h1>
