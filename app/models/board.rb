@@ -2,6 +2,10 @@ class Board < ApplicationRecord
   belongs_to :user
   belongs_to :cut_cube
 
+  has_many :board_tags, dependent: :destroy
+
+  validates :user_id, presence: true
+  validates :cut_cube_id, presence: true
   validates :question, presence: true
   validates :answer, presence: true
   validate :must_own_cut_cube
