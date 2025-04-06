@@ -5,11 +5,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faCircleUser, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { useCheckPointsInfo} from "../../getCoordinates/hooks/useCheckPointsInfo"
 import { useGetBoard } from "./useGetBoard";
-import { faPencil, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faPencil, faStar, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import TagDropDown from "../../tag/TagDropdown"
 
 const ShowBoard = ({ id }: { id: string }) => {
-  const { userName, glbUrl, cutPoints, question, answer, explanation, createdAt, published, setPublished, isOwner, tag, setTag } = useGetBoard(id);
+  const { userName, glbUrl, cutPoints, question, answer, explanation, createdAt, published, setPublished, isOwner, tags, setTags } = useGetBoard(id);
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
@@ -53,7 +53,7 @@ const ShowBoard = ({ id }: { id: string }) => {
   }).replace(/\//g, "-")
   : "";
 
-  const handleBoardUpdate = async (overrideTag?: string) => {
+  const handleBoardUpdate = async (overrideTags?: string[]) => {
     if (!id) return;
 
     try {
@@ -65,7 +65,7 @@ const ShowBoard = ({ id }: { id: string }) => {
           answer: currentAnswer,
           explanation: currentExplanation,
           published: published,
-          tag: overrideTag ?? null,
+          tags: overrideTags ?? null,
         }),
       });
 
@@ -75,46 +75,70 @@ const ShowBoard = ({ id }: { id: string }) => {
     }
   };
 
+  const handleRemoveTags = (tag:string) => {
+    if (!tags) return;
+    if (tags.includes(tag)) {
+      const updatedTags = tags.filter((t) => t !== tag);
+      setTags(updatedTags);
+    }
+  }
+
   return (
     <div className="w-full bg-white p-10 rounded-lg shadow-lg">
-    {/*ヘッダー*/}
-    <div className="header my-4 text-md flex justify-between w-full">
+      <div className="flex space-x-2">
+      {/* タグ */}
+      {tags && (
+        <div className="flex flex-wrap gap-1">
+          {tags.map((tag, index) => (
+            <div key={index} className="flex space-x-1 bg-orange-100 text-gray-700 font-bold text-xs px-4 py-2">
+              <span>{tag}</span>
+              {isOwner && (
+                <button onClick={() => handleRemoveTags(tag)}>
+                  <FontAwesomeIcon icon={faCircleXmark} size="xs" />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      </div>
+
+      {/*ヘッダー*/}
+      <div className="header my-4 text-md flex justify-between w-full">
         <div className="justify-start flex space-x-2">
-        <FontAwesomeIcon icon={faCircleUser} size="lg" className="hover:text-gray-300 transition duration-300"/>
-        <span className="justify-start text-md">{userName}さん</span>
+          <FontAwesomeIcon icon={faCircleUser} size="lg" className="hover:text-gray-300 transition duration-300"/>
+          <span className="justify-start text-md">{userName}さん</span>
         </div>
         <div className="justify-end mx-4 flex space-x-4">
-        <p className="text-gray-500 my-auto text-xs">{formattedDate}</p>
+          <p className="text-gray-500 my-auto text-xs">{formattedDate}</p>
         </div>
-    </div>
-
-    {/* タグとスターといいね */}
-    <div className="flex justify-end space-x-4">
-      {isOwner ? (
-        <TagDropDown
-          selectedTag={tag}
-          setSelectedTag={(selectedTag) => {
-            setTag(selectedTag);
-            handleBoardUpdate(selectedTag); // タグ変更と同時にAPIを呼び出す
-          }}
-        />
-      ): (
-        <span className="bg-orange-100 text-gray-700 font-bold text-xs px-4 py-2"> {tag} </span>
-      )}
-      <button className="flex flex-col space-y-1">
-        <FontAwesomeIcon icon={faStar} className="hover:text-yellow-500"/>
-        <span className="text-xs text-gray-600 mr-2">お気に入り</span>
-      </button>
-      <div className="flex space-x-1">
-        <button className="flex flex-col space-y-1">
-          <FontAwesomeIcon icon={faThumbsUp} className="hover:text-yellow-500"/>
-          <span className="text-xs text-gray-600 mr-2">数</span>
-        </button>
       </div>
-    </div>
 
-    {/* 問題文 */}
-    <div className="m-2">
+      {/* タグとスターといいね */}
+      <div className="flex justify-end space-x-4">
+        {isOwner && (
+            <TagDropDown
+            selectedTags={tags}
+            setSelectedTags={(selectedTags) => {
+                setTags(selectedTags);
+                handleBoardUpdate(selectedTags); // タグ変更と同時にAPIを呼び出す
+            }}
+            />
+        )}
+        <button className="flex flex-col space-y-1">
+            <FontAwesomeIcon icon={faStar} className="hover:text-yellow-500"/>
+            <span className="text-xs text-gray-600 mr-2">お気に入り</span>
+        </button>
+        <div className="flex space-x-1">
+            <button className="flex flex-col space-y-1">
+            <FontAwesomeIcon icon={faThumbsUp} className="hover:text-yellow-500"/>
+            <span className="text-xs text-gray-600 mr-2">数</span>
+            </button>
+        </div>
+      </div>
+
+      {/* 問題文 */}
+      <div className="m-2">
         <h1 className="text-md font-bold mb-4">問題</h1>
         {isOwner ? (
         <div className="flex items-center space-x-2">
@@ -150,13 +174,13 @@ const ShowBoard = ({ id }: { id: string }) => {
         </div>
         )
         }
-    </div>
+      </div>
 
-    {/* 切断前立体表示エリア */}
-    <BoardCubeModel cutPoints={cutPoints}/>
+      {/* 切断前立体表示エリア */}
+      <BoardCubeModel cutPoints={cutPoints}/>
 
-    {/* 切断点情報 */}
-    <div className="mt-2">
+      {/* 切断点情報 */}
+      <div className="mt-2">
         {pointsInfo.map((pointInfo, index) => (
                 <div key={index} className="w-full px-4">
                 {pointInfo.isVertex
@@ -174,9 +198,9 @@ const ShowBoard = ({ id }: { id: string }) => {
                 )}
                 </div>
         ))}
-    </div>
-    {/* 回答、解説エリア アコーディオン*/}
-    <div id="accordion-collapse" data-accordion="collapse">
+      </div>
+      {/* 回答、解説エリア アコーディオン*/}
+      <div id="accordion-collapse" data-accordion="collapse">
         {/*アコーディオンタブ*/}
         <h2 id="accordion-collapse-heading-1">
         <button type="button" className="flex items-center justify-between w-full mt-8 p-2 font-medium rtl:text-right bg-gray-300 border border-gray-500 focus:ring-gray-200 gap-3" 
@@ -287,13 +311,13 @@ const ShowBoard = ({ id }: { id: string }) => {
                 </div>
             ):(
                 <div className="mt-4 mb-2 items-center space-y-4">
-                  <span className="text-md whitespace-pre-line">{currentExplanation}</span>
+                <span className="text-md whitespace-pre-line">{currentExplanation}</span>
                 </div>
             )
             }
         </div>
         </div>
-    </div>
+      </div>
     </div>
   );
 };

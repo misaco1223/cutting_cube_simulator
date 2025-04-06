@@ -11,7 +11,7 @@ export const useGetBoard = (id: string|undefined) => {
   const [createdAt, setCreatedAt] = useState<string|null>(null);
   const [isOwner, setIsOwner] = useState<string|null>(null);
   const [published, setPublished] = useState<boolean>(false);
-  const [tag, setTag] = useState<string|null>(null);
+  const [tags, setTags] = useState<string[]|null>(null);
 
   useEffect(() => {
     const fetchBoard = async (id: string | undefined) => {
@@ -43,7 +43,7 @@ export const useGetBoard = (id: string|undefined) => {
           setCreatedAt(data.board.created_at);
           setIsOwner(data.board.is_owner);
           setPublished(data.board.published);
-          setTag(data.board.tag);
+          setTags(data.board.tags);
         }
       } catch (error) {
         console.error("boardの取得に失敗しました", error);
@@ -53,5 +53,5 @@ export const useGetBoard = (id: string|undefined) => {
     fetchBoard(id);
   }, [id]);
 
-  return { userName, glbUrl, cutPoints, question, answer, explanation, createdAt, isOwner, published, setPublished, tag, setTag};
+  return { userName, glbUrl, cutPoints, question, answer, explanation, createdAt, isOwner, published, setPublished, tags, setTags};
 };

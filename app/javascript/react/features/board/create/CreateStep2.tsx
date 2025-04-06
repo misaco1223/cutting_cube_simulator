@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import CutCubeModel from "../../renderResultCutCube/CutCubeModel";
 import * as THREE from "three";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil } from "@fortawesome/free-solid-svg-icons";
+import { faPencil, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { useCheckPointsInfo} from "../../getCoordinates/hooks/useCheckPointsInfo"
 import { useNavigate} from "react-router-dom";
 import TagDropdown from "../../tag/TagDropdown";
@@ -16,13 +16,13 @@ interface CreateStep2Props {
   setAnswer: (a: string) => void;
   explanation: string | "";
   setExplanation: (e: string) => void;
-  tag: string | "";
-  setTag: (e: string) => void;
+  tags: string[];
+  setTags: (e: string[]) => void;
   onNext: () => void;
   onBack: () => void;
 }
 
-const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnswer, explanation, setExplanation, tag, setTag, onNext, onBack }: CreateStep2Props) => {
+const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnswer, explanation, setExplanation, tags, setTags, onNext, onBack }: CreateStep2Props) => {
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
   const [errorMessage, setErrorMessage] = useState("");
@@ -54,6 +54,13 @@ const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnsw
     setErrorMessage("");
     onNext();
   };
+
+  const handleRemoveTags = (tag:string) => {
+    if (tags.includes(tag)) {
+      const updatedTags = tags.filter((t) => t !== tag);
+      setTags(updatedTags);
+    }
+  }
 
   if (glbUrl === "" || !cutPoints) return;
 
@@ -144,10 +151,20 @@ const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnsw
         </div>
 
         <div className="space-y-1">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 mb-2">
             <h1 className="text-lg font-bold">タグ設定</h1>
-            <TagDropdown selectedTag={tag} setSelectedTag={setTag}/>
+            {tags && (
+              <div className="flex space-x-2">
+                { tags.map((tag, index) => (
+                  <div key={index} className="flex space-x-1 bg-orange-100 text-gray-700 font-bold text-xs px-4 py-2">
+                    <span> {tag} </span>
+                    <button onClick={()=> handleRemoveTags(tag)}><FontAwesomeIcon icon={faCircleXmark} size="xs" /></button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
+          <TagDropdown selectedTags={tags} setSelectedTags={setTags}/>
         </div>
       </div>
 

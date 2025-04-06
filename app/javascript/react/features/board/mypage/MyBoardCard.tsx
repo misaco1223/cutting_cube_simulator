@@ -9,7 +9,7 @@ interface BoardProps {
     cutPoints: THREE.Vector3[];
     createdAt: string;
     question: string;
-    tag: string;
+    tag: string[];
 }
 
 const MyBoardCard = ({ cutPoints, createdAt, question, tag }: BoardProps) => {
@@ -52,10 +52,16 @@ const MyBoardCard = ({ cutPoints, createdAt, question, tag }: BoardProps) => {
   : "";
 
   return (
-    <div>
-      {tag &&
-        (<span className="bg-orange-100 text-gray-700 font-bold text-xs px-4 py-2"> {tag} </span>)
-      }
+    <div className="flex flex-col min-h-[300px]">
+      <div className="mb-auto">
+      {tag && (
+        <div className="flex flex-wrap gap-1">
+          { tag.map((t, index) => (
+            <span key={index} className="bg-orange-100 text-gray-700 font-bold text-xs px-4 py-2"> {t} </span>
+          ))}
+        </div>
+      )}
+      </div>
       <Canvas style={{ height: "150px" , width: "100%"}}>
         <ambientLight intensity={0.3} />
         <directionalLight color="white" position={[0, 0, 5]} intensity={1} />
@@ -74,7 +80,7 @@ const MyBoardCard = ({ cutPoints, createdAt, question, tag }: BoardProps) => {
           <lineBasicMaterial color="black" />
         </lineSegments>
       </Canvas>
-      <div className="p-4 w-full">
+      <div className="p-4 w-full mb-auto">
         <h2 className="text-md mb-2 line-clamp-3 overflow-hidden">{question}</h2>
         <p className="text-gray-500 text-xs">{formattedDate}</p>
       </div>

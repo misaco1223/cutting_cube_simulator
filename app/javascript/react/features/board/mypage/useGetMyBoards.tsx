@@ -7,7 +7,7 @@ export const useGetMyBoards = () => {
   const [questions, setQuestions] = useState<string[]>([]);
   const [createdAt, setCreatedAt] = useState<string[]>([]);
   const [published, setPublished] = useState<boolean[]>([]);
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[][]>([]);
 
   const fetchMyBoards = async () => {
     try {

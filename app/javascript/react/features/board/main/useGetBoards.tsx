@@ -7,7 +7,7 @@ export const useGetBoards = (filter: string | null) => {
   const [cutPoints, setCutPoints] = useState<THREE.Vector3[][]>([]);
   const [questions, setQuestions] = useState<string[]>([]);
   const [createdAt, setCreatedAt] = useState<string[]>([]);
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[][]|null>(null);
 
   const getTagIdFromFilter = (filter: string | null): number | null => {
     switch (filter) {

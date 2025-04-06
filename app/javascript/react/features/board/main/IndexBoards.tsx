@@ -30,7 +30,7 @@ const IndexBoards = ( {filter}:IndexBoardsProps ) => {
       currentCutPoints: cutPoints.slice(startIndex, endIndex),
       currentCreatedAt: createdAt.slice(startIndex, endIndex),
       currentQuestions: questions.slice(startIndex, endIndex),
-      currentTags: tags.slice(startIndex, endIndex),
+      currentTags: tags ? tags.slice(startIndex, endIndex).map(tagArray => tagArray) : []
     };
   }, [currentPage, userNames, boardIds, cutPoints, createdAt, questions, tags]);
 

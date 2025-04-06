@@ -89,7 +89,7 @@ const MyBoardsCarousel= () => {
               question={questions[index]}
               createdAt={createdAt[index]}
             />
-            <Link to={`/board/${boardId}`} className="m-4 text-blue-500 hover:underline">詳細を見る</Link>
+            <Link to={`/board/${boardId}`} className="m-4 text-blue-500 hover:underline mt-auto">詳細を見る</Link>
             <div className="px-4 mt-auto flex space-x-4 justify-end">
               <div className="flex space-x-4 items-center">
                 <button 

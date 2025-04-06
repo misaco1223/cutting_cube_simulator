@@ -9,9 +9,13 @@ class Api::BoardsController < ApplicationController
       published: board_params[:published]
     )
     if board.save
-      tag = Tag.find_by(name: params[:tag])
-      if tag
-        board_tag = BoardTag.create(board_id:board.id, tag_id:tag.id)
+      if params[:tags].present?
+        params[:tags].each do |tag_name|
+          tag = Tag.find_by(name: tag_name)
+          if tag
+            board_tag = BoardTag.create(board_id:board.id, tag_id:tag.id)
+          end
+        end
       end
       render json: { message: "Board作成完了", board_id: board.id }, status: :ok
     else
@@ -32,7 +36,7 @@ class Api::BoardsController < ApplicationController
         questions: boards.map { |board| board.question },
         created_at: boards.map { |board| board.created_at },
         published: boards.map { |board| board.published },
-        tags: boards.map {|board| board.board_tags.first&.tag&.name}
+        tags: boards.map { |board| board.board_tags.map { |board_tag| board_tag.tag.name } }
       }
     render json: { boards: boards_data }, status: :ok
   end
@@ -58,7 +62,10 @@ class Api::BoardsController < ApplicationController
         cut_points: boards.map { |board| JSON.parse(board.cut_cube.cut_points)},
         questions: boards.map { |board| board.question },
         created_at: boards.map { |board| board.created_at },
-        tags: boards.map {|board| board.board_tags.first&.tag&.name}
+        tags: boards.map { |board| board.board_tags
+                                    .includes(:tag)  # tagを含める
+                                    .sort_by { |board_tag| board_tag.created_at }
+                                    .map { |board_tag| board_tag.tag.name } }
       }
       
     render json: { boards: boards_data }, status: :ok
@@ -82,7 +89,7 @@ class Api::BoardsController < ApplicationController
         created_at: board.created_at,
         is_owner: board.user_id == current_user.id,
         published: board.published,
-        tag: board.board_tags.first&.tag&.name
+        tags: board.board_tags.map{ |board_tag| board_tag.tag.name }
       }
       render json: { board: board_data}, status: :ok
     end
@@ -96,15 +103,23 @@ class Api::BoardsController < ApplicationController
     end
 
     if board.update(board_update_params)
-        tag = Tag.find_by(name: params[:tag])
-        if tag
-          board_tag = board.board_tags.first
-          if board_tag
-            board_tag.update(tag_id: tag.id)
-          else
-            BoardTag.create(board_id: board.id, tag_id: tag.id)
+      if params[:tags].present?
+        params[:tags].each do |tag_name|
+          tag = Tag.find_by(name: tag_name)
+          if tag
+            unless board.board_tags.exists?(tag_id: tag.id)
+              BoardTag.create(board_id: board.id, tag_id: tag.id)
+            end
           end
         end
+
+        board.board_tags.each do |board_tag|
+          unless params[:tags].include?(board_tag.tag.name)
+            board_tag.destroy
+          end
+        end
+      end
+
       render json: { status: "success", message: 'Board updated successfully' }, status: :ok
     else
       render json: { error: 'Board not found' }, status: :not_found

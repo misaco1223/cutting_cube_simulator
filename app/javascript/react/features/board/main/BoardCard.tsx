@@ -13,7 +13,7 @@ interface BoardProps {
   cutPoints: THREE.Vector3[];
   createdAt: string;
   question: string;
-  tag: string;
+  tag: string[];
 }
 
 const BoardCard = ({ userName, cutPoints, createdAt, question, tag }: BoardProps) => {
@@ -69,7 +69,13 @@ const BoardCard = ({ userName, cutPoints, createdAt, question, tag }: BoardProps
       {/*ヘッダー*/}
       <div className="flex space-x-2">
         {formattedDate>= todayString && <span className="bg-yellow-400 text-gray-600 text-xs p-1">NEW</span>}
-        {tag && <span className="bg-orange-100 text-gray-600 text-xs p-1">{tag}</span>}
+        {tag && (
+          <div className="flex flex-wrap gap-2">
+            { tag.map((t,index) => (
+              <span key={index} className="bg-orange-100 text-gray-700 font-bold text-xs p-1"> {t} </span>
+            ))}
+          </div>
+        )}
       </div>
       <div className="header my-4 text-md flex justify-between w-full">
         <div className="justify-start flex space-x-2">
