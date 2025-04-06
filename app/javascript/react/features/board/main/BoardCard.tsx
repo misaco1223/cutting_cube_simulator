@@ -76,7 +76,7 @@ const BoardCard = ({ userName, cutPoints, createdAt, question, tag }: BoardProps
           <FontAwesomeIcon icon={faCircleUser} size="lg" className="hover:text-gray-300 transition duration-300"/>
           <span className="justify-start text-md">{userName}さん</span>
         </div>
-        <div className="justify-end mx-4 flex space-x-4">
+        <div className="justify-end">
           <p className="text-gray-500 my-auto text-xs">{formattedDate}</p>
         </div>
       </div>

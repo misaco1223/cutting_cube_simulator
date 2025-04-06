@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import * as THREE from "three";
 
-export const useGetBoards = () => {
+export const useGetBoards = (filter: string | null) => {
   const [userNames, setUserNames] = useState<string[]>([]);
   const [boardIds, setBoardIds] = useState<string[]>([]);
   const [cutPoints, setCutPoints] = useState<THREE.Vector3[][]>([]);
@@ -9,9 +9,41 @@ export const useGetBoards = () => {
   const [createdAt, setCreatedAt] = useState<string[]>([]);
   const [tags, setTags] = useState<string[]>([]);
 
-  const fetchBoards = async () => {
+  const getTagIdFromFilter = (filter: string | null): number | null => {
+    switch (filter) {
+      case "基礎":
+        return 1;
+      case "応用":
+        return 2;
+      case "5年":
+        return 3;
+      case "6年前期":
+        return 4;
+      case "6年後期":
+        return 5;
+      default:
+        return null;
+    }
+  };
+
+  const fetchBoards = async (filter:string | null) => {
+    const tagId = getTagIdFromFilter(filter);
+
+    let url = `/api/boards`
+    if (tagId) {
+      url = `/api/boards?tag_id=${tagId}`;
+    } else if (filter === "タグ別") {
+      url = `/api/boards?filter=tag`;
+    } else if (filter === "人気順") {
+      url = `/api/boards?filter=popular`;
+    } else if (filter === "いいね") {
+      url = `/api/boards?filter=like`;
+    } else if ( filter === "お気に入り"){
+      url = `/api/boards?filter=favorite`;
+    };
+
     try {
-      const response = await fetch(`/api/boards`, {
+      const response = await fetch( url , {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -43,8 +75,8 @@ export const useGetBoards = () => {
   };
 
   useEffect(() => {
-    fetchBoards();  
-  }, []);
+    fetchBoards(filter);  
+  }, [filter]);
 
   return { userNames, boardIds, cutPoints, createdAt, questions, tags };
 };

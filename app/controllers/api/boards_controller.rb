@@ -42,6 +42,14 @@ class Api::BoardsController < ApplicationController
       .joins(:user, :cut_cube)
       .includes(board_tags: :tag)
       .order(created_at: :desc)
+    
+    if params[:tag_id].present?
+      boards = boards.joins(board_tags: :tag).where(board_tags: { tag_id: params[:tag_id] })
+    elsif params[:filter].present?
+      if params[:filter] === "tag"
+        boards = boards.joins(board_tags: :tag)
+      end
+    end
 
     boards_data =
       {

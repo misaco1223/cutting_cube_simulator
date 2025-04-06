@@ -7,6 +7,7 @@ import BoardsSideBar from "../features/board/main/BoardsSideBar"
 const Boards = () => {
   const { isLoggedIn } = useAuth();
   const [selectedTab, setSelectedTab] = useState<"boards" | "learning">("boards");
+  const [filter, setFilter] = useState<string|null>("新着順");
 
   const tabLabels: Record<"boards" | "learning", string> = {
     boards: "みんなの切断",
@@ -17,9 +18,9 @@ const Boards = () => {
     <div className="w-full">
       <div className="w-full flex">
         {isLoggedIn &&
-          <BoardsSideBar/>
+          <BoardsSideBar filter={filter} setFilter={setFilter}/>
         }
-        <div className="w-5/6 mt-4 px-4 mx-auto">
+        <div className="w-5/6 mt-4 px-2 mx-auto">
           <div className="flex justify-start"  role="tablist">
           {(["boards", "learning" ] as const).map((tab) => (
             <button
@@ -38,7 +39,7 @@ const Boards = () => {
           { selectedTab === "learning"
             ? <BasicEducation/>
             : isLoggedIn
-              ? <IndexBoards/>
+              ? <IndexBoards filter={filter}/>
               : <p>ログインが必要です</p>
           }
           </div>

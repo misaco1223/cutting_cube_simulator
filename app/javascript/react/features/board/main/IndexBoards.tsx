@@ -5,9 +5,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faAngleRight, faStar, faThumbsUp} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
+interface IndexBoardsProps {
+  filter: string|null;
+}
 
-const IndexBoards = () => {
-  const { userNames, boardIds, cutPoints, createdAt, questions, tags } = useGetBoards();
+const IndexBoards = ( {filter}:IndexBoardsProps ) => {
+  const { userNames, boardIds, cutPoints, createdAt, questions, tags } = useGetBoards(filter);
   if (!boardIds ) return null;
 
   //ページ処理
@@ -41,7 +44,7 @@ const IndexBoards = () => {
   return (
     <div>
       {/* カード */}
-      <div className="grid lg:grid-cols-3 grid-cols-1 gap-4 m-4 min-w-0">
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 min-w-0">
       { boardIds.length === 0 ? <p className="m-4">投稿されている問題はありません</p>
       : currentBoardIds.map((boardId, index) => (
         <div className="w-full border border-gray-200 p-2 rounded-lg shadow-md flex flex-col min-h-[300px]">
