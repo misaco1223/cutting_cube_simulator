@@ -7,7 +7,10 @@ export const useGetBoards = (filter: string | null) => {
   const [cutPoints, setCutPoints] = useState<THREE.Vector3[][]>([]);
   const [questions, setQuestions] = useState<string[]>([]);
   const [createdAt, setCreatedAt] = useState<string[]>([]);
-  const [tags, setTags] = useState<string[][]|null>(null);
+  const [tags, setTags] = useState<string[][]>([]);
+  const [likes, setLikes] = useState<boolean[]>([]);
+  const [likeCounts, setLikeCounts] = useState<number[]>([]);
+  const [favorites, setFavorites ] = useState<boolean[]>([]);
 
   const getTagIdFromFilter = (filter: string | null): number | null => {
     switch (filter) {
@@ -38,7 +41,7 @@ export const useGetBoards = (filter: string | null) => {
       url = `/api/boards?filter=popular`;
     } else if (filter === "いいね") {
       url = `/api/boards?filter=like`;
-    } else if ( filter === "お気に入り"){
+    } else if ( filter === "キープ"){
       url = `/api/boards?filter=favorite`;
     };
 
@@ -66,6 +69,9 @@ export const useGetBoards = (filter: string | null) => {
         setQuestions(data.boards.questions);
         setCreatedAt(data.boards.created_at);
         setTags(data.boards.tags);
+        setLikes(data.boards.likes);
+        setLikeCounts(data.boards.like_counts);
+        setFavorites(data.boards.favorites);
       } else {
         console.log("データなし");
       }
@@ -78,5 +84,5 @@ export const useGetBoards = (filter: string | null) => {
     fetchBoards(filter);  
   }, [filter]);
 
-  return { userNames, boardIds, cutPoints, createdAt, questions, tags };
+  return { userNames, boardIds, cutPoints, createdAt, questions, tags, likes, setLikes, likeCounts, setLikeCounts, favorites, setFavorites };
 };

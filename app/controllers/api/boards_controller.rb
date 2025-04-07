@@ -44,14 +44,24 @@ class Api::BoardsController < ApplicationController
   def index
     boards = Board.where(published: true)
       .joins(:user, :cut_cube)
-      .includes(board_tags: :tag)
+      .includes(:likes, :favorites, board_tags: :tag)
       .order(created_at: :desc)
     
     if params[:tag_id].present?
       boards = boards.joins(board_tags: :tag).where(board_tags: { tag_id: params[:tag_id] })
     elsif params[:filter].present?
-      if params[:filter] === "tag"
+      if params[:filter] == "tag"
         boards = boards.joins(board_tags: :tag)
+      elsif params[:filter] == "popular"
+        boards = Board.joins(:likes)
+              .where(published: true)
+              .group('boards.id')
+              .select('boards.*, COUNT(likes.id) AS likes_count')
+              .order('likes_count DESC') 
+      elsif params[:filter] == "like"
+        boards = current_user.likes.includes(:board).map(&:board)
+      elsif params[:filter] == "favorite"
+        boards = current_user.favorites.includes(:board).map(&:board)
       end
     end
 
@@ -65,7 +75,10 @@ class Api::BoardsController < ApplicationController
         tags: boards.map { |board| board.board_tags
                                     .includes(:tag)  # tagを含める
                                     .sort_by { |board_tag| board_tag.created_at }
-                                    .map { |board_tag| board_tag.tag.name } }
+                                    .map { |board_tag| board_tag.tag.name } },
+        likes: boards.map { |board| current_user.likes.exists?(board_id: board.id) },
+        like_counts: boards.map { |board| board.likes.count },
+        favorites: boards.map { |board| current_user.favorites.exists?(board_id: board.id) },
       }
       
     render json: { boards: boards_data }, status: :ok
@@ -75,7 +88,7 @@ class Api::BoardsController < ApplicationController
   def show
     board = Board
       .joins(:user, :cut_cube)
-      .includes(board_tags: :tag)
+      .includes(:likes, :favorites, board_tags: :tag)
       .find_by(id: params[:id])
 
     if board.present?
@@ -89,7 +102,10 @@ class Api::BoardsController < ApplicationController
         created_at: board.created_at,
         is_owner: board.user_id == current_user.id,
         published: board.published,
-        tags: board.board_tags.map{ |board_tag| board_tag.tag.name }
+        tags: board.board_tags.map{ |board_tag| board_tag.tag.name },
+        like: current_user.likes.exists?(board_id: board.id),
+        like_count: board.likes.count,
+        favorite: current_user.favorites.exists?(board_id: board.id)
       }
       render json: { board: board_data}, status: :ok
     end

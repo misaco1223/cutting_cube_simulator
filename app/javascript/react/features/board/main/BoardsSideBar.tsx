@@ -9,7 +9,7 @@ interface BoardsSideBarProps {
 
 const BoardsSideBar = ({ filter, setFilter }: BoardsSideBarProps) => {
   const [ isSideBarOpen, setIsSideBarOpen ] = useState<boolean>(true);
-  const filters = ["新着順", "人気順", "タグ別", "いいね", "スター"];
+  const filters = ["新着順", "人気順", "タグ別", "いいね", "キープ"];
   const tags = ["基礎", "応用", "5年", "6年前期", "6年後期"];
   const [ isTagMenuOpen, setIsTagMenuOpen ] = useState<boolean>(false);
 

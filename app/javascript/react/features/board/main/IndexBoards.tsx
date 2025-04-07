@@ -10,7 +10,7 @@ interface IndexBoardsProps {
 }
 
 const IndexBoards = ( {filter}:IndexBoardsProps ) => {
-  const { userNames, boardIds, cutPoints, createdAt, questions, tags } = useGetBoards(filter);
+  const { userNames, boardIds, cutPoints, createdAt, questions, tags, likes, setLikes, likeCounts, setLikeCounts, favorites, setFavorites } = useGetBoards(filter);
   if (!boardIds ) return null;
 
   //ページ処理
@@ -20,7 +20,7 @@ const IndexBoards = ( {filter}:IndexBoardsProps ) => {
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { currentUserNames, currentBoardIds, currentCutPoints, currentCreatedAt, currentQuestions, currentTags } = useMemo(() => {
+  const { currentUserNames, currentBoardIds, currentCutPoints, currentCreatedAt, currentQuestions, currentTags, currentLikes, currentLikeCounts, currentFavorites } = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
   
@@ -30,9 +30,13 @@ const IndexBoards = ( {filter}:IndexBoardsProps ) => {
       currentCutPoints: cutPoints.slice(startIndex, endIndex),
       currentCreatedAt: createdAt.slice(startIndex, endIndex),
       currentQuestions: questions.slice(startIndex, endIndex),
-      currentTags: tags ? tags.slice(startIndex, endIndex).map(tagArray => tagArray) : []
+      currentTags: tags.slice(startIndex, endIndex).map(tagArray => tagArray),
+      currentLikes: likes.slice(startIndex, endIndex),
+      currentLikeCounts: likeCounts.slice(startIndex, endIndex),
+      currentFavorites: favorites.slice(startIndex, endIndex)
+
     };
-  }, [currentPage, userNames, boardIds, cutPoints, createdAt, questions, tags]);
+  }, [currentPage, userNames, boardIds, cutPoints, createdAt, questions, tags, likes, likeCounts, favorites]);
 
   const handlePageClick = (selectedPage: number) => {
     if (selectedPage < 1 || selectedPage > totalPages + 1) return;
@@ -40,6 +44,49 @@ const IndexBoards = ( {filter}:IndexBoardsProps ) => {
         setCurrentPage(selectedPage);
       });
   };
+
+  const handleUpdateFavorites = async(id:string, index: number) => {
+    try {
+      const response = await fetch(`/api/favorites/toggle`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ board_id: id })
+      });
+      if (!response.ok) throw new Error("更新に失敗しました");
+      const data = await response.json();
+      if (data) {console.log(data.message)}
+      
+      const updatedFavorites = [...favorites];
+      updatedFavorites[index] = !data.favorite;
+      setFavorites(updatedFavorites);
+
+    } catch (error) {
+      console.error("更新エラー:", error);
+    }
+  }
+
+  const handleUpdateLikes = async(id:string, index: number) => {
+    const updatedLikeCounts = [...likeCounts];
+    likes[index] === true ? updatedLikeCounts[index] -= 1 : updatedLikeCounts[index] += 1
+    setLikeCounts(updatedLikeCounts);
+
+    try {
+      const response = await fetch(`/api/likes/toggle`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ board_id: id })
+      });
+      if (!response.ok) throw new Error("更新に失敗しました");
+      const data = await response.json();
+      if (data) {console.log(data.message)}
+      
+      const updatedLikes = [...likes];
+      updatedLikes[index] = !data.like;
+      setLikes(updatedLikes);
+    } catch (error) {
+      console.error("更新エラー:", error);
+    }
+  }
 
   return (
     <div>
@@ -58,8 +105,13 @@ const IndexBoards = ( {filter}:IndexBoardsProps ) => {
           />
           <div className="px-2 flex space-x-4 justify-end items-center mt-auto">
             <Link to={`/board/${boardId}`} className="text-blue-500 hover:underline">詳細を見る</Link>
-            <span><FontAwesomeIcon icon={faStar} /></span>
-            <span><FontAwesomeIcon icon={faThumbsUp} /></span>
+            <button key={index} onClick={()=> handleUpdateFavorites(boardId, index)} className="items-center">
+              <FontAwesomeIcon icon={faStar} className={`${currentFavorites[index] ? "text-yellow-500":""}`}/>
+            </button>
+            <button key={index} onClick={()=> handleUpdateLikes(boardId, index)} className="flex space-x-1 items-center">
+              <FontAwesomeIcon icon={faThumbsUp} className={`${currentLikes[index] ? "text-blue-500":""}`}/>
+              <span>{currentLikeCounts[index]}</span>
+            </button>
           </div>
         </div>
       ))}
