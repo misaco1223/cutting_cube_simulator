@@ -12,6 +12,9 @@ export const useGetBoard = (id: string|undefined) => {
   const [isOwner, setIsOwner] = useState<string|null>(null);
   const [published, setPublished] = useState<boolean>(false);
   const [tags, setTags] = useState<string[]|null>(null);
+  const [like, setLike] = useState<boolean|null>(null);
+  const [likeCount, setLikeCount] = useState<number>(0);
+  const [favorite, setFavorite] = useState<boolean|null>(null);
 
   useEffect(() => {
     const fetchBoard = async (id: string | undefined) => {
@@ -44,6 +47,9 @@ export const useGetBoard = (id: string|undefined) => {
           setIsOwner(data.board.is_owner);
           setPublished(data.board.published);
           setTags(data.board.tags);
+          setLike(data.board.like);
+          setLikeCount(data.board.like_count);
+          setFavorite(data.board.favorite);
         }
       } catch (error) {
         console.error("boardの取得に失敗しました", error);
@@ -53,5 +59,5 @@ export const useGetBoard = (id: string|undefined) => {
     fetchBoard(id);
   }, [id]);
 
-  return { userName, glbUrl, cutPoints, question, answer, explanation, createdAt, isOwner, published, setPublished, tags, setTags};
+  return { userName, glbUrl, cutPoints, question, answer, explanation, createdAt, isOwner, published, setPublished, tags, setTags, like, setLike, likeCount, setLikeCount, favorite, setFavorite};
 };

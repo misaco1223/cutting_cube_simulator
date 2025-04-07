@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import BookmarkCard from "./BookmarkCard";
 import { useGetBookmarks } from "./useGetBookmarks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleRight, faBookmark, faToggleOff, faToggleOn } from "@fortawesome/free-solid-svg-icons";
+import { faAngleRight, faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
 const BookmarksCarousel= () => {

@@ -21,18 +21,18 @@ const TagDropdown = ({selectedTags, setSelectedTags}:TagDropDownProps) => {
 
   return (
       <div className="flex">
-        <span className="border border-gray-300 text-sm p-2">タグ</span>
+        <span className="border border-gray-300 text-sm p-1">タグ</span>
         <div className="relative border  border-gray-300 inline-block text-left">
         <button
             type="button"
             onClick={()=>setIsOpen(!isOpen)}
-            className="inline-flex justify-center px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            className="inline-flex justify-center px-4 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             id="menu-button"
             aria-expanded="true"
             aria-haspopup="true"
         >
-            選択
-            <FontAwesomeIcon icon={faCaretDown}className={`ml-2 transition-transform ${isOpen ? "rotate-180" : ""}`}  />
+            追加
+            <FontAwesomeIcon icon={faCaretDown}className={`ml-2 mt-1/2 transition-transform ${isOpen ? "rotate-180" : ""}`}  />
         </button>
         {/*タグ内容*/}
         <div

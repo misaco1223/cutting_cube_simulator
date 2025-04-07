@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookmark, faRightFromBracket, faEllipsis, faQ, faStar, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faBookmark, faRightFromBracket, faEllipsis, faQ, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from "../contexts/AuthContext";
 import { Link } from "react-router-dom";
 import BookmarksCarousel from "../features/bookmark/BookmarksCarousel"
@@ -40,7 +40,7 @@ const MyPage = () => {
             </div>
             <div className="my-6">
               <div className="flex space-x-4">
-              <span><FontAwesomeIcon icon={faQ} className="mr-2" /> あなたの問題コレクション</span>
+              <span><FontAwesomeIcon icon={faQ} className="mr-2" /> あなたの作った問題ボード</span>
                 <Link to="/board/new" className="flex flex-col">
                   <span className="text-xs font-semibold text-red-600 pt-1"><FontAwesomeIcon icon={faPlus} />問題を作成する</span>
                 </Link>

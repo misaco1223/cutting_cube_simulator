@@ -153,8 +153,10 @@ const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnsw
         <div className="space-y-1">
           <div className="flex items-center space-x-2 mb-2">
             <h1 className="text-lg font-bold">タグ設定</h1>
-            {tags && (
-              <div className="flex space-x-2">
+            <TagDropdown selectedTags={tags} setSelectedTags={setTags}/>
+          </div>
+          {tags && (
+              <div className="flex flex-wrap gap-1">
                 { tags.map((tag, index) => (
                   <div key={index} className="flex space-x-1 bg-orange-100 text-gray-700 font-bold text-xs px-4 py-2">
                     <span> {tag} </span>
@@ -163,8 +165,6 @@ const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnsw
                 ))}
               </div>
             )}
-          </div>
-          <TagDropdown selectedTags={tags} setSelectedTags={setTags}/>
         </div>
       </div>
 

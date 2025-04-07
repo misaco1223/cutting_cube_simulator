@@ -9,7 +9,7 @@ import { faPencil, faStar, faCircleXmark } from "@fortawesome/free-solid-svg-ico
 import TagDropDown from "../../tag/TagDropdown"
 
 const ShowBoard = ({ id }: { id: string }) => {
-  const { userName, glbUrl, cutPoints, question, answer, explanation, createdAt, published, setPublished, isOwner, tags, setTags } = useGetBoard(id);
+  const { userName, glbUrl, cutPoints, question, answer, explanation, createdAt, published, setPublished, isOwner, tags, setTags, like, setLike, likeCount, setLikeCount, favorite, setFavorite } = useGetBoard(id);
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
@@ -80,10 +80,56 @@ const ShowBoard = ({ id }: { id: string }) => {
     if (tags.includes(tag)) {
       const updatedTags = tags.filter((t) => t !== tag);
       setTags(updatedTags);
+      handleBoardUpdate(updatedTags);
+    }
+  }
+
+  const handleUpdateFavorite = async(id:string) =>{
+    try {
+      const response = await fetch(`/api/favorites/toggle`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ board_id: id })
+      });
+      if (!response.ok) throw new Error("更新に失敗しました");
+      const data = await response.json();
+      if (data) {console.log(data.message)}
+      setFavorite(!data.favorite);
+    } catch (error) {
+      console.error("更新エラー:", error);
+    }
+  }
+
+  const handleUpdateLike = async(id:string) =>{
+    setLikeCount(prev => like ? prev - 1 : prev + 1);
+    try {
+      const response = await fetch(`/api/likes/toggle`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ board_id: id })
+      });
+      if (!response.ok) throw new Error("更新に失敗しました");
+      const data = await response.json();
+      if (data) {console.log(data.message)}
+      setLike(!data.like);
+    } catch (error) {
+      console.error("更新エラー:", error);
     }
   }
 
   return (
+    <>
+    <div className="flex justify-end mb-2">
+        {isOwner && (
+            <TagDropDown
+            selectedTags={tags}
+            setSelectedTags={(selectedTags) => {
+                setTags(selectedTags);
+                handleBoardUpdate(selectedTags); // タグ変更と同時にAPIを呼び出す
+            }}
+            />
+        )}
+      </div>
     <div className="w-full bg-white p-10 rounded-lg shadow-lg">
       <div className="flex space-x-2">
       {/* タグ */}
@@ -116,25 +162,13 @@ const ShowBoard = ({ id }: { id: string }) => {
 
       {/* タグとスターといいね */}
       <div className="flex justify-end space-x-4">
-        {isOwner && (
-            <TagDropDown
-            selectedTags={tags}
-            setSelectedTags={(selectedTags) => {
-                setTags(selectedTags);
-                handleBoardUpdate(selectedTags); // タグ変更と同時にAPIを呼び出す
-            }}
-            />
-        )}
-        <button className="flex flex-col space-y-1">
-            <FontAwesomeIcon icon={faStar} className="hover:text-yellow-500"/>
-            <span className="text-xs text-gray-600 mr-2">お気に入り</span>
+        <button onClick={()=> handleUpdateFavorite(id)} className="my-auto">
+          <FontAwesomeIcon icon={faStar} size="lg" className={`${favorite ? "text-yellow-500":""}`}/>
         </button>
-        <div className="flex space-x-1">
-            <button className="flex flex-col space-y-1">
-            <FontAwesomeIcon icon={faThumbsUp} className="hover:text-yellow-500"/>
-            <span className="text-xs text-gray-600 mr-2">数</span>
-            </button>
-        </div>
+        <button onClick={()=> handleUpdateLike(id)} className="flex space-x-1 my-auto">
+          <FontAwesomeIcon icon={faThumbsUp} size="lg" className={`${like ? "text-blue-500":""}`}/>
+          <span className="text-xs text-gray-600 m-auto">{likeCount}</span>
+        </button>
       </div>
 
       {/* 問題文 */}
@@ -319,6 +353,7 @@ const ShowBoard = ({ id }: { id: string }) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

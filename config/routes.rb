@@ -10,6 +10,16 @@ Rails.application.routes.draw do
         get :my_boards_index
       end
     end
+    resources :favorites do
+      collection do
+        post :toggle
+      end
+    end
+    resources :likes do
+      collection do
+        post :toggle
+      end
+    end
   end
 
   get '*path', to: 'application#frontend', constraints: ->(req) {!req.xhr? && req.format.html?}

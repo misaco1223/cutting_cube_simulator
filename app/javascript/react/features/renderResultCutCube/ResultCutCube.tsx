@@ -183,13 +183,13 @@ const ResultCutCube = ({ id }: { id: string}) => {
           ? ( <button 
                 onClick={() => handleCreateBookmark(id)} 
               >
-                <span className="text-xs text-gray-600 mr-2">ブックマークに追加</span>
+                <span className="text-xs text-gray-600 mr-2">コレクションに追加</span>
                 <FontAwesomeIcon icon={faBookmark} className="hover:text-yellow-500"/>
               </button>)
           : ( <button
                 onClick={() => handleRemoveBookmark(bookmarkId)} 
               >
-                <span className="text-xs text-gray-600 mr-2">ブックマークから削除</span>
+                <span className="text-xs text-gray-600 mr-2">コレクションから削除</span>
                 <FontAwesomeIcon icon={faBookmark} className="text-yellow-500 hover:text-yellow-100" />
               </button>)
         )}
