@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_03_102405) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_06_062713) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -88,6 +88,26 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_03_102405) do
     t.index ["user_id"], name: "index_cut_cubes_on_user_id"
   end
 
+  create_table "favorites", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "board_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["board_id"], name: "index_favorites_on_board_id"
+    t.index ["user_id", "board_id"], name: "index_favorites_on_user_id_and_board_id", unique: true
+    t.index ["user_id"], name: "index_favorites_on_user_id"
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "board_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["board_id"], name: "index_likes_on_board_id"
+    t.index ["user_id", "board_id"], name: "index_likes_on_user_id_and_board_id", unique: true
+    t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
   create_table "tags", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -111,4 +131,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_03_102405) do
   add_foreign_key "bookmarks", "cut_cubes"
   add_foreign_key "bookmarks", "users"
   add_foreign_key "cut_cubes", "users"
+  add_foreign_key "favorites", "boards"
+  add_foreign_key "favorites", "users"
+  add_foreign_key "likes", "boards"
+  add_foreign_key "likes", "users"
 end

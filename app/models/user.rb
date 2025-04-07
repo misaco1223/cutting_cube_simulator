@@ -3,6 +3,8 @@ class User < ApplicationRecord
   has_many :cut_cubes, dependent: :destroy
   has_many :bookmarks, dependent: :destroy
   has_many :boards, dependent: :destroy
+  has_many :likes, dependent: :destroy
+  has_many :favorites, dependent: :destroy
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }

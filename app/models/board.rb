@@ -3,6 +3,8 @@ class Board < ApplicationRecord
   belongs_to :cut_cube
 
   has_many :board_tags, dependent: :destroy
+  has_many :likes, dependent: :destroy
+  has_many :favorites, dependent: :destroy
 
   validates :user_id, presence: true
   validates :cut_cube_id, presence: true
