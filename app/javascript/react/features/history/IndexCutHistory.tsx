@@ -94,7 +94,6 @@ const IndexCutHistory = () => {
       const updatedBookmarkIds = [...bookmarkIds];
       updatedBookmarkIds[index] = null;
       setBookmarkIds(updatedBookmarkIds);
-      window.location.reload();
     } catch (error) {
       console.log(error);
     }
@@ -131,7 +130,7 @@ const IndexCutHistory = () => {
               <div className="flex space-x-6 items-center">
                 <div>
                 { isLoggedIn  && (
-                  currentBookmarkIds[index] !== null ? (
+                  currentBookmarkIds[index] ? (
                     <button 
                       onClick={() => handleRemoveBookmark(currentBookmarkIds[index]!, index)}
                       className="flex flex-col space-y-1"

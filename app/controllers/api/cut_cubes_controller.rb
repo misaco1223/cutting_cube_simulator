@@ -63,69 +63,47 @@ class Api::CutCubesController < ApplicationController
   end
 
   def show
-    cut_cube = if current_user.present? 
-                 current_user.cut_cubes.find_by(id: params[:id])
-               else CutCube.find_by(id: params[:id])
-               end
+    cut_cube = CutCube.find_by(id:params[:id])
 
-    if cut_cube.present?
-      cut_cube_data = {
-        glb_url: url_for(cut_cube.gltf_file),
-        cut_points: JSON.parse(cut_cube.cut_points),
-        title: cut_cube.title,
-        memo: cut_cube.memo,
-        created_at: cut_cube.created_at
-      }
-
-      if current_user.present?
-        bookmark = Bookmark.find_by(user_id: current_user.id, cut_cube_id: params[:id])
-        bookmark_id = bookmark&.id
-      else
-        bookmark_id = nil  # ログインしていない場合、Bookmark されていない
-      end
-
-      render json: { cut_cube: cut_cube_data, bookmark_id: bookmark_id }, status: :ok
-    else
+    if cut_cube.nil?
       render json: { error: 'CutCube not found' }, status: :not_found
     end
+
+    cut_cube_data = {
+      glb_url: url_for(cut_cube.gltf_file),
+      cut_points: JSON.parse(cut_cube.cut_points),
+      title: cut_cube.title,
+      memo: cut_cube.memo,
+      created_at: cut_cube.created_at
+    }
+
+    bookmark_id = cut_cube.bookmark_id_for(current_user)
+
+    render json: { cut_cube: cut_cube_data, bookmark_id: bookmark_id }, status: :ok
   end
 
   def index
-    cut_cubes = if current_user.present?
-      current_user.cut_cubes.order(created_at: :desc)
-    elsif cookies[:guest_id].present?
-      CutCube.where(cookie_id: cookies[:guest_id]).order(created_at: :desc)
-    end
+    cut_cubes = CutCube.owned_by_user_or_cookie(current_user, cookies[:guest_id])
   
     if cut_cubes.present?
       cut_cubes_data = {
-        ids: cut_cubes.map { |cut_cube| cut_cube.id },
+        ids: cut_cubes.map(&:id),
         glb_urls: cut_cubes.map { |cut_cube| url_for(cut_cube.gltf_file)},
         cut_points: cut_cubes.map { |cut_cube| JSON.parse(cut_cube.cut_points)},
-        titles: cut_cubes.map { |cut_cube| cut_cube.title },
-        memos: cut_cubes.map { |cut_cube| cut_cube.memo },
-        created_at: cut_cubes.map { |cut_cube| cut_cube.created_at }
-      }
-      if current_user.present?
-        bookmarks = Bookmark.where(user_id: current_user.id, cut_cube_id: cut_cubes.ids)
-        bookmark_ids = cut_cubes.map { |cut_cube| bookmarks.find_by(cut_cube_id: cut_cube.id)&.id }
-      else
-        bookmark_ids=[]
-      end
+        titles: cut_cubes.map(&:title),
+        memos: cut_cubes.map(&:memo),
+        created_at: cut_cubes.map(&:created_at)
+    }
 
-      render json: { cut_cubes: cut_cubes_data, bookmark_ids: bookmark_ids }, status: :ok
+    bookmark_ids = cut_cubes.map { |cut_cube| cut_cube.bookmark_id_for(current_user) }
+    render json: { cut_cubes: cut_cubes_data, bookmark_ids: bookmark_ids }, status: :ok
     else
       render json: { error: 'CutCube not found' }, status: :not_found
     end
   end
 
   def destroy
-    cut_cube = if current_user.present?
-      current_user.cut_cubes.find_by(id: params[:id])
-    else
-      CutCube.find_by(id: params[:id])
-    end
-
+    cut_cube = CutCube.find_by_user_or_cookie(current_user, cookies[:guest_id], params[:id])
     if cut_cube
       cut_cube.destroy
       cut_cube.gltf_file.purge
@@ -136,17 +114,18 @@ class Api::CutCubesController < ApplicationController
   end
 
   def update
-    cut_cube = if current_user.present?
-      current_user.cut_cubes.find_by(id: params[:id])
-    else
-      CutCube.find_by(id: params[:id])
-    end
-
+    cut_cube = CutCube.find_by_user_or_cookie(current_user, cookies[:guest_id], params[:id])
     if cut_cube
-      cut_cube.update(title: params[:title], memo: params[:memo])
+      cut_cube.update(cut_cube_update_params)
       render json: { status: "success", message: 'CutCube updated successfully' }, status: :ok
     else
       render json: { error: 'CutCube not found' }, status: :not_found
     end
+  end
+
+  private
+
+  def cut_cube_update_params
+    params.require(:cut_cube).permit(:title, :memo)
   end
 end

@@ -102,7 +102,6 @@ const ResultCutCube = ({ id }: { id: string}) => {
       });
       const data = await response.json();
       setBookmarkId(null);
-      window.location.reload();
     } catch (error) {
       console.log(error);
     }

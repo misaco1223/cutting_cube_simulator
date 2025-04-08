@@ -1,22 +1,8 @@
 class Api::BoardsController < ApplicationController
   def create
-    board = Board.new(
-      user_id: current_user.id,
-      cut_cube_id: board_params[:cut_cube_id],
-      question: board_params[:question],
-      answer: board_params[:answer],
-      explanation: board_params[:explanation],
-      published: board_params[:published]
-    )
+    board = current_user.boards.new(board_params)
     if board.save
-      if params[:tags].present?
-        params[:tags].each do |tag_name|
-          tag = Tag.find_by(name: tag_name)
-          if tag
-            board_tag = BoardTag.create(board_id:board.id, tag_id:tag.id)
-          end
-        end
-      end
+      board.create_tags_by_names(params[:tags])
       render json: { message: "Board作成完了", board_id: board.id }, status: :ok
     else
       render json: { message: "登録に失敗しました", errors: board.errors.full_messages }, status: :unprocessable_entity
@@ -25,60 +11,49 @@ class Api::BoardsController < ApplicationController
 
   def my_boards_index
     boards = current_user.boards
-      .joins(:cut_cube)
-      .includes(board_tags: :tag)
+      .with_associations
       .order(created_at: :desc)
     
     boards_data =
       {
-        board_ids: boards.map { |board| board.id },
-        cut_points: boards.map { |board| JSON.parse(board.cut_cube.cut_points)},
-        questions: boards.map { |board| board.question },
-        created_at: boards.map { |board| board.created_at },
-        published: boards.map { |board| board.published },
-        tags: boards.map { |board| board.board_tags.map { |board_tag| board_tag.tag.name } }
+        board_ids: boards.map(&:id),
+        cut_points: boards.map(&:cut_points_json),
+        questions: boards.map(&:question),
+        created_at: boards.map(&:created_at),
+        published: boards.map(&:published),
+        tags: boards.map(&:tag_names)
       }
     render json: { boards: boards_data }, status: :ok
   end
 
   def index
-    boards = Board.where(published: true)
-      .joins(:user, :cut_cube)
-      .includes(:likes, :favorites, board_tags: :tag)
-      .order(created_at: :desc)
+    boards = Board.is_published.with_associations.order(created_at: :desc)
     
     if params[:tag_id].present?
-      boards = boards.joins(board_tags: :tag).where(board_tags: { tag_id: params[:tag_id] })
+      boards = Board.is_published.with_tag(params[:tag_id])
     elsif params[:filter].present?
       if params[:filter] == "tag"
         boards = boards.joins(board_tags: :tag)
       elsif params[:filter] == "popular"
-        boards = Board.joins(:likes)
-              .where(published: true)
-              .group('boards.id')
-              .select('boards.*, COUNT(likes.id) AS likes_count')
-              .order('likes_count DESC') 
+        boards = Board.is_published.popular
       elsif params[:filter] == "like"
-        boards = current_user.likes.includes(:board).map(&:board)
+        boards = current_user.liked_boards.is_published
       elsif params[:filter] == "favorite"
-        boards = current_user.favorites.includes(:board).map(&:board)
+        boards = current_user.favorited_boards.is_published
       end
     end
 
     boards_data =
       {
-        user_names: boards.map { |board| board.user.name },
-        board_ids: boards.map { |board| board.id },
-        cut_points: boards.map { |board| JSON.parse(board.cut_cube.cut_points)},
-        questions: boards.map { |board| board.question },
-        created_at: boards.map { |board| board.created_at },
-        tags: boards.map { |board| board.board_tags
-                                    .includes(:tag)  # tagを含める
-                                    .sort_by { |board_tag| board_tag.created_at }
-                                    .map { |board_tag| board_tag.tag.name } },
-        likes: boards.map { |board| current_user.likes.exists?(board_id: board.id) },
-        like_counts: boards.map { |board| board.likes.count },
-        favorites: boards.map { |board| current_user.favorites.exists?(board_id: board.id) },
+        user_names: boards.map(&:user_name),
+        board_ids: boards.map(&:id),
+        cut_points: boards.map(&:cut_points_json),
+        questions: boards.map(&:question),
+        created_at: boards.map(&:created_at),
+        tags: boards.map(&:tag_names),
+        likes: boards.map { |board| board.liked_by?(current_user) },
+        like_counts: boards.map{ |board| board.likes.count },
+        favorites: boards.map { |board| board.favorited_by?(current_user)}
       }
       
     render json: { boards: boards_data }, status: :ok
@@ -86,26 +61,23 @@ class Api::BoardsController < ApplicationController
 
   # 公開Boardの情報を取得
   def show
-    board = Board
-      .joins(:user, :cut_cube)
-      .includes(:likes, :favorites, board_tags: :tag)
-      .find_by(id: params[:id])
+    board = Board.with_associations.find_by(id: params[:id])
 
     if board.present?
       board_data = {
         user_name: board.user.name,
         glb_url: url_for(board.cut_cube.gltf_file),
-        cut_points: JSON.parse(board.cut_cube.cut_points),
+        cut_points: board.cut_points_json,
         question: board.question,
         answer: board.answer,
         explanation: board.explanation,
         created_at: board.created_at,
         is_owner: board.user_id == current_user.id,
         published: board.published,
-        tags: board.board_tags.map{ |board_tag| board_tag.tag.name },
-        like: current_user.likes.exists?(board_id: board.id),
+        tags: board.tag_names,
+        like: board.liked_by?(current_user),
         like_count: board.likes.count,
-        favorite: current_user.favorites.exists?(board_id: board.id)
+        favorite: board.favorited_by?(current_user)
       }
       render json: { board: board_data}, status: :ok
     end
@@ -119,26 +91,10 @@ class Api::BoardsController < ApplicationController
     end
 
     if board.update(board_update_params)
-      if params[:tags].present?
-        params[:tags].each do |tag_name|
-          tag = Tag.find_by(name: tag_name)
-          if tag
-            unless board.board_tags.exists?(tag_id: tag.id)
-              BoardTag.create(board_id: board.id, tag_id: tag.id)
-            end
-          end
-        end
-
-        board.board_tags.each do |board_tag|
-          unless params[:tags].include?(board_tag.tag.name)
-            board_tag.destroy
-          end
-        end
-      end
-
+      board.update_tags_by_name(params[:tags]) if params[:tags].present?
       render json: { status: "success", message: 'Board updated successfully' }, status: :ok
     else
-      render json: { error: 'Board not found' }, status: :not_found
+      render json: { error: 'Failed to update board' }, status: :not_found
     end
   end
 

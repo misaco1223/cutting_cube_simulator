@@ -23,4 +23,22 @@ class CutCube < ApplicationRecord
         end
       end
   end
+
+  def self.find_by_user_or_cookie(user, cookie_id, id)
+    if user.present?
+      user.cut_cubes.find_by(id: id)
+    elsif cookie_id.present?
+      CutCube.find_by(id: id, cookie_id: cookie_id)
+    end
+  end
+
+  def self.owned_by_user_or_cookie(user, cookie_id)
+    return user.cut_cubes.order(created_at: :desc) if user
+    where(cookie_id: cookie_id).order(created_at: :desc)
+  end
+
+  def bookmark_id_for(user)
+    return nil unless user
+    bookmarks.find_by(user_id: user.id)&.id
+  end
 end

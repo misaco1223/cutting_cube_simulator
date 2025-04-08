@@ -22,7 +22,7 @@ export const useGetBookmarks = () => {
 
       const data = await response.json();
       if (data.bookmarks) {
-        console.log("データは,", data.bookmarks);
+        console.log("bookmarkデータは,", data.bookmarks);
         setBookmarkIds(data.bookmarks.bookmark_ids);
         setCutCubeIds(data.bookmarks.cut_cube_ids);
         setGlbUrls(data.bookmarks.glb_urls);
@@ -40,7 +40,7 @@ export const useGetBookmarks = () => {
         console.log("データなし");
       }
     } catch (error) {
-      console.error("cut_cubeの取得に失敗しました", error);
+      console.error("bookmarkの取得に失敗しました", error);
     }
   };
 
