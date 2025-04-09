@@ -18,7 +18,7 @@ const MyPage = () => {
           <p></p>
         </div>
         <div className="w-full justify-end px-4 flex space-x-4">
-          <Link to="/" className="flex flex-col">
+          <Link to="/user" className="flex flex-col">
           <FontAwesomeIcon icon={faEllipsis} size="lg" className="hover:text-gray-300 transition duration-300"/>
               <span className="text-xs text-gray-600 pt-1">ユーザー詳細</span>
           </Link>

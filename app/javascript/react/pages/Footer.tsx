@@ -11,10 +11,19 @@ export const Footer = () => {
             <Link to="/privacy_policy"><span className="text-xs">プライバシーポリシー</span></Link>
           </li>
           <li>
-            <Link to="#"><span className="text-xs">お問い合わせ</span></Link>
+            <button
+              onClick={() => {
+                if (window.confirm("外部サイト(GoogleForm)を開きます。よろしいですか？")) {
+                  window.open("https://docs.google.com/forms/d/e/1FAIpQLSeTAlvLt3XIjLtgSFMqPIl2YCPmkRY6w9IzRoawkxILrEiJ0w/viewform?usp=dialog", "_blank");
+                }
+              }}
+              className="text-xs"
+            >
+              お問い合わせ
+            </button>
           </li>
         </ul>
-        <ul><span className="text-xs mx-auto">© 2025. 立方体の切断 ~中学受験算数 学習用シミュレータ~</span></ul>
+        <ul><span className="text-xs mx-auto">© 2025. 立方体の切断 ~中学受験算数 学習用シミュレーター~</span></ul>
     </footer>
   );
 };
@@ -70,7 +79,7 @@ export const PrivacyPolicy = ()=>{
     
         <h2 className="text-md font-semibold mt-4">第1条（収集する情報）</h2>
         <ul className="list-disc pl-6">
-            <li>ユーザーが登録時に提供する情報（メールアドレス）</li>
+            <li>ユーザーが登録時に提供する情報（メールアドレス、ユーザー名など）</li>
             <li>ユーザーが作成した3Dモデルデータおよび関連する情報</li>
             <li>Cookieを利用したゲストユーザーの識別情報</li>
         </ul>
@@ -102,6 +111,9 @@ export const PrivacyPolicy = ()=>{
 
         <h2 className="text-md font-semibold mt-4">第6条（改訂）</h2>
         <p>本ポリシーは、必要に応じて変更される場合があります。変更後のポリシーは、本サービス上で通知し、掲載後に有効となります。</p>
+
+        <h2 className="text-md font-semibold mt-4">第7条（お問い合わせ）</h2>
+        <p>プライバシーポリシーに関するお問い合わせは、フッターのお問い合わせフォームからご連絡ください。</p>
     </div>
     )
 };

@@ -35,7 +35,7 @@ const Boards = () => {
             </button>
           ))}
           </div>
-          {filter && selectedTab === "boards" && 
+          {isLoggedIn && filter && selectedTab === "boards" && 
             <div className="text-gray-500 text-sm flex mr-1 justify-end mt-auto">表示: {filter}</div>
           }
           <div className="mt-2 mx-auto">

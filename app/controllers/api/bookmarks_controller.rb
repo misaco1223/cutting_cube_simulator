@@ -20,8 +20,8 @@ class Api::BookmarksController < ApplicationController
         glb_urls: bookmarks.map { |bookmark| url_for(bookmark.cut_cube.gltf_file)},
         cut_points: bookmarks.map { |bookmark| JSON.parse(bookmark.cut_cube.cut_points)},
         created_at: bookmarks.map(&:created_at),
-        titles: bookmarks.map(&:title),
-        memos: bookmarks.map(&:memo)
+        titles: bookmarks.map { |bookmark| bookmark.cut_cube.title},
+        memos: bookmarks.map { |bookmark| bookmark.cut_cube.memo}
         }
       render json: { bookmarks: bookmarks_data }, status: :ok
     end

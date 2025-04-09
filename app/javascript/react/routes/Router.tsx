@@ -11,13 +11,15 @@ import CreateBoard from "../features/board/create/CreateBoard"
 import Board from "../pages/Board";
 import { PrivacyPolicy } from "../pages/Footer";
 import { ServiceTerms } from "../pages/Footer";
+import UserMe from "../features/user/UserMe"
 
 const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<LoginForm />} />
-      <Route path="/users" element={<CreateUserForm />} />
+      <Route path="/user/new" element={<CreateUserForm />} />
+      <Route path="/user" element={<UserMe/>} />
       <Route path="/result/:id" element={<Result />} />
       <Route path="/history" element={<History/>} />
       <Route path="/mypage" element={<MyPage/>} />

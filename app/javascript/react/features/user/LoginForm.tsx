@@ -96,7 +96,7 @@ const LoginForm = () => {
       </button>
 
       <p className="mt-4 text-center">
-        <Link to="/users" className="text-blue-500 hover:underline">
+        <Link to="/user/new" className="text-blue-500 hover:underline">
         新規ユーザー登録
         </Link>
       </p>
