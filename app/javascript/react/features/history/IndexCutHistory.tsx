@@ -102,7 +102,7 @@ const IndexCutHistory = () => {
   return (
     <div>
       {/* 切断履歴 */}
-      <div className="m-4 items-center">
+      <div className="my-4 items-center">
         <h1 className="text-2xl font-bold">切断履歴</h1>
         { isStorageUser ?
           <span className="text-red-500 text-xs flex mt-2 items-center">
@@ -114,7 +114,7 @@ const IndexCutHistory = () => {
 
       {/* カード */}
       <div className="space-y-4">
-      { glbUrls.length === 0 ? <p className="m-4">履歴はありません</p>
+      { glbUrls.length === 0 ? <p className="my-4">履歴はありません</p>
       : currentGlbUrls.map((glbUrl, index) => (
         <div className="w-full border border-gray-200 px-2 py-6 rounded-lg shadow-md">
           <HistoryCard

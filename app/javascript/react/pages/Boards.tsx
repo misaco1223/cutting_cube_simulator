@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import BasicEducation from "../features/board/main/BasicEducation";
-import IndexBoards from "../features/board/main/IndexBoards"
-import BoardsSideBar from "../features/board/main/BoardsSideBar"
+import IndexBoards from "../features/board/main/IndexBoards";
+import BoardsSideBar from "../features/board/main/BoardsSideBar";
+import { Link } from "react-router-dom";
 
 const Boards = () => {
   const { isLoggedIn } = useAuth();
@@ -43,7 +44,7 @@ const Boards = () => {
             ? <BasicEducation/>
             : isLoggedIn
               ? <IndexBoards filter={filter}/>
-              : <p>ログインが必要です</p>
+              : <p className="py-4"><Link to="/login" className="text-blue-700 border-b-2">ログイン</Link>が必要です</p>
           }
           </div>
         </div>

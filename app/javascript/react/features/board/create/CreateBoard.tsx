@@ -1,10 +1,11 @@
 import {useEffect, useState} from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate, Link  } from "react-router-dom";
 import CreateStep1 from "./CreateStep1";
 import CreateStep2 from "./CreateStep2";
 import CreateStep3 from "./CreateStep3";
 import { useGetCutCubes } from "../../history/useGetCutCubes";
 import * as THREE from "three";
+import { useAuth } from "../../../contexts/AuthContext"
 
 const CreateBoard = () => {
   const { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos} = useGetCutCubes();
@@ -14,6 +15,7 @@ const CreateBoard = () => {
   const [explanation, setExplanation] = useState<string>("");
   const [published, setPublished] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
+  const {isLoggedIn} = useAuth();
   const navigate = useNavigate();
 
   const selectedIndex = cutCubeIds.indexOf(cutCubeId || "");
@@ -25,6 +27,16 @@ const CreateBoard = () => {
       navigate("/board/new/step1");
     }
   }, [navigate]);
+
+  if(!isLoggedIn) { return (
+    <div className="m-4 p-4">
+      <div className="m-4 items-center space-y-1 w-full">
+        <h1>問題を作成する</h1>
+        <p className="text-xl font-bold">step1: 切断を選択してください</p>
+      </div>
+      <p className="p-4"><Link to="/login" className="text-blue-700 border-b-2">ログイン</Link>が必要です</p>
+    </div>
+  )}
 
   return (
     <Routes>
