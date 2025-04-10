@@ -5,7 +5,7 @@ set -o errexit
 rm -f tmp/pids/server.pid
 
 bundle exec rails db:migrate
-bunlde exec rails db:seed
+bundle exec rails db:seed
 
 # xvfbをバックグラウンドで起動
 Xvfb :99 -screen 0 1024x768x24 &
