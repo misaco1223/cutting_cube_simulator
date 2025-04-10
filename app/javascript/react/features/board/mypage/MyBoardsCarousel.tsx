@@ -9,6 +9,7 @@ const MyBoardsCarousel= () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { boardIds, cutPoints, questions, createdAt, published, setPublished, tags, isLoaded } = useGetMyBoards();
   const [showMoreButton, setShowMoreButton] = useState(false);
+  const [ isOrbit, setIsOrbit ] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -87,6 +88,7 @@ const MyBoardsCarousel= () => {
               cutPoints={cutPoints[index]}
               question={questions[index]}
               createdAt={createdAt[index]}
+              isOrbit={isOrbit}
             />
             <Link to={`/board/${boardId}`} className="m-4 text-blue-500 hover:underline mt-auto">詳細を見る</Link>
             <div className="px-4 mt-auto flex space-x-4 justify-end">

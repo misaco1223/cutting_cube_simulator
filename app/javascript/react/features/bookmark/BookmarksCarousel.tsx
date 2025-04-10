@@ -9,6 +9,7 @@ const BookmarksCarousel= () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { bookmarkIds, cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isLoaded } = useGetBookmarks();
   const [showMoreButton, setShowMoreButton] = useState(false);
+  const [ isOrbit, setIsOrbit ] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,6 +69,7 @@ const BookmarksCarousel= () => {
               createdAt={createdAt[index]}
               title={titles[index]}
               memo={memos[index]}
+              isOrbit={isOrbit}
             />
             <div className="px-4 mt-auto flex space-x-4">
               <Link to={`/result/${cutCubeIds[index]}`} className="text-blue-500 hover:underline">詳細を見る</Link>

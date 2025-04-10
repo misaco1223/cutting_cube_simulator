@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import BoardCubeModel from "../create/BoardCubeModel";
 import CutCubeModel from "../../renderResultCutCube/CutCubeModel"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretDown, faCircleUser, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import { faCaretDown, faCircleUser, faHand, faPause, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { useCheckPointsInfo} from "../../getCoordinates/hooks/useCheckPointsInfo"
 import { useGetBoard } from "./useGetBoard";
 import { faPencil, faStar, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
@@ -13,6 +13,8 @@ const ShowBoard = ({ id }: { id: string }) => {
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+  const [ isOrbitBoardCube, setIsOrbitBoardCube ] = useState(false);
+  const [ isOrbitCutCube, setIsOrbitCutCube ] = useState(true);
 
   // 編集用の状態
   const [isEditingQuestion, setIsEditingQuestion] = useState(false);
@@ -211,26 +213,39 @@ const ShowBoard = ({ id }: { id: string }) => {
       </div>
 
       {/* 切断前立体表示エリア */}
-      <BoardCubeModel cutPoints={cutPoints}/>
+      <div className="flex justify-end">
+      {isOrbitBoardCube ? (
+        <button onClick={()=> setIsOrbitBoardCube(false)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+          <span className="mr-2 text-xs">立体: 回転モード中</span>
+          <FontAwesomeIcon icon={faHand} className="mx-auto"/>
+        </button>
+      ):(
+        <button onClick={()=> setIsOrbitBoardCube(true)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+          <span className="mr-2 text-xs">立体: 固定モード中</span>
+          <FontAwesomeIcon icon={faPause} className="mx-auto"/>
+        </button>
+      )}
+      </div>
+      <BoardCubeModel cutPoints={cutPoints} isOrbit={isOrbitBoardCube}/>
 
       {/* 切断点情報 */}
       <div className="mt-2">
         {pointsInfo.map((pointInfo, index) => (
-                <div key={index} className="w-full px-4">
-                {pointInfo.isVertex
-                ? ( <div className="w-full flex space-x-2">
-                        <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
-                        <span className="p-1 my-auto">頂点 {pointInfo.vertexLabel}</span>
-                    </div>
-                ):( <div className="w-full flex space-x-2">
-                        <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
-                        <span className="p-1 my-auto">辺 {pointInfo.edgeLabel}</span>
-                        <span className="text-sm my-auto text-center">{pointInfo.edgeRatio.left}</span>
-                        <span className="my-auto"> : </span>
-                        <span className="text-sm my-auto text-center">{pointInfo.edgeRatio.right}</span>
-                    </div>
-                )}
+          <div key={index} className="w-full px-4">
+            {pointInfo.isVertex
+            ? ( <div className="w-full flex space-x-2">
+                    <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
+                    <span className="p-1 my-auto">頂点 {pointInfo.vertexLabel}</span>
                 </div>
+            ):( <div className="w-full flex space-x-2">
+                    <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
+                    <span className="p-1 my-auto">辺 {pointInfo.edgeLabel}</span>
+                    <span className="text-sm my-auto text-center">{pointInfo.edgeRatio.left}</span>
+                    <span className="my-auto"> : </span>
+                    <span className="text-sm my-auto text-center">{pointInfo.edgeRatio.right}</span>
+                </div>
+            )}
+          </div>
         ))}
       </div>
       {/* 回答、解説エリア アコーディオン*/}
@@ -292,24 +307,37 @@ const ShowBoard = ({ id }: { id: string }) => {
 
         {/* 切断後の立体表示 */}
         <div>
-            <div className="mt-4 mb-2 flex space-x-8 justify-end"  role="tablist">
+          <div className="mt-4 mb-2 flex space-x-8 justify-end"  role="tablist">
             {/* 切り替えボタン */}
             <div>
-                {(["all", "geometry1", "geometry2"] as const).map((tab) => (
-                    <button
-                    key={tab}
-                    role="tab"
-                    className={`px-2 py-2 border-b-2 text-sm ${
-                        selectedGeometry === tab ? "border-blue-500 font-semibold" : ""
-                    }`}
-                    onClick={() => setSelectedGeometry(tab)}
-                    >
-                    {tabLabels[tab]}
-                    </button>
-                ))}
+            {(["all", "geometry1", "geometry2"] as const).map((tab) => (
+                <button
+                key={tab}
+                role="tab"
+                className={`px-2 py-2 border-b-2 text-sm ${
+                    selectedGeometry === tab ? "border-blue-500 font-semibold" : ""
+                }`}
+                onClick={() => setSelectedGeometry(tab)}
+                >
+                {tabLabels[tab]}
+                </button>
+            ))}
             </div>
-            </div>
-            <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry}/>
+          </div>
+          <div className="flex justify-end">
+            {isOrbitCutCube ? (
+                <button onClick={()=> setIsOrbitCutCube(false)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+                <span className="mr-2 text-xs">立体: 回転モード中</span>
+                <FontAwesomeIcon icon={faHand} className="mx-auto"/>
+                </button>
+            ):(
+                <button onClick={()=> setIsOrbitCutCube(true)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+                <span className="mr-2 text-xs">立体: 固定モード中</span>
+                <FontAwesomeIcon icon={faPause} className="mx-auto"/>
+                </button>
+            )}
+          </div>
+          <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry} isOrbit={isOrbitCutCube}/>
         </div>
 
         {/* 解説 */}

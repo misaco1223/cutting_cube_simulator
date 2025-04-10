@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import BoardCubeModel from "./BoardCubeModel";
 import CutCubeModel from "../../renderResultCutCube/CutCubeModel"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretDown, faToggleOn, faToggleOff } from "@fortawesome/free-solid-svg-icons";
+import { faCaretDown, faToggleOn, faToggleOff, faHand, faPause } from "@fortawesome/free-solid-svg-icons";
 import { useCheckPointsInfo} from "../../getCoordinates/hooks/useCheckPointsInfo"
 import { useNavigate } from "react-router-dom";
 import * as THREE from "three";
@@ -25,6 +25,8 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
   const navigate = useNavigate();
+  const [ isOrbitBoardCube, setIsOrbitBoardCube ] = useState(false);
+  const [ isOrbitCutCube, setIsOrbitCutCube ] = useState(false);
 
   useEffect(() => {
     if (!cutPoints) return;
@@ -88,7 +90,20 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
         </div>
 
         {/* 切断前立体表示エリア */}
-        <BoardCubeModel cutPoints={cutPoints}/>
+        <div className="flex justify-end">
+          {isOrbitBoardCube ? (
+            <button onClick={()=> setIsOrbitBoardCube(false)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+              <span className="mr-2 text-xs">立体: 回転モード中</span>
+              <FontAwesomeIcon icon={faHand} className="mx-auto"/>
+            </button>
+          ):(
+            <button onClick={()=> setIsOrbitBoardCube(true)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+              <span className="mr-2 text-xs">立体: 固定モード中</span>
+              <FontAwesomeIcon icon={faPause} className="mx-auto"/>
+            </button>
+          )}
+        </div>
+        <BoardCubeModel cutPoints={cutPoints} isOrbit={isOrbitBoardCube}/>
 
         {/* 切断点情報 */}
         {pointsInfo.map((pointInfo, index) => (
@@ -149,8 +164,21 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
                       </button>
                   ))}
               </div>
+              <div className="flex justify-end">
+              {isOrbitCutCube ? (
+                <button onClick={()=> setIsOrbitCutCube(false)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+                  <span className="mr-2 text-xs">立体:回転モード中</span>
+                  <FontAwesomeIcon icon={faHand} className="mx-auto"/>
+                </button>
+              ):(
+                <button onClick={()=> setIsOrbitCutCube(true)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+                  <span className="mr-2 text-xs">立体: 固定モード中</span>
+                  <FontAwesomeIcon icon={faPause} className="mx-auto"/>
+                </button>
+              )}
               </div>
-              <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry}/>
+              </div>
+              <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry} isOrbit={isOrbitCutCube}/>
             </div>
 
             {/* 解説 */}

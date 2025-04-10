@@ -1,8 +1,8 @@
-import { useState, useMemo, startTransition  } from "react";
+import { useState, useMemo, useEffect, startTransition  } from "react";
 import BoardCard from "./BoardCard";
 import { useGetBoards } from "./useGetBoards";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft, faAngleRight, faStar, faThumbsUp} from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faAngleRight, faHand, faPause, faStar, faThumbsUp} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
 interface IndexBoardsProps {
@@ -12,6 +12,7 @@ interface IndexBoardsProps {
 const IndexBoards = ( {filter}:IndexBoardsProps ) => {
   const { userNames, boardIds, cutPoints, createdAt, questions, tags, likes, setLikes, likeCounts, setLikeCounts, favorites, setFavorites } = useGetBoards(filter);
   if (!boardIds ) return null;
+  const [ isOrbit, setIsOrbit ] = useState(false);
 
   //ページ処理
   const itemsPerPage = 12;
@@ -37,6 +38,10 @@ const IndexBoards = ( {filter}:IndexBoardsProps ) => {
 
     };
   }, [currentPage, userNames, boardIds, cutPoints, createdAt, questions, tags, likes, likeCounts, favorites]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter]);
 
   const handlePageClick = (selectedPage: number) => {
     if (selectedPage < 1 || selectedPage > totalPages + 1) return;
@@ -90,6 +95,20 @@ const IndexBoards = ( {filter}:IndexBoardsProps ) => {
 
   return (
     <div>
+      <div className="flex justify-end mr-2">
+      {isOrbit ? (
+        <button onClick={()=> setIsOrbit(false)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+          <span className="mr-2 text-xs">立体: 回転モード中</span>
+          <FontAwesomeIcon icon={faHand} className="mx-auto"/>
+        </button>
+      ):(
+        <button onClick={()=> setIsOrbit(true)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+          <span className="mr-2 text-xs">立体: 固定モード中</span>
+          <FontAwesomeIcon icon={faPause} className="mx-auto"/>
+        </button>
+      )}
+      </div>
+
       {/* カード */}
       <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 min-w-0">
       { boardIds.length === 0 ? <p className="m-4">投稿されている問題はありません</p>
@@ -102,6 +121,7 @@ const IndexBoards = ( {filter}:IndexBoardsProps ) => {
             createdAt={currentCreatedAt[index]}
             question={currentQuestions[index]}
             tag={currentTags[index]}
+            isOrbit={isOrbit}
           />
           <div className="px-2 flex space-x-4 justify-end items-center mt-auto">
             <Link to={`/board/${boardId}`} className="text-blue-500 hover:underline">詳細を見る</Link>

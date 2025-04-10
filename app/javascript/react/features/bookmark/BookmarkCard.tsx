@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState} from "react";
-import { Canvas } from "@react-three/fiber";
+import { useEffect, useMemo, useRef} from "react";
+import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { useGLTF, Text } from "@react-three/drei";
 import * as THREE from "three";
@@ -11,9 +11,10 @@ interface BookmarkProps {
     createdAt: string;
     title: string;
     memo: string;
+    isOrbit: boolean;
 }
 
-const BookmarkCard = ({ glbUrl, cutPoints, createdAt, title, memo }: BookmarkProps) => {
+const BookmarkCard = ({ glbUrl, cutPoints, createdAt, title, memo, isOrbit }: BookmarkProps) => {
   const { scene } = useGLTF(glbUrl);
 
   useEffect(() => {
@@ -83,14 +84,30 @@ const BookmarkCard = ({ glbUrl, cutPoints, createdAt, title, memo }: BookmarkPro
   }).replace(/\//g, "-")
   : "";
 
+  function CustomCamera() {
+    const cameraRef = useRef<THREE.PerspectiveCamera>(null)
+    const { camera, set } = useThree()
+  
+    useEffect(() => {
+      if (cameraRef.current) {
+        set({ camera: cameraRef.current }) // makeDefault
+        cameraRef.current.lookAt(0, 0, 0)
+      }
+    }, [])
+  
+    return (
+      <PerspectiveCamera ref={cameraRef} position={[2, 2, 5]} fov={50} />
+    )
+  }
+
   return (
     <div>
       <div style={{ height: "150px" , width: "100%"}}>
         <Canvas>
             <ambientLight intensity={0.3} />
             <directionalLight color="white" position={[0, 0, 5]} intensity={1} />
-            <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={50} />
-            <OrbitControls />
+            <CustomCamera />
+            {isOrbit && <OrbitControls />}
 
             {spheres}
             {vertexLabelsMemo}

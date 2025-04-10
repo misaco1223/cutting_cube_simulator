@@ -1,5 +1,5 @@
-import { useEffect, useMemo} from "react";
-import { Canvas } from "@react-three/fiber";
+import { useEffect, useMemo, useRef} from "react";
+import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { Text } from "@react-three/drei";
 import * as THREE from "three";
@@ -14,9 +14,10 @@ interface BoardProps {
   createdAt: string;
   question: string;
   tag: string[];
+  isOrbit: boolean;
 }
 
-const BoardCard = ({ userName, cutPoints, createdAt, question, tag }: BoardProps) => {
+const BoardCard = ({ userName, cutPoints, createdAt, question, tag, isOrbit }: BoardProps) => {
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
   const spheres = useMemo(() => {
     return cutPoints.map((point, index) => (
@@ -64,6 +65,22 @@ const BoardCard = ({ userName, cutPoints, createdAt, question, tag }: BoardProps
   today.setHours(0, 0, 0, 0);
   const todayString = today.toISOString().split('T')[0];
 
+  function CustomCamera() {
+    const cameraRef = useRef<THREE.PerspectiveCamera>(null)
+    const { camera, set } = useThree()
+  
+    useEffect(() => {
+      if (cameraRef.current) {
+        set({ camera: cameraRef.current }) // makeDefault
+        cameraRef.current.lookAt(0, 0, 0)
+      }
+    }, [])
+  
+    return (
+      <PerspectiveCamera ref={cameraRef} position={[2, 2, 5]} fov={50} />
+    )
+  }
+
   return (
     <div className="w-full p-4">
       {/*ヘッダー*/}
@@ -92,8 +109,8 @@ const BoardCard = ({ userName, cutPoints, createdAt, question, tag }: BoardProps
           <Canvas style={{ height: "100%" }} className="border border-gray-500">
             <ambientLight intensity={0.3} />
             <directionalLight color="white" position={[0, 0, 5]} intensity={1} />
-            <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={50} />
-            <OrbitControls />
+            <CustomCamera />
+            {isOrbit && <OrbitControls />}
             {/* 遠近感のあるグリッド */}
             <gridHelper args={[10, 10, 0x000000, 0x888888]} position={[0, -1, 0]}/>
 
@@ -112,10 +129,13 @@ const BoardCard = ({ userName, cutPoints, createdAt, question, tag }: BoardProps
         </div>
         {/*問題*/}
         <div className="mt-4 max-w-1/2">
-          <h2 className="text-md my-2 font-bold whitespace-pre-line">
-            <FontAwesomeIcon icon={faQ} className="mx-2"/>
-            {question}
-          </h2>
+          <div className="my-2">
+            <span className="text-xs my-2">問題</span>
+            <h2 className="text-sm font-semibold whitespace-pre-line">
+              {question}
+            </h2>
+          </div>
+
           {/*切断点情報*/}
           {pointsInfo.map((pointInfo, index) => (
             <div key={index} className="w-full">

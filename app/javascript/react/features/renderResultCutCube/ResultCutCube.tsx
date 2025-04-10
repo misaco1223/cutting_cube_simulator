@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import CutCubeModel from "./CutCubeModel";
 import { useGetCutCube } from "./useGetCutCube";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil, faBookmark} from "@fortawesome/free-solid-svg-icons";
+import { faPencil, faBookmark, faHand, faPause} from "@fortawesome/free-solid-svg-icons";
 import { useCheckPointsInfo} from "../getCoordinates/hooks/useCheckPointsInfo"
 import { useAuth } from "../../contexts/AuthContext"
 
@@ -12,6 +12,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
   const { isLoggedIn } = useAuth();
+  const [ isOrbit, setIsOrbit ] = useState(true);
 
   // 編集用の状態
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -108,9 +109,9 @@ const ResultCutCube = ({ id }: { id: string}) => {
   }
 
   return (
-    <div>
+    <div className="m-4">
       {/* タイトル・メモ編集エリア */}
-      <div className="mt-4 mb-2 items-center space-y-4">
+      <div className="p-2 mt-4 mb-2 items-center space-y-4">
         <div className="flex items-center space-x-2">
           {isEditingTitle ? (
             <input
@@ -208,34 +209,45 @@ const ResultCutCube = ({ id }: { id: string}) => {
           ))}
         </div>
       </div>
+
+      {/* 回転モード切り替えボタン */}
+      <div className="flex justify-end">
+      {isOrbit ? (
+        <button onClick={()=> setIsOrbit(false)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+          <span className="mr-2 text-xs">立体: 回転モード中</span>
+          <FontAwesomeIcon icon={faHand} className="mx-auto"/>
+        </button>
+      ):(
+        <button onClick={()=> setIsOrbit(true)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+          <span className="mr-2 text-xs">立体: 固定モード中</span>
+          <FontAwesomeIcon icon={faPause} className="mx-auto"/>
+        </button>
+      )}
+      </div>
   
       {/* 3Dモデル表示 */}
       <div>
-        <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry}/>
+        <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry} isOrbit={isOrbit}/>
       </div>
 
       {/* 座標表示 */}
-      <div className="mt-4">
+      <div className="mt-4 mb-2 border p-2">
         {pointsInfo.map((pointInfo, index) => (
-          <div key={index} className="w-full p-2 mb-2 rounded-sm border">
-            <h3 className="w-full text-sm mb-2">切断点 {index + 1}</h3>
-            <div className="w-full flex space-x-2 justify-between">
-              <div className="w-full flex justify-start space-x-2 ">
-                {pointInfo.isVertex
-                ? ( <span className="font-semibold w-16 my-auto">頂点 {pointInfo.vertexLabel}</span> )
-                : ( <>
-                      <span className="font-semibold w-16 flex my-auto">辺 {pointInfo.edgeLabel}</span>
-                      <div className="flex w-full">
-                        <span className="my-auto">比</span>
-                        <span className="text-sm border p-1 rounded w-20 mx-2 text-center">{pointInfo.edgeRatio.left}</span>
-                        <span> : </span>
-                        <span className="text-sm border p-1 rounded w-20 mx-2 text-center">{pointInfo.edgeRatio.right}</span>
-                      </div>
-                    </>
-                )}
-              </div>
+            <div key={index} className="w-full">
+              {pointInfo.isVertex
+              ? ( <div className="w-full flex space-x-1">
+                    <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
+                    <span className="p-1 my-auto">頂点 {pointInfo.vertexLabel}</span>
+                  </div>
+              ):( <div className="w-full flex space-x-1">
+                    <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
+                    <span className="p-1 my-auto">辺 {pointInfo.edgeLabel}</span>
+                    <span className="text-sm my-auto rounded text-center">{pointInfo.edgeRatio.left}</span>
+                    <span className="my-auto"> : </span>
+                    <span className="text-sm my-auto rounded text-center">{pointInfo.edgeRatio.right}</span>
+                  </div>
+              )}
             </div>
-          </div>
         ))}
       </div>
     </div>

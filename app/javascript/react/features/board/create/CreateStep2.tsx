@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import CutCubeModel from "../../renderResultCutCube/CutCubeModel";
 import * as THREE from "three";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { faPencil, faCircleXmark, faHand, faPause } from "@fortawesome/free-solid-svg-icons";
 import { useCheckPointsInfo} from "../../getCoordinates/hooks/useCheckPointsInfo"
 import { useNavigate} from "react-router-dom";
 import TagDropdown from "../../tag/TagDropdown";
@@ -27,6 +27,7 @@ const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnsw
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const [ isOrbit, setIsOrbit ] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -104,7 +105,20 @@ const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnsw
             ))}
           </div>
         </div>
-        <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry}/>
+        <div className="flex justify-end">
+        {isOrbit ? (
+          <button onClick={()=> setIsOrbit(false)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+            <span className="mr-2 text-xs">立体: 回転モード中</span>
+            <FontAwesomeIcon icon={faHand} className="mx-auto"/>
+          </button>
+        ):(
+          <button onClick={()=> setIsOrbit(true)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+            <span className="mr-2 text-xs">立体: 固定モード中</span>
+            <FontAwesomeIcon icon={faPause} className="mx-auto"/>
+          </button>
+        )}
+      </div>
+        <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry} isOrbit={isOrbit}/>
         {pointsInfo.map((pointInfo, index) => (
           <div key={index} className="w-full px-4">
             {pointInfo.isVertex

@@ -9,15 +9,15 @@ const MyPage = () => {
   const { isLoggedIn, logout, userName } = useAuth();
   return(
     <div className="p-4 w-full">
-      <div className="m-4 items-center w-full">
-          <h1 className="text-2xl font-bold">マイページ</h1>
+      <div className="m-4">
+          <h1 className="text-xl font-bold p-2">マイページ</h1>
       </div>
-      <div className="w-full m-4 flex justify-between">
-        <div className="justify-start w-full">
+      <div className="m-4 flex justify-between">
+        <div className="justify-start w-full p-2 my-auto">
           <span>ようこそ、{userName}さん</span>
           <p></p>
         </div>
-        <div className="w-full justify-end px-4 flex space-x-4">
+        <div className="w-full justify-end flex space-x-4">
           <Link to="/user" className="flex flex-col">
           <FontAwesomeIcon icon={faEllipsis} size="lg" className="hover:text-gray-300 transition duration-300"/>
               <span className="text-xs text-gray-600 pt-1">ユーザー詳細</span>
@@ -28,7 +28,7 @@ const MyPage = () => {
           </Link>
         </div>
       </div>
-      <div className="w-full m-4">
+      <div className="m-4">
         { !isLoggedIn
         ? <p>ログインが必要です</p>
         : ( <>

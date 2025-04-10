@@ -15,7 +15,7 @@ const BoardsSideBar = ({ filter, setFilter }: BoardsSideBarProps) => {
 
   return (
     <div className={`relative`}>
-    <div className={`max-w-1/6 p-4 border-r border-gray-300 bg-gray-700 text-white ${!isSideBarOpen && "hidden"}`}>
+    <div className={`w-[60px] px-1 py-4 border-r border-gray-300 bg-gray-700 text-white ${!isSideBarOpen && "hidden"}`}>
         <h2 className="text-lg font-semibold mb-4 text-center">
         <button 
             onClick={()=>setIsSideBarOpen(!isSideBarOpen)}
@@ -105,10 +105,10 @@ const BoardsSideBar = ({ filter, setFilter }: BoardsSideBarProps) => {
 
     {!isSideBarOpen && (
         <div
-        className="absolute left-0 top-1 pr-4 transform -translate-y-1 bg-gray-700 p-2 rounded-r-xl cursor-pointer"
+        className="absolute left-0 top-1 pr-2 opacity-20 transform -translate-y-1 bg-gray-700 p-2 rounded-r-xl cursor-pointer"
             onClick={() => setIsSideBarOpen(!isSideBarOpen)}
         >
-        <span className="text-white text-xl"><FontAwesomeIcon icon={faAnglesRight} /></span>
+        <span className="text-white text-lg"><FontAwesomeIcon icon={faAnglesRight} /></span>
         </div>
     )}
     </div>

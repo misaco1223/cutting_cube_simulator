@@ -1,15 +1,16 @@
-import { useMemo } from "react";
+import { useMemo, useRef, useEffect } from "react";
 import { Text } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import {vertices, vertexLabels} from "../../getCoordinates/types/ThreeScene";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 
 interface BoardCubeProps {
-    cutPoints: THREE.Vector3[];
+  cutPoints: THREE.Vector3[];
+  isOrbit: boolean;
 }
 
-const BoardCubeModel = ({cutPoints}: BoardCubeProps) => {
+const BoardCubeModel = ({cutPoints, isOrbit}: BoardCubeProps) => {
 
   const spheres = useMemo(() => {
     return cutPoints.map((point, index) => (
@@ -38,13 +39,29 @@ const BoardCubeModel = ({cutPoints}: BoardCubeProps) => {
     []
   );
 
+  function CustomCamera() {
+    const cameraRef = useRef<THREE.PerspectiveCamera>(null)
+    const { camera, set } = useThree()
+  
+    useEffect(() => {
+      if (cameraRef.current) {
+        set({ camera: cameraRef.current }) // makeDefault
+        cameraRef.current.lookAt(0, 0, 0)
+      }
+    }, [])
+  
+    return (
+      <PerspectiveCamera ref={cameraRef} position={[2, 2, 5]} fov={50} />
+    )
+  }
+
   return (
     <div>
       <Canvas style={{ height: "300px" }} className="border border-gray-500">
         <ambientLight intensity={0.3} />
         <directionalLight color="white" position={[0, 0, 5]} intensity={1} />
-        <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={50} />
-        <OrbitControls />
+        <CustomCamera />
+        {isOrbit && <OrbitControls />}
         {/* 遠近感のあるグリッド */}
         <gridHelper args={[10, 10, 0x000000, 0x888888]} position={[0, -1, 0]}/>
 

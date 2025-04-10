@@ -2,7 +2,7 @@ import IndexCutHistory from "../features/history/IndexCutHistory";
 
 const History = () => {
   return(
-    <div className="container mx-auto w-full mt-4 px-5">
+    <div className="w-full p-4">
       <IndexCutHistory />
     </div>
   );

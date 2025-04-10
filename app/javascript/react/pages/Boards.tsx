@@ -16,13 +16,13 @@ const Boards = () => {
   };
 
   return(
-    <div className="w-full">
+    <div className="w-full p-4">
       <div className="w-full flex">
         {isLoggedIn &&
           <BoardsSideBar filter={filter} setFilter={setFilter}/>
         }
-        <div className="w-5/6 mt-4 px-2 mx-auto">
-          <div className="flex justify-start"  role="tablist">
+        <div className="w-full m-4">
+          <div className="flex justify-start p-2"  role="tablist">
           {(["boards", "learning" ] as const).map((tab) => (
             <button
               key={tab}
@@ -37,14 +37,14 @@ const Boards = () => {
           ))}
           </div>
           {isLoggedIn && filter && selectedTab === "boards" && 
-            <div className="text-gray-500 text-sm flex mr-1 justify-end mt-auto">表示: {filter}</div>
+            <div className="text-gray-500 text-sm flex mr-4 justify-end">表示: {filter}</div>
           }
-          <div className="mt-2 mx-auto">
+          <div className="m-2">
           { selectedTab === "learning"
             ? <BasicEducation/>
             : isLoggedIn
               ? <IndexBoards filter={filter}/>
-              : <p className="py-4"><Link to="/login" className="text-blue-700 border-b-2">ログイン</Link>が必要です</p>
+              : <p className="p-2"><Link to="/login" className="text-blue-700 border-b-2">ログイン</Link>が必要です</p>
           }
           </div>
         </div>

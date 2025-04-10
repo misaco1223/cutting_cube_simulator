@@ -2,17 +2,18 @@ import { useEffect, useState, useMemo, startTransition  } from "react";
 import HistoryCard from "./HistoryCard";
 import { useGetCutCubes } from "./useGetCutCubes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft, faAngleRight, faTriangleExclamation, faTrashCan, faBookmark } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faAngleRight, faTriangleExclamation, faTrashCan, faBookmark, faPause, faHand } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
 const IndexCutHistory = () => {
   const { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isStorageUser, bookmarkIds, setBookmarkIds, isLoaded } = useGetCutCubes();
   const { isLoggedIn } = useAuth();
+  const [ isOrbit, setIsOrbit ] = useState(false);
   if (!glbUrls || !cutPoints || glbUrls.length !== cutPoints.length || !bookmarkIds ) return null;
 
   //ページ処理
-  const itemsPerPage = 5;
+  const itemsPerPage = 12;
   const totalItems = glbUrls.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
@@ -100,26 +101,39 @@ const IndexCutHistory = () => {
   }
 
   return (
-    <div>
+    <div className="m-4">
       {/* 切断履歴 */}
-      <div className="my-4 items-center">
-        <h1 className="text-2xl font-bold">切断履歴</h1>
-        { isStorageUser ?
-          <span className="text-red-500 text-xs flex mt-2 items-center">
-            <FontAwesomeIcon icon={faTriangleExclamation} className="mr-2" />
-            <p>ログイン前 / Cookie 承認前の切断データは引き継げません。<br/>最大５つまで表示されます。<br/>データは保持されません。</p>
-          </span>
-        : ""}
+      <h1 className="text-xl font-bold p-2">切断履歴</h1>
+      { isStorageUser ?
+        <span className="text-red-500 text-xs flex mt-2 items-center">
+          <FontAwesomeIcon icon={faTriangleExclamation} className="mr-2" />
+          <p>ログイン前 / Cookie 承認前の切断データは引き継げません。<br/>最大５つまで表示されます。<br/>データは保持されません。</p>
+        </span>
+      : ""}
+
+      <div className="flex justify-end mr-2">
+      {isOrbit ? (
+        <button onClick={()=> setIsOrbit(false)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+          <span className="mr-2 text-xs">立体: 回転モード中</span>
+          <FontAwesomeIcon icon={faHand} className="mx-auto"/>
+        </button>
+      ):(
+        <button onClick={()=> setIsOrbit(true)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+          <span className="mr-2 text-xs">立体: 固定モード中</span>
+          <FontAwesomeIcon icon={faPause} className="mx-auto"/>
+        </button>
+      )}
       </div>
 
       {/* カード */}
-      <div className="space-y-4">
+      <div className="grid lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 grid-cols-2 gap-4 min-w-0">
       {!isLoaded && 
-        <p className="mt-6">ロード中...</p>
+        <p className="mt-6 p-2">ロード中...</p>
       }
-      { isLoaded && glbUrls.length === 0 ? <p className="my-4">履歴はありません</p>
+      { isLoaded && glbUrls.length === 0 ?
+        (<p className="my-4">履歴はありません</p>)
       : currentGlbUrls.map((glbUrl, index) => (
-        <div className="w-full border border-gray-200 px-2 py-6 rounded-lg shadow-md">
+        <div className="w-full border border-gray-200 px-4 py-6 rounded-lg shadow-md flex flex-col justify-between">
           <HistoryCard
             key={index}
             glbUrl={glbUrl}
@@ -127,51 +141,41 @@ const IndexCutHistory = () => {
             createdAt={currentCreatedAt[index]}
             title={currentTitles[index]}
             memo={currentMemos[index]}
+            isOrbit={isOrbit}
           />
-            <div className="p-2 flex space-x-4 justify-end items-center">
-              <Link to={`/result/${currentCutCubeIds[index]}`} className="text-blue-500 hover:underline">詳細を見る</Link>
-              <div className="flex space-x-6 items-center">
-                <div>
-                { isLoggedIn  && (
-                  currentBookmarkIds[index] ? (
-                    <button 
-                      onClick={() => handleRemoveBookmark(currentBookmarkIds[index]!, index)}
-                      className="flex flex-col space-y-1"
-                    >
-                      <FontAwesomeIcon icon={faBookmark} size="lg" className="text-yellow-500"/>
-                      <span className="text-xs text-gray-600">はずす</span>
-                    </button>
-                  ):(
-                    <button 
-                      onClick={() => handleCreateBookmark(currentCutCubeIds[index], index)}
-                      className="flex flex-col space-y-1"
-                    >
-                      <FontAwesomeIcon icon={faBookmark} size="lg" className="hover:text-yellow-500"/>
-                      <span className="text-xs text-gray-600">追加</span>
-                    </button>
-                  )
-                )}
-                </div>
-                <button 
-                  onClick={() => {
-                    if (window.confirm("切断を削除しますか？")) {
-                      handleRemoveCutCube(currentCutCubeIds[index]);
-                    }} 
-                  }
-                  className="flex flex-col space-y-1"
-                >
-                  
-                  <FontAwesomeIcon icon={faTrashCan} size="lg" className="hover:text-red-600"/>
-                  <span className="text-xs text-gray-600">削除</span>
-                </button>
-              </div>
+
+          <div className="p-2 justify-end mt-4">
+            <Link to={`/result/${currentCutCubeIds[index]}`} className="text-blue-500 hover:underline">詳細を見る</Link>
+            {/*下部ボタン*/}
+            <div className="flex space-x-4 mt-4 justify-end">
+              { isLoggedIn  && (
+                currentBookmarkIds[index] ? (
+                  <button onClick={() => handleRemoveBookmark(currentBookmarkIds[index]!, index)}>
+                    <FontAwesomeIcon icon={faBookmark} className="text-yellow-500"/>
+                  </button>
+                ):(
+                  <button onClick={() => handleCreateBookmark(currentCutCubeIds[index], index)}>
+                    <FontAwesomeIcon icon={faBookmark} className="hover:text-yellow-500"/>
+                  </button>
+                )
+              )}
+              <button 
+                onClick={() => {
+                  if (window.confirm("切断を削除しますか？")) {
+                    handleRemoveCutCube(currentCutCubeIds[index]);
+                  }} 
+                }
+              >
+                <FontAwesomeIcon icon={faTrashCan} className="hover:text-red-600"/>
+              </button>
             </div>
+          </div>
         </div>
-      ))}
+        ))}
       </div>
 
       {/* ページング*/}
-      <div className="mt-4 flex justify-center space-x-4">
+      <div className="mt-4 mx-auto flex justify-center space-x-4">
         {totalPages > 1 ? (
           <>
             <button

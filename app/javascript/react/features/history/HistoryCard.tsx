@@ -1,5 +1,5 @@
-import { useEffect, useMemo} from "react";
-import { Canvas } from "@react-three/fiber";
+import { useEffect, useMemo, useRef} from "react";
+import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { useGLTF, Text } from "@react-three/drei";
 import * as THREE from "three";
@@ -11,9 +11,10 @@ interface CutCubeProps {
   createdAt: string;
   title: string;
   memo: string;
+  isOrbit: boolean;
 }
 
-const HistoryCard = ({ glbUrl, cutPoints, createdAt, title, memo }: CutCubeProps) => {
+const HistoryCard = ({ glbUrl, cutPoints, createdAt, title, memo, isOrbit }: CutCubeProps) => {
   const { scene } = useGLTF(glbUrl);
 
   useEffect(() => {
@@ -83,14 +84,30 @@ const HistoryCard = ({ glbUrl, cutPoints, createdAt, title, memo }: CutCubeProps
   }).replace(/\//g, "-")
   : "";
 
+  function CustomCamera() {
+    const cameraRef = useRef<THREE.PerspectiveCamera>(null)
+    const { camera, set } = useThree()
+  
+    useEffect(() => {
+      if (cameraRef.current) {
+        set({ camera: cameraRef.current }) // makeDefault
+        cameraRef.current.lookAt(0, 0, 0)
+      }
+    }, [])
+  
+    return (
+      <PerspectiveCamera ref={cameraRef} position={[2, 2, 5]} fov={50} />
+    )
+  }
+
   return (
-    <div className="flex">
-      <div style={{ height: "150px" , width: "200px" }}>
+    <div>
+      <div style={{ height: "150px" , width: "100%" }}>
       <Canvas>
         <ambientLight intensity={0.3} />
         <directionalLight color="white" position={[0, 0, 5]} intensity={1} />
-        <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={50} />
-        <OrbitControls />
+        <CustomCamera />
+        {isOrbit && <OrbitControls />}
 
         {spheres}
         {vertexLabelsMemo}
@@ -103,8 +120,8 @@ const HistoryCard = ({ glbUrl, cutPoints, createdAt, title, memo }: CutCubeProps
       </div>
       <div className="w-full">
         <h2 className="text-md font-bold mb-2">{title || "No Title"}</h2>
-        <p className="text-gray-500 py-2 text-md">{memo}</p>
-        <p className="text-gray-500 text-xs">{formattedDate}</p>
+        <p className="text-gray-500 text-md line-clamp-3 overflow-hidden">{memo}</p>
+        <p className="text-gray-500 text-xs mt-2">{formattedDate}</p>
       </div>
     </div>
   );

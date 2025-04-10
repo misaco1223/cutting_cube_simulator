@@ -23,7 +23,7 @@ export const Footer = () => {
             </button>
           </li>
         </ul>
-        <ul><span className="text-xs mx-auto">© 2025. 立方体の切断 ~中学受験算数 学習用シミュレーター~</span></ul>
+        <ul className="flex justify-center"><span className="text-xs">© 2025. 立方体の切断 ~中学受験算数 学習用シミュレーター~</span></ul>
     </footer>
   );
 };

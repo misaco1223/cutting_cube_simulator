@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { Canvas } from "@react-three/fiber";
+import { useMemo, useEffect, useRef } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { Text } from "@react-three/drei";
 import * as THREE from "three";
@@ -10,9 +10,10 @@ interface BoardProps {
     createdAt: string;
     question: string;
     tag: string[];
+    isOrbit: boolean;
 }
 
-const MyBoardCard = ({ cutPoints, createdAt, question, tag }: BoardProps) => {
+const MyBoardCard = ({ cutPoints, createdAt, question, tag, isOrbit }: BoardProps) => {
 
   const spheres = useMemo(() => {
     return cutPoints.map((point, index) => (
@@ -51,6 +52,22 @@ const MyBoardCard = ({ cutPoints, createdAt, question, tag }: BoardProps) => {
   }).replace(/\//g, "-")
   : "";
 
+  function CustomCamera() {
+    const cameraRef = useRef<THREE.PerspectiveCamera>(null)
+    const { camera, set } = useThree()
+  
+    useEffect(() => {
+      if (cameraRef.current) {
+        set({ camera: cameraRef.current }) // makeDefault
+        cameraRef.current.lookAt(0, 0, 0)
+      }
+    }, [])
+  
+    return (
+      <PerspectiveCamera ref={cameraRef} position={[2, 2, 5]} fov={50} />
+    )
+  }
+
   return (
     <div className="flex flex-col min-h-[300px]">
       <div className="mb-auto">
@@ -65,8 +82,8 @@ const MyBoardCard = ({ cutPoints, createdAt, question, tag }: BoardProps) => {
       <Canvas style={{ height: "150px" , width: "100%"}}>
         <ambientLight intensity={0.3} />
         <directionalLight color="white" position={[0, 0, 5]} intensity={1} />
-        <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={50} />
-        <OrbitControls />
+        <CustomCamera/>
+        { isOrbit && <OrbitControls /> }
 
         <mesh scale= {[2, 2, 2]} >
           <boxGeometry args={[1, 1, 1]} />

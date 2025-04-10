@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useGLTF, Text } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import {vertices, vertexLabels} from "../getCoordinates/types/ThreeScene";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
@@ -9,9 +9,10 @@ interface CutCubeProps {
     glbUrl: string;
     cutPoints: THREE.Vector3[];
     selectedGeometry: "all" | "geometry1" | "geometry2";
+    isOrbit: boolean;
 }
 
-const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry }: CutCubeProps) => {
+const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry, isOrbit }: CutCubeProps) => {
   const { scene } = useGLTF(glbUrl);
   const [ref1, setRef1] = useState<THREE.Mesh | null>(null);
   const [ref2, setRef2] = useState<THREE.Mesh | null>(null);
@@ -67,13 +68,29 @@ const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry }: CutCubeProps) => 
     []
   );
 
+  function CustomCamera() {
+    const cameraRef = useRef<THREE.PerspectiveCamera>(null)
+    const { camera, set } = useThree()
+  
+    useEffect(() => {
+      if (cameraRef.current) {
+        set({ camera: cameraRef.current }) // makeDefault
+        cameraRef.current.lookAt(0, 0, 0)
+      }
+    }, [])
+  
+    return (
+      <PerspectiveCamera ref={cameraRef} position={[2, 2, 5]} fov={50} />
+    )
+  }
+
   return (
     <div>
       <Canvas style={{ height: "400px" }} className="border border-gray-500">
         <ambientLight intensity={0.3} />
         <directionalLight color="white" position={[0, 0, 5]} intensity={1} />
-        <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={50} />
-        <OrbitControls />
+        <CustomCamera />
+        {isOrbit && <OrbitControls />}
 
         {spheres}
         {vertexLabelsMemo}
