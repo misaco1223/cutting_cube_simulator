@@ -10,6 +10,7 @@ export const useGetCutCubes = () => {
   const [createdAt, setCreatedAt] = useState<string[]>([]);
   const [isStorageUser, setIsStorageUser] = useState(false);
   const [bookmarkIds, setBookmarkIds] = useState<(string|null)[]>([]);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   const loadHistoryFromStorage = () => {
     const storedCutCubes = JSON.parse(localStorage.getItem("cutCube") || "[]");
@@ -56,6 +57,7 @@ export const useGetCutCubes = () => {
         setMemos(data.cut_cubes.memos);
         setCreatedAt(data.cut_cubes.created_at);
         setBookmarkIds(data.bookmark_ids);
+        setIsLoaded(true);
       } else {
         console.log("データなし");
       }
@@ -70,5 +72,5 @@ export const useGetCutCubes = () => {
     fetchCutCubes();  
   }, []);
 
-  return { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isStorageUser, bookmarkIds, setBookmarkIds};
+  return { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isStorageUser, bookmarkIds, setBookmarkIds, isLoaded};
 };

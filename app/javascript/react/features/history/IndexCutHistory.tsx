@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
 const IndexCutHistory = () => {
-  const { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isStorageUser, bookmarkIds, setBookmarkIds } = useGetCutCubes();
+  const { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isStorageUser, bookmarkIds, setBookmarkIds, isLoaded } = useGetCutCubes();
   const { isLoggedIn } = useAuth();
   if (!glbUrls || !cutPoints || glbUrls.length !== cutPoints.length || !bookmarkIds ) return null;
 
@@ -114,7 +114,10 @@ const IndexCutHistory = () => {
 
       {/* カード */}
       <div className="space-y-4">
-      { glbUrls.length === 0 ? <p className="my-4">履歴はありません</p>
+      {!isLoaded && 
+        <p className="mt-6">ロード中...</p>
+      }
+      { isLoaded && glbUrls.length === 0 ? <p className="my-4">履歴はありません</p>
       : currentGlbUrls.map((glbUrl, index) => (
         <div className="w-full border border-gray-200 px-2 py-6 rounded-lg shadow-md">
           <HistoryCard

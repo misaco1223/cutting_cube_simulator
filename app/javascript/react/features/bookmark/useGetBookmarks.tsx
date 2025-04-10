@@ -9,6 +9,7 @@ export const useGetBookmarks = () => {
   const [titles, setTitles] = useState<string[]>([]);
   const [memos, setMemos] = useState<string[]>([]);
   const [createdAt, setCreatedAt] = useState<string[]>([]);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   const fetchCutCube = async () => {
     try {
@@ -36,6 +37,7 @@ export const useGetBookmarks = () => {
         setTitles(data.bookmarks.titles);
         setMemos(data.bookmarks.memos);
         setCreatedAt(data.bookmarks.created_at);
+        setIsLoaded(true);
       } else {
         console.log("データなし");
       }
@@ -48,5 +50,5 @@ export const useGetBookmarks = () => {
     fetchCutCube();  
   }, []);
 
-  return { bookmarkIds, cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos};
+  return { bookmarkIds, cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isLoaded};
 };

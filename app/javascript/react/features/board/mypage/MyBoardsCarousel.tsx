@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const MyBoardsCarousel= () => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { boardIds, cutPoints, questions, createdAt, published, setPublished, tags } = useGetMyBoards();
+  const { boardIds, cutPoints, questions, createdAt, published, setPublished, tags, isLoaded } = useGetMyBoards();
   const [showMoreButton, setShowMoreButton] = useState(false);
 
   useEffect(() => {
@@ -32,14 +32,6 @@ const MyBoardsCarousel= () => {
       }
     };
   }, [boardIds]);
-
-  if (!boardIds || boardIds.length === 0) {
-    return (
-      <div className="p-2">
-        <p>作成された問題はありません。</p>
-      </div>
-    );
-  }
 
   const handleRemoveBoard = async(boardId: string, index: number) => {
     try {
@@ -77,6 +69,13 @@ const MyBoardsCarousel= () => {
 
   return (
     <div className="relative flex h-full w-full p-2 max-w-full">
+      {!isLoaded ?
+        <p className="p-2">ロード中...</p>
+      : (!boardIds || boardIds.length === 0) &&
+        <div className="p-2">
+          <p>作成された問題はありません。</p>
+        </div>
+      }
       <div  ref={scrollRef}
         className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory p-2 scrollbar-hide"
       >

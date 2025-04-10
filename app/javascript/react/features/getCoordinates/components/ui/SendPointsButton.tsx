@@ -103,7 +103,7 @@ const SendPointsButton = ({ points, isCollect }: SendPointsButtonProps)=> {
       ))}
       { isLoading && 
         <div className="flex space-x-4">
-          <p>切断中... しばらくお待ちください。</p>
+          <p>切断中... しばらくお待ちください。(最大15秒)</p>
           <FontAwesomeIcon icon={faSpinner} className="my-auto animate-spin text-blue-500" />
         </div>
       }

@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const BookmarksCarousel= () => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { bookmarkIds, cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos } = useGetBookmarks();
+  const { bookmarkIds, cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isLoaded } = useGetBookmarks();
   const [showMoreButton, setShowMoreButton] = useState(false);
 
   useEffect(() => {
@@ -33,14 +33,6 @@ const BookmarksCarousel= () => {
     };
   }, [bookmarkIds]);
 
-  if (!bookmarkIds || bookmarkIds.length === 0) {
-    return (
-      <div className="p-2">
-        <p>ブックマークされた切断はありません。</p>
-      </div>
-    );
-  }
-
   const handleRemoveBookmark = async(bookmarkId: string) => {
     try {
       const response = await fetch(`/api/bookmarks/${bookmarkId}`, {
@@ -57,6 +49,13 @@ const BookmarksCarousel= () => {
 
   return (
     <div className="relative flex h-full w-full p-2 max-w-full">
+      {!isLoaded ?
+        <p className="p-2">ロード中...</p>
+      : (!bookmarkIds || bookmarkIds.length === 0) &&
+        <div className="p-2">
+          <p>ブックマークされた切断はありません。</p>
+        </div>
+      }
       <div  ref={scrollRef}
         className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory p-2 scrollbar-hide"
       >
