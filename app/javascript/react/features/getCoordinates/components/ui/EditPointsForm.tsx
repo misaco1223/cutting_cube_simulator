@@ -4,17 +4,20 @@ import { useCheckPointsInfo } from '../../hooks/useCheckPointsInfo';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faRotate, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { calculateRatioToPoint } from "../../hooks/calculateRatioToPoint";
+import PointDropdown from "../PointDropDown";
 
 const EditPointsForm = ( {points, onUpdatePoints, isCollect, setIsCollect}: EditPointsFormProps) => {
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
-  const [leftRatios, setLeftRatios] = useState<{ [key: number]: string }>({});
-  const [rightRatios, setRightRatios] = useState<{ [key: number]: string }>({});
+  const [leftRatios, setLeftRatios] = useState<{ [key: number]: string }>({}); //手入力を保持
+  const [rightRatios, setRightRatios] = useState<{ [key: number]: string }>({}); //手入力を保持
 
+  // pointの変更時に、pointInfo(ポイント詳細)を更新する。
+  // pointInfoは、頂点判定isVertexと中点判定isMidpointと辺の比の情報edgeRatioなどを含んでいる。
   useEffect(() => {
     checkPointInfo(points);
     console.log("pointsは:", points);
     
-      if (Object.keys(isCollect).length !== points.length) {
+    if (Object.keys(isCollect).length !== points.length) {
       setIsCollect((prev) => {
         const newCollect = { ...prev };
   
@@ -25,10 +28,12 @@ const EditPointsForm = ( {points, onUpdatePoints, isCollect, setIsCollect}: Edit
   
         return newCollect;
       }); // 更新されたisCollectをセット
-  }
+    }
     
   }, [points, checkPointInfo, isCollect, setIsCollect]);
 
+  // pointInfo(ポイント詳細)が点を修正している場合、pointをそれに合わせる
+  // 新規に追加されたpointについて、isCollect状態をpointInfoの状態に応じて追加する
   useEffect(() => {
     console.log("pointsInfo が更新されました:", pointsInfo);
     const extractedPoints = pointsInfo.map(info => info.point);
@@ -46,6 +51,7 @@ const EditPointsForm = ( {points, onUpdatePoints, isCollect, setIsCollect}: Edit
     }
   }, [pointsInfo]);
 
+  // 点の削除ボタン
   const handleRemovePoint = (index: number) => {
     const newPoints = points.filter((_, i) => i !== index);
     onUpdatePoints(newPoints);
@@ -64,9 +70,8 @@ const EditPointsForm = ( {points, onUpdatePoints, isCollect, setIsCollect}: Edit
     setIsCollect((prev) => reindexObject(prev));
   };
 
-  const handleUpdateRatio = (index: number) => {
-    const left = leftRatios[index]|| "1";
-    const right = rightRatios[index] || "1";
+  // 点の更新ボタン
+  const handleUpdateRatio = (index: number, left: string, right: string) => {
     const edgeLabel = pointsInfo[index].edgeLabel
 
     const{ point } = calculateRatioToPoint(left, right, edgeLabel);
@@ -81,64 +86,51 @@ const EditPointsForm = ( {points, onUpdatePoints, isCollect, setIsCollect}: Edit
   return (
     <div>
       {pointsInfo.map((pointInfo, index) => (
-        <div key={index} className="w-full p-4 mb-2 rounded-sm border">
-          <h3 className="w-full text-sm mb-2">切断点 {index + 1}</h3>
-          <div className="w-full flex space-x-2 justify-between">
+        <div key={index} className="p-4 mb-2 rounded-sm border">
+          {/*ヘッダーと更新状態*/}
+          <div className="flex space-x-4 mb-2">
+            <h3 className="text-sm">切断点 {index + 1}</h3>
+            {isCollect[index]
+              ? ( <FontAwesomeIcon icon={faCircleCheck} className="text-green-500 my-auto" /> )
+              : ( <FontAwesomeIcon icon={faCircleCheck} className="text-gray-200 my-auto" />
+            )}
+          </div>
+
+          {/*メイン*/}
+          <div className="w-full flex justify-between">
+            {/*左側 切断点情報*/}
             <div className="w-full flex justify-start space-x-2 ">
               {pointInfo.isVertex
-              ? ( <span className="font-semibold w-16 my-auto">頂点 {pointInfo.vertexLabel}</span> )
-              : ( <>
-                    <span className="font-semibold w-16 flex my-auto">辺 {pointInfo.edgeLabel}</span>
-                    <div className="flex w-full my-auto">
-                      <span className="my-auto">比</span>
-                      <label className="text-sm">
-                        <input
-                          type="text"
-                          value={leftRatios[index] ?? pointInfo.edgeRatio.left}
-                          onChange={(e) => {
-                            setLeftRatios((prev) => ({ ...prev, [index]: e.target.value }));
-                            setIsCollect((prev) => ({ ...prev, [index]: false }));
-                          }}
-                          className="border p-1 rounded w-20 mx-2 text-center"
-                        />
-                      </label>
-                      <span> : </span>
-                      <label className="text-sm">
-                        <input
-                          type="text"
-                          value={rightRatios[index] ?? pointInfo.edgeRatio.right}
-                          onChange={(e) => {
-                            setRightRatios((prev) => ({ ...prev, [index]: e.target.value }));
-                            setIsCollect((prev) => ({ ...prev, [index]: false }));
-                          }}
-                          className="border p-1 rounded w-20 ml-2 text-center"
-                        />
-                      </label>
-                    </div>
-                  </>
+              ? ( 
+                //頂点の時
+                <span className="font-semibold w-16 my-auto">頂点 {pointInfo.vertexLabel}</span>
+              ):( 
+                // 中点または辺上の点の時
+                <>
+                <span className="font-semibold w-16 flex my-auto">辺 {pointInfo.edgeLabel}</span>
+                <div className="flex w-full my-auto">
+                  <PointDropdown
+                    index={index}
+                    leftRatio = {leftRatios[index]}
+                    rightRatio = {rightRatios[index]}
+                    setLeftRatio = {(index:number, left:string) => setLeftRatios((prev) => ({ ...prev, [index]: left }))}
+                    setRightRatio = {(index:number, right:string) => setRightRatios((prev) => ({ ...prev, [index]: right }))}
+                    pointInfoRatio ={{left: pointInfo.edgeRatio.left, right: pointInfo.edgeRatio.right}}
+                    handleUpdateRatio = {(index, left, right)=> handleUpdateRatio(index, left, right)}
+                    setIsCollect = {(index, value) => setIsCollect((prev) => ({ ...prev, [index]: value}))}
+                  />
+                </div>
+                </>
               )}
             </div>
-            <div className="w-full flex justify-end">
-              <div className="w-full flex space-x-4 justify-end">
-                <>
-                {isCollect[index]
-                  ? ( <FontAwesomeIcon icon={faCircleCheck} className="text-green-500 my-auto" /> )
-                  : ( <button
-                      onClick={() => handleUpdateRatio(index)}
-                      className="flex flex-col hover:text-blue-500"
-                    >
-                      <FontAwesomeIcon icon={faRotate} />
-                      <span className="text-xs mx-auto text-gray-600">更新</span>
-                    </button>
-                )}
-                </>
-                <button 
-                  onClick={() => handleRemovePoint(index)} 
-                  className="hover:text-red-600"
-                  >
-                  <FontAwesomeIcon icon={faTrashCan}/>
-                </button>
-              </div>
+            {/*右側 削除ボタン*/}
+            <div className="w-24 flex justify-end">
+              <button 
+                onClick={() => handleRemovePoint(index)} 
+                className="hover:text-red-600"
+                >
+                <FontAwesomeIcon icon={faTrashCan}/>
+              </button>
             </div>
           </div>
         </div>

@@ -5,7 +5,7 @@ const Home = () => {
   return(
     <>
       <ScrollMessage/>
-      <div className="container mx-auto mt-4 px-5">
+      <div className="container mx-auto mt-4 px-5 mb-24">
         <InteractiveCube />
       </div>
     </>

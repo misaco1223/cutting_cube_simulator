@@ -9,7 +9,7 @@ const Header = () => {
   return (
     <header className="bg-yellow-300 py-2 px-6 w-full h-24">
       <nav className="flex justify-between items-center h-full w-full">
-        <Link to="/" className="flex items-center justify-start h-full">
+        <Link to="/" className="flex items-center justify-start h-full w-1/3">
           <img src="/logo.png" alt="ロゴ" className="h-full" />
         </Link>
         <ul className="flex space-x-4 justify-end">

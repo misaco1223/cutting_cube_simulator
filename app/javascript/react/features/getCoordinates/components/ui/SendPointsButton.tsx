@@ -96,7 +96,7 @@ const SendPointsButton = ({ points, isCollect }: SendPointsButtonProps)=> {
         Object.values(isCollect).every((item) => item === true)
         ? ( <button 
               onClick={sendPointsToRails}
-              className="bg-gray-800 hover:bg-red-500 text-white rounded px-4 py-2">
+              className="bg-gray-800 hover:bg-red-500 text-white rounded px-6 py-2">
               3点で切断する
             </button>)
         : ( <div className="text-red-500">切断点を更新して最新の状態にしてください</div>

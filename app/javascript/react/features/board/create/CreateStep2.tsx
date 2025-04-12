@@ -105,7 +105,7 @@ const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnsw
             ))}
           </div>
         </div>
-        <div className="flex justify-end">
+        <div className="flex justify-end mx-4">
         {isOrbit ? (
           <button onClick={()=> setIsOrbit(false)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
             <span className="mr-2 text-xs">立体: 回転モード中</span>
