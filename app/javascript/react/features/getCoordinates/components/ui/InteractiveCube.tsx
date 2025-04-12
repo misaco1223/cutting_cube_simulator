@@ -4,7 +4,7 @@ import { OrbitControls, PerspectiveCamera,Text } from "@react-three/drei";
 import ClickableEdges from "./ClickableEdges";
 import * as THREE from "three";
 import EditPointsForm from "./EditPointsForm";
-import { vertices, vertexLabels, midpoints, edges, faces } from "../../types/ThreeScene";
+import { vertices, vertexLabels, midpoints } from "../../types/ThreeScene";
 import SendPointsButton from "./SendPointsButton";
 import { isPointOnEdge } from "../../hooks/isPointOnEdge";
 
