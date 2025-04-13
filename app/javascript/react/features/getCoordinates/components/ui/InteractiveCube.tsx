@@ -4,7 +4,7 @@ import { OrbitControls, PerspectiveCamera,Text } from "@react-three/drei";
 import ClickableEdges from "./ClickableEdges";
 import * as THREE from "three";
 import EditPointsForm from "./EditPointsForm";
-import { vertices, vertexLabels, midpoints } from "../../types/ThreeScene";
+import { vertices, vertexLabels, midpoints, edges, faces } from "../../types/ThreeScene";
 import SendPointsButton from "./SendPointsButton";
 import { isPointOnEdge } from "../../hooks/isPointOnEdge";
 
@@ -109,7 +109,7 @@ const InteractiveCube = () => {
         <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={40}/>
 
         {/* 遠近感のあるグリッド */}
-        <gridHelper args={[10, 10, 0x000000, 0x888888]} position={[0, -1, 0]}/>
+        <gridHelper args={[10, 10, 0x228B22, 0xA9DFBF]} position={[0, -1, 0]}/>
     
         <mesh scale= {[2, 2, 2]} >
           <boxGeometry args={[1, 1, 1]} />
