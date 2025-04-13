@@ -3,6 +3,8 @@ import * as THREE from "three";
 
 export interface ClickableEdgesProps {
   onClick: (clickedPoint: THREE.Vector3) => void;
+  highlightedEdges?: number[];
+  nonHighlightedEdges? :number[];
 }
 
 export interface EditPointsFormProps {

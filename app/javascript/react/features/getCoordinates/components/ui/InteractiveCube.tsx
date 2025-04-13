@@ -1,23 +1,105 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera,Text } from "@react-three/drei";
 import ClickableEdges from "./ClickableEdges";
 import * as THREE from "three";
 import EditPointsForm from "./EditPointsForm";
-import { vertices, vertexLabels, midpoints } from "../../types/ThreeScene";
+import { vertices, vertexLabels, midpoints, edges, faces } from "../../types/ThreeScene";
 import SendPointsButton from "./SendPointsButton";
+import { isPointOnEdge } from "../../hooks/isPointOnEdge";
 
 const InteractiveCube = () => {
   const [points, setPoints] = useState<THREE.Vector3[]>([]);
   const [isCollect, setIsCollect] = useState<{ [key: number]: boolean }>({});
+  const [edgeValidate, setEdgeValidate] = useState<number[]>([]);
+  const [nonEdgeValidate, setNonEdgeValidate] = useState<number[]>([]);
+  const [isEdgeValidateReady, setisEdgeValidateReady] = useState(false);
 
   const handleEdgeClick = (clickedPoint: THREE.Vector3) => {
     setPoints((prevPoints) => [...prevPoints, clickedPoint]);
+    setisEdgeValidateReady(false);
   };
 
   const handleUpdatePoints = (updatedPoints: THREE.Vector3[]) => {
     setPoints(updatedPoints);
+    setisEdgeValidateReady(false);
   };
+
+  useEffect(() => {
+    if (points.length === 0) return;
+  
+    // matchedEdgesを空で準備する
+    const matchedEdges: [THREE.Vector3, THREE.Vector3][] = [];
+  
+    // 1つ目の点は、辺のチェックのみ行う
+    if (points.length === 1) {
+      edges.forEach((edge) => {
+        points.map((point) => {
+          // 頂点の時は辺のバリデーションをしない
+          if (vertices.some(v => v.equals(point))) return;
+          const { isCollinear } = isPointOnEdge(point, edge);
+          if (isCollinear) {
+            matchedEdges.push(edge);
+          }
+        });
+      });
+
+    // 点が2つ以上ある時、同一平面上のチェックと辺のチェックを行う
+    } else {
+      // 同一平面に全ての点がある時trueを返して、その面の辺をmatchedEdgesに追加する
+      faces.forEach((face) => {
+        const allPointsOnSameFace = points.every((point) =>
+          face.some((edge) => {
+            const { isCollinear } = isPointOnEdge(point, edge);
+            return isCollinear;
+          })
+        );
+        if (allPointsOnSameFace) {
+          face.forEach((edge) => { matchedEdges.push(edge)})
+        }
+      })
+
+      // 同一平面上でなかった時、それぞれの点について辺を調べて追加する。
+      if (matchedEdges.length === 0){
+        edges.forEach((edge) => {
+          points.map((point) => {
+            if (vertices.some(v => v.equals(point))) return;
+            const { isCollinear } = isPointOnEdge(point, edge);
+            if (isCollinear) {
+              matchedEdges.push(edge);
+            }
+          });
+        });
+      }
+    }
+
+    // lignsegmentsに渡せる形式に変換する
+    const highlightedEdges = matchedEdges.flatMap(([start, end]) => [
+      start.x, start.y, start.z,
+      end.x, end.y, end.z
+    ]);
+
+    // バリデーションなしの辺を取得する
+    const nonMatchedEdges = edges.filter(edge =>
+      !matchedEdges.some(m =>
+        (edge[0].equals(m[0]) && edge[1].equals(m[1])) ||
+        (edge[0].equals(m[1]) && edge[1].equals(m[0]))
+      )
+    );
+    
+    // lignsegmentsに渡せる形式に変換する
+    const nonHighlightedEdges= nonMatchedEdges.flatMap(
+      ([start, end]) => [...start.toArray(), ...end.toArray()]
+    )
+
+    // EdgeValidateに配列をセットし、準備OKにする
+    if (matchedEdges.length > 0 && highlightedEdges.length + nonHighlightedEdges.length === 72) {
+      setEdgeValidate(highlightedEdges);
+      setNonEdgeValidate(nonHighlightedEdges);
+      setisEdgeValidateReady(true);
+    }
+
+  }, [points]);
 
   return (
     <div>
@@ -27,14 +109,17 @@ const InteractiveCube = () => {
         <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={40}/>
 
         {/* 遠近感のあるグリッド */}
-        <gridHelper args={[10, 10, 0x000000, 0x888888]} position={[0, -1, 0]}/>
+        <gridHelper args={[10, 10, 0x228B22, 0xA9DFBF]} position={[0, -1, 0]}/>
     
         <mesh scale= {[2, 2, 2]} >
           <boxGeometry args={[1, 1, 1]} />
           <meshBasicMaterial transparent opacity={0.2} />
         </mesh>
 
-        <ClickableEdges onClick={handleEdgeClick} />
+        <ClickableEdges 
+          onClick={handleEdgeClick}
+          highlightedEdges={isEdgeValidateReady ? (edgeValidate ?? []) : []}
+          nonHighlightedEdges={isEdgeValidateReady ? (nonEdgeValidate ?? []) : []}   />
   
         {points.map((point, index) => (
           <mesh key={index} position={[point.x, point.y, point.z]}>

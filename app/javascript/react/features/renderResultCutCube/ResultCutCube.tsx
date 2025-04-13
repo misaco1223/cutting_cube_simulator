@@ -210,7 +210,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
         </div>
       </div>
 
-      {/* 回転モード切り替えボタン */}
+      {/* 回転モード切り替えボタン
       <div className="flex justify-end">
       {isOrbit ? (
         <button onClick={()=> setIsOrbit(false)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
@@ -223,7 +223,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
           <FontAwesomeIcon icon={faPause} className="mx-auto"/>
         </button>
       )}
-      </div>
+      </div> */}
   
       {/* 3Dモデル表示 */}
       <div>
