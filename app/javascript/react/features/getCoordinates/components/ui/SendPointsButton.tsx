@@ -94,12 +94,20 @@ const SendPointsButton = ({ points, isCollect }: SendPointsButtonProps)=> {
       { points.length === 3 && isOnSameFace &&  <div className="ml-4 text-red-500">同じ面上の3点では切断できません</div>}
       { !isLoading && points.length === 3 && !isOnSameFace && (
         Object.values(isCollect).every((item) => item === true)
-        ? ( <button 
+        ? ( 
+          <>
+          <button 
               onClick={sendPointsToRails}
-              className="bg-gray-800 hover:bg-red-500 text-white rounded px-4 py-2">
+              className="bg-green-800 hover:bg-green-700 text-white rounded px-6 py-2">
               3点で切断する
-            </button>)
-        : ( <div className="text-red-500">切断点を更新して最新の状態にしてください</div>
+          </button>
+          <div className="border mt-4 p-4 flex space-x-2">
+            <span className="my-auto">立方体の1辺の長さは</span>
+            <input type="text" placeholder="準備中..." className="border text-sm mx-auto rounded-sm p-1 w-20"/>
+            <span className="my-auto">cm</span>
+          </div>
+          </>
+        ): ( <div className="text-red-500">切断点を更新して最新の状態にしてください</div>
       ))}
       { isLoading && 
         <div className="flex space-x-4">

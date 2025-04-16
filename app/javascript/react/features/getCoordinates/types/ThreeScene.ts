@@ -3,6 +3,8 @@ import * as THREE from "three";
 
 export interface ClickableEdgesProps {
   onClick: (clickedPoint: THREE.Vector3) => void;
+  highlightedEdges?: number[];
+  nonHighlightedEdges? :number[];
 }
 
 export interface EditPointsFormProps {
@@ -29,6 +31,23 @@ export const vertices = [
 ];
   
 export const vertexLabels = ['H', 'G', 'C', 'D', 'E', 'F', 'B', 'A'];
+
+export const midpoints = [
+  new THREE.Vector3(0, 1, 1), // AB
+  new THREE.Vector3(1, 0, 1), //BF
+  new THREE.Vector3(0, -1, 1), //EF
+  new THREE.Vector3(-1, 0, 1), //AE
+
+  new THREE.Vector3(0, 1, -1), //CD
+  new THREE.Vector3(1, 0, -1), //CG
+  new THREE.Vector3(0, -1, -1), //GH
+  new THREE.Vector3(-1, 0, -1), //HD
+
+  new THREE.Vector3(-1, 1, 0), //AD
+  new THREE.Vector3(1, 1, 0), //BC
+  new THREE.Vector3(1, -1, 0), //FG
+  new THREE.Vector3(-1, -1, 0), //EH
+]
 
 export type Edge = [THREE.Vector3, THREE.Vector3];
 
@@ -66,6 +85,7 @@ export interface PointInfo {
   point: THREE.Vector3;
   isVertex: boolean; //頂点or辺を表示するために使用
   vertexLabel?: string;
+  isMidpoint: boolean;
   edgeLabel: string;
   edgeRatio: { //頂点の場合も比を表示するため
     left: string;

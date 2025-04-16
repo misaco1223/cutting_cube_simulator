@@ -5,7 +5,7 @@ const Result = () => {
   const { id } = useParams<{ id: string }>();
   if(!id) return;
   return(
-    <div className="w-full p-4">
+    <div className="w-full mt-4 p-4">
       <ResultCutCube id={id}/>
     </div>
   );

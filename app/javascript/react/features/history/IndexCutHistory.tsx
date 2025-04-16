@@ -101,9 +101,9 @@ const IndexCutHistory = () => {
   }
 
   return (
-    <div className="m-4">
+    <div>
       {/* 切断履歴 */}
-      <h1 className="text-xl font-bold p-2">切断履歴</h1>
+      <h1 className="text-xl m-4 font-bold p-2">切断履歴</h1>
       { isStorageUser ?
         <span className="text-red-500 text-xs flex mt-2 items-center">
           <FontAwesomeIcon icon={faTriangleExclamation} className="mr-2" />
@@ -175,7 +175,7 @@ const IndexCutHistory = () => {
       </div>
 
       {/* ページング*/}
-      <div className="mt-4 mx-auto flex justify-center space-x-4">
+      <div className="my-12 mx-auto flex justify-center space-x-4">
         {totalPages > 1 ? (
           <>
             <button

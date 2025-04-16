@@ -4,10 +4,10 @@ import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom"
 
 const BasicEducation = () => {
-  const [isOpen1, setIsOpen1] = useState<boolean>(false);
-  const [isOpen2, setIsOpen2] = useState<boolean>(false);
-  const [isOpen3, setIsOpen3] = useState<boolean>(false);
-  const [isOpen4, setIsOpen4] = useState<boolean>(false);
+  const [isOpen1, setIsOpen1] = useState<boolean>(true);
+  const [isOpen2, setIsOpen2] = useState<boolean>(true);
+  const [isOpen3, setIsOpen3] = useState<boolean>(true);
+  const [isOpen4, setIsOpen4] = useState<boolean>(true);
 
   return(
     <div className="w-full">
@@ -113,14 +113,14 @@ const BasicEducation = () => {
         aria-labelledby="accordion-collapse-heading-1"
         >
           <img src="/example_question_1.png" className="w-80" />
-          <h2 className="font-bold space-y-1 mt-4">切断の手順を確認</h2>
+          <h2 className="font-bold space-y-1 mt-8">切断の手順を確認</h2>
           <img src="/example_explanation_1.png" className="w-80" />
           <p className="text-sm">
             点1と点2はどちらも立方体の上の面にあるので結んで切断線になります。<br/>
             同様に、点1と点3、点2と点3もそれぞれ結びます。<br/>
             立方体の表面だけに切断線ができました。これで切断は完了です。
           </p>
-          <h2 className="font-bold space-y-1 mt-4">答え 36㎤</h2>
+          <h2 className="font-bold space-y-1 mt-8">答え 36㎤</h2>
           <p className="text-sm">点Bを含む立体は三角すい。<br/>
           三角すいの体積の求め方は  底面積×高さ÷3<br/>
           よって<br/>

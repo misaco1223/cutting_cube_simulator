@@ -13,6 +13,7 @@ export const useCheckPointsInfo = () => {
         point: pointInfo.point,
         isVertex: pointInfo.isVertex,
         vertexLabel: pointInfo.vertexLabel,
+        isMidpoint: pointInfo.isMidpoint,
         edgeLabel: pointInfo.edgeLabel,
         edgeRatio: pointInfo.edgeRatio
       };
