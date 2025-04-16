@@ -89,3 +89,8 @@
 ■ 画面遷移図
 
 Figma：https://www.figma.com/board/1muSjeudChFFLTUbAEIYuS/cut_cube_simulator-%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3?t=BlIjxTUAXvq8eBGn-6
+
+■ ER図
+
+![image](https://github.com/user-attachments/assets/af46a1a6-8aa6-42a3-9717-ddef2f2048eb)
+
