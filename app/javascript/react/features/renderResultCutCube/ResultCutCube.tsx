@@ -109,7 +109,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
   }
 
   return (
-    <div className="m-4">
+    <div className="m-4 lg:w-3/4 mx-auto">
       {/* タイトル・メモ編集エリア */}
       <div className="p-2 mt-4 mb-2 items-center space-y-4">
         <div className="flex items-center space-x-2">
@@ -151,11 +151,11 @@ const ResultCutCube = ({ id }: { id: string}) => {
                 handleCutCubeUpdate();
               }}
               autoFocus
-              className="text-sm border-b border-gray-100 focus:outline-none focus:border-red-500 w-full"
+              className="text-sm border-b border-gray-100 focus:outline-none focus:border-red-500 w-full whitespace-pre-line"
             />
           ) : (
             <p
-              className="text-sm cursor-pointer"
+              className="text-sm cursor-pointer whitespace-pre-line"
               onClick={() => setIsEditingMemo(true)}
             >
               {currentMemo}
@@ -176,7 +176,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
       </div>
 
       {/*ボタン*/}
-      <div className="mt-4 mb-2 flex space-x-4 justify-end"  role="tablist">
+      <div className="mt-4 mb-2 flex space-x-2 justify-end"  role="tablist">
         {/*ブックマークボタン*/}
         {isLoggedIn && id && (
           !bookmarkId
@@ -189,7 +189,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
           : ( <button
                 onClick={() => handleRemoveBookmark(bookmarkId)} 
               >
-                <span className="text-xs text-gray-600 mr-2">コレクションから削除</span>
+                <span className="text-xs text-gray-600 mr-2">コレクションをはずす</span>
                 <FontAwesomeIcon icon={faBookmark} className="text-yellow-500 hover:text-yellow-100" />
               </button>)
         )}
@@ -230,9 +230,11 @@ const ResultCutCube = ({ id }: { id: string}) => {
         <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry} isOrbit={isOrbit}/>
       </div>
 
-      {/* 座標表示 */}
-      <div className="mt-4 mb-2 border p-2">
-        {pointsInfo.map((pointInfo, index) => (
+      <div className="lg:flex lg:space-x-4 mt-4 mb-2 mx-auto">
+        {/* 座標表示 */}
+        <div className="lg:w-1/2 border p-4">
+          <h1>------ 切断点 ------</h1>
+          {pointsInfo.map((pointInfo, index) => (
             <div key={index} className="w-full">
               {pointInfo.isVertex
               ? ( <div className="w-full flex space-x-1">
@@ -248,7 +250,14 @@ const ResultCutCube = ({ id }: { id: string}) => {
                   </div>
               )}
             </div>
-        ))}
+          ))}
+        </div>
+
+        {/*体積比*/}
+        <div className="lg:w-1/2 border p-4">
+          <h1>------ 体積比 ------</h1>
+          <span>準備中...</span>
+        </div>
       </div>
     </div>
   );

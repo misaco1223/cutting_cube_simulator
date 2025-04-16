@@ -13,9 +13,34 @@ const Hint = () => {
 
 
   return(
-    <div className="w-full p-4">
+    <div className="w-full p-4 md:p-6">
       <div className="m-4">
-        <h1 className="text-xl font-bold p-2">このサイトの使い方</h1>
+        <h1 className="text-xl font-bold p-2">このアプリの使い方</h1>
+
+        {/* 0 */}
+        <div id="accordion-collapse" data-accordion="collapse">
+          <h2 id="accordion-collapse-heading-1">
+          <button type="button" className="flex items-center justify-between w-full mt-6 p-2 text-lg font-bold rtl:text-right focus:ring-gray-200 gap-3" 
+              onClick={() => setIsOpen1(!isOpen1)}
+              aria-expanded={isOpen1}
+              aria-controls="accordion-collapse-body-1"
+          >
+              <span>0. はじめに</span>
+              <FontAwesomeIcon icon={faCaretDown}className={`transition-transform ${isOpen1 ? "rotate-180" : ""}`}  />
+          </button>
+          </h2>
+          <div id="accordion-collapse-body-1"
+          className={`p-5 border bg-gray-100 border-gray-200 ${isOpen1 ? "" : "hidden"}`}
+          aria-labelledby="accordion-collapse-heading-1"
+          >
+            <span>
+            このアプリでは立方体を1回切断できます(2回以上は準備中...)。<br/>
+            Cookieを承認またはユーザー登録をすると切断履歴を残せます。 <br/>
+            ユーザー登録をするとマイページで自分の切断をコレクションしたり 問題を作って投稿したり、他ユーザーの問題を閲覧することができます。<br/>
+            ユーザー登録はメールアドレスの登録がいるので <b>必ず保護者の人に確認してから登録しましょう。</b> 
+            </span>
+          </div>
+        </div>
         
         <h2 className="text-md mt-8">------ 未ログインで使える機能 ------</h2>
         {/* 1 */}
@@ -35,7 +60,7 @@ const Hint = () => {
           aria-labelledby="accordion-collapse-heading-1"
           >
             <span>
-              ヘッダーのロゴをクリックすると<Link to="/" className="text-blue-700 border-b-2">ホーム</Link>に行きます。そこで切断ができます。<br/>
+              <Link to="/home" className="text-blue-700 border-b-2">切断ページ</Link>から切断点を選び、切断することができます。<br/>
               表示されている立方体からフレキシブルに頂点を選ぶことができます。<br/>
               辺上の点を選択した場合は、立体下に表示される編集フォームから辺の比を指定することができます。辺の比を修正した後は、更新ボタンを押してください。<br/>
               切断点は3つまでしか選べません。また、同じ面の3点は、切断ができないため選べません。
@@ -94,7 +119,7 @@ const Hint = () => {
         </div>
 
         <h2 className="text-md mt-8">------ ログイン後に使える機能 ------</h2>
-        <p className="p-2"><Link to="/login" className="text-blue-700 border-b-2">ログイン</Link>はこちらから</p>
+        <p className="p-2"><Link to="/login" className="text-blue-700 border-b-2">ログイン・新規ユーザー登録</Link>はこちらから</p>
 
         {/* 4 */}
         <div id="accordion-collapse" data-accordion="collapse">

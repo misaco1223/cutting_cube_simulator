@@ -20,13 +20,14 @@ const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,ti
   const [ isOrbit, setIsOrbit ] = useState(false);
 
   return (
-    <div className="m-4 p-4 border-2 rounded-lg">
+    <div className="w-full p-4">
+    <div className="m-4 mx-auto p-2 border-2 rounded-lg">
       <div className="m-4 items-center space-y-1 w-full">
         <h1>問題を作成する</h1>
         <p className="text-xl font-bold">step1: 切断を選択してください</p>
       </div>
 
-      <div className="flex justify-end mr-4">
+      <div className="flex justify-end md:mr-4 mb-4 md:mb-0">
       {isOrbit ? (
         <button onClick={()=> setIsOrbit(false)} className="flex border bg-gray-300 px-4 hover:bg-blue-300">
           <span className="mr-2 text-xs">立体: 回転モード中</span>
@@ -41,7 +42,7 @@ const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,ti
       </div>
 
       {/* 切断カード一覧 */}
-      <div className="grid lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 grid-cols-2 gap-4 m-4 min-w-0">
+      <div className="grid lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 grid-cols-2 gap-4 md:m-4 min-w-0">
         { glbUrls.length === 0 ? 
           ( <p className="m-4">切断履歴がありません</p>
           ):(
@@ -76,6 +77,7 @@ const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,ti
             次へ
           </button>
         </div>
+    </div>
     </div>
   );
 };

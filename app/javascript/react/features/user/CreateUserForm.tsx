@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import { useAuth } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const CreateUserForm = () => {
   const {login}= useAuth();
@@ -10,6 +10,8 @@ const CreateUserForm = () => {
   const [ email, setEmail ] = useState("");
   const [ password, setPassword ] = useState("");
   const [ passwordConfirmation, setPasswordConfirmation ] = useState("");
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [agreedToParental, setAgreedToParental] = useState(false);
   const [ errors, setErrors ] = useState<string[]>([]);
   
   const handleNameForm = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,24 +30,30 @@ const CreateUserForm = () => {
   const validateForm = () => {
     const errorMessages = [];
     if (!name) {
-      errorMessages.push("名前は必須です");
+      errorMessages.push("名前は必須です。");
     }
     if (!email) {
-      errorMessages.push("メールアドレスは必須です");
+      errorMessages.push("メールアドレスは必須です。");
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      errorMessages.push("有効なメールアドレスを入力してください");
+      errorMessages.push("有効なメールアドレスを入力してください。");
     }
     if (!password) {
-      errorMessages.push("パスワードは必須です");
+      errorMessages.push("パスワードは必須です。");
     } else if (password.length < 8) {
-      errorMessages.push("パスワードは8文字以上で入力してください");
+      errorMessages.push("パスワードは8文字以上で入力してください。");
     }
     if (!passwordConfirmation) {
-      errorMessages.push("パスワード(確認用)の入力は必須です");
+      errorMessages.push("パスワード(確認用)の入力は必須です。");
     } 
     if (password && password !== passwordConfirmation) {
-    errorMessages.push("パスワードと確認用パスワードが一致しません");
+    errorMessages.push("パスワードと確認用パスワードが一致しません。");
 	  }
+    if (!agreedToTerms) {
+      errorMessages.push("利用規約とプライバシーポリシーへの同意が必要です。");
+    }
+    if (!agreedToParental) {
+      errorMessages.push("未成年の場合、保護者の同意が必要です。");
+    }
     return errorMessages;
   };
   
@@ -138,6 +146,32 @@ const CreateUserForm = () => {
         placeholder="パスワード(確認用)"
         className="w-full p-2 mb-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
+
+      <div className="flex items-start mb-4 text-sm">
+        <input
+          id="terms"
+          type="checkbox"
+          checked={agreedToTerms}
+          onChange={(e) => setAgreedToTerms(e.target.checked)}
+          className="mt-1 mr-2"
+        />
+        <label htmlFor="terms" className="leading-snug">
+          <span><Link to="/service_terms" className="text-blue-700 border-b-2">利用規約</Link>と<Link to="/privacy_policy" className="text-blue-700 border-b-2">プライバシーポリシー</Link>に同意します。</span>
+        </label>
+      </div>
+
+      <div className="flex items-start mb-4 text-sm">
+        <input
+          id="parental-consent"
+          type="checkbox"
+          checked={agreedToParental}
+          onChange={(e) => setAgreedToParental(e.target.checked)}
+          className="mt-1 mr-2"
+        />
+        <label htmlFor="parental-consent" className="leading-snug">
+          私は未成年ではありません。または、<strong>保護者の同意を得ています。</strong>
+        </label>
+      </div>
 
       <button
         onClick={handleCreateUser}

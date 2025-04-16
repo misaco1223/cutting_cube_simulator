@@ -56,8 +56,8 @@ const BoardCubeModel = ({cutPoints, isOrbit}: BoardCubeProps) => {
   }
 
   return (
-    <div>
-      <Canvas style={{ height: "300px" }} className="border border-gray-500">
+    <div className="h-full">
+      <Canvas style={{ height: "100%" }} className="border border-gray-500">
         <ambientLight intensity={0.3} />
         <directionalLight color="white" position={[0, 0, 5]} intensity={1} />
         <CustomCamera />

@@ -94,12 +94,12 @@ const BoardCard = ({ userName, cutPoints, createdAt, question, tag, isOrbit }: B
           </div>
         )}
       </div>
-      <div className="header my-4 text-md flex justify-between w-full">
+      <div className="header my-4 text-md md:flex justify-between w-full">
         <div className="justify-start flex space-x-2">
           <FontAwesomeIcon icon={faCircleUser} size="lg" className="hover:text-gray-300 transition duration-300"/>
           <span className="justify-start text-md">{userName}さん</span>
         </div>
-        <div className="justify-end">
+        <div className="flex justify-end">
           <p className="text-gray-500 my-auto text-xs">{formattedDate}</p>
         </div>
       </div>

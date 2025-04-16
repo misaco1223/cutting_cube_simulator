@@ -67,13 +67,13 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
     }
 
   return (
-    <div className="w-full py-2">
-      <div className="m-4 flex space-y-2 justify-between min-w-0">
-        <h1 className="text-2xl font-bold justify-start">プレビュー</h1>
+    <div className="w-full p-4">
+      <div className="m-4">
+        <h1 className="text-xl font-bold">プレビュー</h1>
       </div>
 
       {/*問題*/}
-      <div className="bg-white m-4 p-4 border-2 rounded-md shadow-lg">
+      <div className="mx-auto my-4 p-6 border-2 rounded-md shadow-lg">
         {/*タグ*/}
         {tags && (
           <div className="flex flex-wrap gap-2">
@@ -103,7 +103,9 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
             </button>
           )}
         </div>
-        <BoardCubeModel cutPoints={cutPoints} isOrbit={isOrbitBoardCube}/>
+        <div className="h-[300px]">
+          <BoardCubeModel cutPoints={cutPoints} isOrbit={isOrbitBoardCube}/>
+        </div>
 
         {/* 切断点情報 */}
         {pointsInfo.map((pointInfo, index) => (
@@ -162,7 +164,7 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
                   </button>
               ))}
             </div>
-            
+
             {/* OrbitControll切り替えボタン */}
             <div className="flex justify-end">
             {isOrbitCutCube ? (

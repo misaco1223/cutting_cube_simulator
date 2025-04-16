@@ -226,8 +226,9 @@ const ShowBoard = ({ id }: { id: string }) => {
         </button>
       )}
       </div>
-      <BoardCubeModel cutPoints={cutPoints} isOrbit={isOrbitBoardCube}/>
-
+      <div className="h-[300px]">
+        <BoardCubeModel cutPoints={cutPoints} isOrbit={isOrbitBoardCube}/>
+      </div>
       {/* 切断点情報 */}
       <div className="mt-2">
         {pointsInfo.map((pointInfo, index) => (
