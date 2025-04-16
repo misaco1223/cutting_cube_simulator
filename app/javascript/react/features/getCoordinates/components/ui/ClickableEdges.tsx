@@ -1,9 +1,9 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import {ClickableEdgesProps} from '../../types/ThreeScene';
 
-const ClickableEdges = ({ onClick }: ClickableEdgesProps ) => {
+const ClickableEdges = ({ onClick, highlightedEdges = [], nonHighlightedEdges = [] }: ClickableEdgesProps ) => {
   const lineRef = useRef<THREE.LineSegments>(null);
   const { camera, gl, scene } = useThree();
   const raycaster = new THREE.Raycaster();
@@ -44,10 +44,66 @@ const ClickableEdges = ({ onClick }: ClickableEdgesProps ) => {
   },[gl.domElement, handleMouseClick]);
 
   return (
-    <lineSegments scale= {[2, 2, 2]} ref={lineRef}>
-      <edgesGeometry args={[new THREE.BoxGeometry(1, 1, 1)]} />
-      <lineBasicMaterial color="black" />
-    </lineSegments>
+    <>
+    {/* ハイライトの灰色線 */}
+    {highlightedEdges.length >= 6 ? (
+      <>
+      <lineSegments position={[0, 0, 0]}>
+        <bufferGeometry attach="geometry">
+          <bufferAttribute
+            attach="attributes-position"
+            array={new Float32Array(highlightedEdges)}
+            itemSize={3}
+            count={highlightedEdges.length/3}
+          />
+        </bufferGeometry>
+        <lineBasicMaterial color="whitesmoke" />
+      </lineSegments>
+
+      {/*ハイライト以外の線は太く*/}
+      <lineSegments position={[0, 0, 0]} ref={lineRef}>
+        <bufferGeometry attach="geometry">
+          <bufferAttribute
+            attach="attributes-position"
+            array={new Float32Array(nonHighlightedEdges)}
+            itemSize={3}
+            count={nonHighlightedEdges.length / 3}
+          />
+        </bufferGeometry>
+        <lineBasicMaterial color="black" />
+      </lineSegments>
+
+      {[1, 2, 3, 4, 5].map(i => (
+        <lineSegments
+          key={i}
+          position={[i * 0.001, i * 0.001, i * 0.001]}
+        >
+          <bufferGeometry attach="geometry">
+            <bufferAttribute
+              attach="attributes-position"
+              array={new Float32Array(nonHighlightedEdges)}
+              itemSize={3}
+              count={nonHighlightedEdges.length / 3}
+            />
+          </bufferGeometry>
+          <lineBasicMaterial color="black" />
+        </lineSegments>
+      ))}
+    </>
+    ):(
+      <>
+      <lineSegments scale= {[2, 2, 2]} ref={lineRef}>
+        <edgesGeometry args={[new THREE.BoxGeometry(1, 1, 1)]} />
+        <lineBasicMaterial color="black" />
+      </lineSegments>
+
+      <lineSegments scale= {[2.01, 2.01, 2.01]}>
+        <edgesGeometry args={[new THREE.BoxGeometry(1, 1, 1)]} />
+        <lineBasicMaterial color="black" />
+      </lineSegments>
+    </>
+    )}
+    </>
   );
 };
 

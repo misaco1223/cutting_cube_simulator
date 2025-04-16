@@ -113,7 +113,7 @@ const IndexBoards = ( {filter}:IndexBoardsProps ) => {
       <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 min-w-0">
       { boardIds.length === 0 ? <p className="m-4">投稿されている問題はありません</p>
       : currentBoardIds.map((boardId, index) => (
-        <div className="w-full border border-gray-200 p-2 rounded-lg shadow-md flex flex-col min-h-[300px]">
+        <div className="w-full border border-gray-200 md:px-2 py-2 rounded-lg shadow-md flex flex-col min-h-[300px]">
           <BoardCard
             key={index}
             userName={currentUserNames[index]}
@@ -138,7 +138,7 @@ const IndexBoards = ( {filter}:IndexBoardsProps ) => {
       </div>
 
       {/* ページング*/}
-      <div className="my-4 flex justify-center space-x-4">
+      <div className="my-12 flex justify-center space-x-4">
         {totalPages > 1 ? (
           <>
             <button

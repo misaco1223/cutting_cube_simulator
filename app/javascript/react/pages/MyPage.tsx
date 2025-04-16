@@ -8,11 +8,11 @@ import MyBoardsCarousel from "../features/board/mypage/MyBoardsCarousel"
 const MyPage = () => {
   const { isLoggedIn, logout, userName } = useAuth();
   return(
-    <div className="p-4 w-full">
+    <div className="p-2 md:p-6 w-full">
       <div className="m-4">
           <h1 className="text-xl font-bold p-2">マイページ</h1>
       </div>
-      <div className="m-4 flex justify-between">
+      <div className="m-4 md:flex justify-between">
         <div className="justify-start w-full p-2 my-auto">
           <span>ようこそ、{userName}さん</span>
           <p></p>

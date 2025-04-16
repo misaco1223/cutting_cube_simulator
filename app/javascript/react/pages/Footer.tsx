@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 export const Footer = () => {
   return (
-    <footer className="bg-gray-200 pt-4 px-6 w-full h-20 text-center">
+    <footer className="bg-gray-200 py-10 px-6 w-full h-32 text-center">
         <ul className="flex space-x-4 justify-center">
           <li>
             <Link to="/service_terms"><span className="text-xs">利用規約</span></Link>
@@ -23,7 +23,7 @@ export const Footer = () => {
             </button>
           </li>
         </ul>
-        <ul className="flex justify-center"><span className="text-xs">© 2025. 立方体の切断 ~中学受験算数 学習用シミュレーター~</span></ul>
+        <ul className="flex justify-center mt-2"><span className="text-xs">© 2025. 立方体の切断 ~中学受験算数 学習用シミュレーター~</span></ul>
     </footer>
   );
 };

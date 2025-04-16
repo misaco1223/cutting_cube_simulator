@@ -86,7 +86,7 @@ const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry, isOrbit }: CutCubeP
 
   return (
     <div>
-      <Canvas style={{ height: "400px" }} className="border border-gray-500">
+      <Canvas style={{ height: "400px" }} className="mx-auto border border-gray-500">
         <ambientLight intensity={0.3} />
         <directionalLight color="white" position={[0, 0, 5]} intensity={1} />
         <CustomCamera />

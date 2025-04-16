@@ -66,7 +66,8 @@ const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnsw
   if (glbUrl === "" || !cutPoints) return;
 
   return (
-    <div className="m-4 p-6 border-2 rounded-lg">
+    <div className="w-full p-4">
+    <div className="m-4 mx-auto p-6 border-2 rounded-lg">
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
       <div className="my-4 items-center space-y-1 w-full">
         <h1>問題の作成</h1>
@@ -88,7 +89,7 @@ const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnsw
 
       {/* 切断立体表示エリア */}
       <div>
-        <div className="m-4 mb-2 flex space-x-8 justify-end"  role="tablist">
+        <div className="mx-2 mb-2 flex space-x-8 justify-end"  role="tablist">
           {/* 切り替えボタン */}
           <div>
             {(["all", "geometry1", "geometry2"] as const).map((tab) => (
@@ -105,7 +106,7 @@ const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnsw
             ))}
           </div>
         </div>
-        <div className="flex justify-end">
+        <div className="flex justify-end mx-2 mt-4">
         {isOrbit ? (
           <button onClick={()=> setIsOrbit(false)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
             <span className="mr-2 text-xs">立体: 回転モード中</span>
@@ -191,6 +192,7 @@ const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnsw
           プレビュー
         </button>
       </div>
+    </div>
     </div>
   );
 };

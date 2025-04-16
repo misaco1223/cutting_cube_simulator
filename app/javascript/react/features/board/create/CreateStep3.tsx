@@ -67,13 +67,13 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
     }
 
   return (
-    <div className="w-full py-2">
-      <div className="m-4 flex space-y-2 justify-between min-w-0">
-        <h1 className="text-2xl font-bold justify-start">プレビュー</h1>
+    <div className="w-full p-4">
+      <div className="m-4">
+        <h1 className="text-xl font-bold">プレビュー</h1>
       </div>
 
       {/*問題*/}
-      <div className="bg-white m-4 p-4 border-2 rounded-md shadow-lg">
+      <div className="mx-auto my-4 p-6 border-2 rounded-md shadow-lg">
         {/*タグ*/}
         {tags && (
           <div className="flex flex-wrap gap-2">
@@ -103,7 +103,9 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
             </button>
           )}
         </div>
-        <BoardCubeModel cutPoints={cutPoints} isOrbit={isOrbitBoardCube}/>
+        <div className="h-[300px]">
+          <BoardCubeModel cutPoints={cutPoints} isOrbit={isOrbitBoardCube}/>
+        </div>
 
         {/* 切断点情報 */}
         {pointsInfo.map((pointInfo, index) => (
@@ -147,39 +149,38 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
             </div>
 
             {/* 切断後の立体表示 */}
-            <div>
-              <div className="mt-4 mb-2 flex space-x-8 justify-end"  role="tablist">
-              {/* 切り替えボタン */}
-              <div>
-                  {(["all", "geometry1", "geometry2"] as const).map((tab) => (
-                      <button
-                      key={tab}
-                      role="tab"
-                      className={`px-2 py-2 border-b-2 text-sm ${
-                          selectedGeometry === tab ? "border-blue-500 font-semibold" : ""
-                      }`}
-                      onClick={() => setSelectedGeometry(tab)}
-                      >
-                      {tabLabels[tab]}
-                      </button>
-                  ))}
-              </div>
-              <div className="flex justify-end">
-              {isOrbitCutCube ? (
-                <button onClick={()=> setIsOrbitCutCube(false)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
-                  <span className="mr-2 text-xs">立体:回転モード中</span>
-                  <FontAwesomeIcon icon={faHand} className="mx-auto"/>
-                </button>
-              ):(
-                <button onClick={()=> setIsOrbitCutCube(true)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
-                  <span className="mr-2 text-xs">立体: 固定モード中</span>
-                  <FontAwesomeIcon icon={faPause} className="mx-auto"/>
-                </button>
-              )}
-              </div>
-              </div>
-              <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry} isOrbit={isOrbitCutCube}/>
+            {/* 切り替えボタン */}
+            <div className="mt-4 mb-2 flex justify-end"  role="tablist">
+              {(["all", "geometry1", "geometry2"] as const).map((tab) => (
+                  <button
+                  key={tab}
+                  role="tab"
+                  className={`px-2 py-2 border-b-2 text-sm ${
+                      selectedGeometry === tab ? "border-blue-500 font-semibold" : ""
+                  }`}
+                  onClick={() => setSelectedGeometry(tab)}
+                  >
+                  {tabLabels[tab]}
+                  </button>
+              ))}
             </div>
+
+            {/* OrbitControll切り替えボタン */}
+            <div className="flex justify-end">
+            {isOrbitCutCube ? (
+              <button onClick={()=> setIsOrbitCutCube(false)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+                <span className="mr-2 text-xs">立体:回転モード中</span>
+                <FontAwesomeIcon icon={faHand} className="mx-auto"/>
+              </button>
+            ):(
+              <button onClick={()=> setIsOrbitCutCube(true)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
+                <span className="mr-2 text-xs">立体: 固定モード中</span>
+                <FontAwesomeIcon icon={faPause} className="mx-auto"/>
+              </button>
+            )}
+            </div>
+            
+            <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry} isOrbit={isOrbitCutCube}/>
 
             {/* 解説 */}
             <div className="mt-4 mb-2 items-center space-y-4">

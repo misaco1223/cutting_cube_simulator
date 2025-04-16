@@ -12,11 +12,12 @@ import Board from "../pages/Board";
 import { PrivacyPolicy } from "../pages/Footer";
 import { ServiceTerms } from "../pages/Footer";
 import UserMe from "../features/user/UserMe"
+import LandingPage from "../pages/LandingPage";
 
 const Router = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/home" element={<Home />} />
       <Route path="/login" element={<LoginForm />} />
       <Route path="/user/new" element={<CreateUserForm />} />
       <Route path="/user" element={<UserMe/>} />
@@ -29,6 +30,7 @@ const Router = () => {
       <Route path="/board/:id" element={<Board/>}/>
       <Route path="/privacy_policy" element={<PrivacyPolicy/>} />
       <Route path="/service_terms" element={<ServiceTerms/>} />
+      <Route path="/" element={<LandingPage/>} />
     </Routes>
   )
 };

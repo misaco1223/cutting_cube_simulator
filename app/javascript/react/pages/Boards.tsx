@@ -21,7 +21,7 @@ const Boards = () => {
         {isLoggedIn &&
           <BoardsSideBar filter={filter} setFilter={setFilter}/>
         }
-        <div className="w-full m-4">
+        <div className="w-full md:mx-4 mx-2 my-4">
           <div className="flex justify-start p-2"  role="tablist">
           {(["boards", "learning" ] as const).map((tab) => (
             <button
