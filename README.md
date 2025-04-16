@@ -85,3 +85,7 @@
 - バックエンド: RailsAPI, BlenderAPI
 - 切断処理の実装方針
   フロントで取得した座標をAPI通信でRailsに送信し、RailsからBlenderに渡すことで、Blenderが切断処理を行う。切断後BlendergaGLBエクスポートを行い、Railsで取得してActiveStorageに紐付けする。その後再度フロントからRailsにGETリクエストを送信し、Railsがglbファイルと一緒にデータをフロントに返して、R3Fで描画する。
+
+■ 画面遷移図
+
+Figma：https://www.figma.com/board/1muSjeudChFFLTUbAEIYuS/cut_cube_simulator-%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3?t=BlIjxTUAXvq8eBGn-6
