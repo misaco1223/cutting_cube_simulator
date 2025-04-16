@@ -182,23 +182,6 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
             
             <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry} isOrbit={isOrbitCutCube}/>
 
-            {/* OrbitControll切り替えボタン */}
-            <div className="flex justify-end">
-            {isOrbitCutCube ? (
-              <button onClick={()=> setIsOrbitCutCube(false)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
-                <span className="mr-2 text-xs">立体:回転モード中</span>
-                <FontAwesomeIcon icon={faHand} className="mx-auto"/>
-              </button>
-            ):(
-              <button onClick={()=> setIsOrbitCutCube(true)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
-                <span className="mr-2 text-xs">立体: 固定モード中</span>
-                <FontAwesomeIcon icon={faPause} className="mx-auto"/>
-              </button>
-            )}
-            </div>
-            
-            <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry} isOrbit={isOrbitCutCube}/>
-
             {/* 解説 */}
             <div className="mt-4 mb-2 items-center space-y-4">
               <h1 className="text-md font-bold mb-4">解説</h1>
