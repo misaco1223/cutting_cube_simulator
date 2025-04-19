@@ -7,7 +7,7 @@ const ScrollMessage = () => {
             ようこそ、立方体の切断へ！　新学年が始まって1ヶ月ですね。
             新しいクラスには慣れてきましたか？
             初めてのことは勇気がいりますが、きちんと向き合えば大きな学びがあるはずです。　頑張りましょう！
-            このアプリを使う前に<Link to="/hint" className="text-blue-700 border-b-2"> はじめに</Link>を確認してください。
+            このアプリを使う前に、ヒントページの<Link to="/hint" className="text-blue-700 border-b-2"> はじめに</Link>を確認してください。
           </span>
         </div>
       </div>

@@ -4,8 +4,10 @@ import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { useGLTF, Text } from "@react-three/drei";
 import * as THREE from "three";
 import {vertices, vertexLabels} from "../getCoordinates/types/ThreeScene";
+import { useNavigate } from "react-router-dom";
 
 interface BookmarkProps {
+    cutCubeId?: string;
     glbUrl: string;
     cutPoints: THREE.Vector3[];
     createdAt: string;
@@ -14,8 +16,9 @@ interface BookmarkProps {
     isOrbit: boolean;
 }
 
-const BookmarkCard = ({ glbUrl, cutPoints, createdAt, title, memo, isOrbit }: BookmarkProps) => {
+const BookmarkCard = ({ cutCubeId, glbUrl, cutPoints, title, memo, isOrbit }: BookmarkProps) => {
   const { scene } = useGLTF(glbUrl);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let meshFound = false;
@@ -73,17 +76,6 @@ const BookmarkCard = ({ glbUrl, cutPoints, createdAt, title, memo, isOrbit }: Bo
     []
   );
 
-  const formattedDate = createdAt ? new Date(createdAt).toLocaleString("ja-JP", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: undefined,
-    hour12: false,
-  }).replace(/\//g, "-")
-  : "";
-
   function CustomCamera() {
     const cameraRef = useRef<THREE.PerspectiveCamera>(null)
     const { camera, set } = useThree()
@@ -119,9 +111,8 @@ const BookmarkCard = ({ glbUrl, cutPoints, createdAt, title, memo, isOrbit }: Bo
         </Canvas>
       </div>
       <div className="p-4 w-full">
-        <h2 className="text-md font-bold mb-2">{title || "No Title"}</h2>
-        <p className="text-gray-500 my-2 text-md line-clamp-3 overflow-hidden">{memo}</p>
-        <p className="text-gray-500 text-xs">{formattedDate}</p>
+        <button onClick={()=> navigate(`/result/${cutCubeId}`)}  disabled={!cutCubeId} className="text-sm font-semibold mb-2 hover:text-blue-700 hover:underline">{title || "No Title"}</button>
+        <p className="text-gray-500 my-2 text-sm line-clamp-3 mt-2 overflow-hidden">{memo}</p>
       </div>
     </div>
   );

@@ -18,15 +18,21 @@ const CreateBoard = () => {
   const {isLoggedIn} = useAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    const idParam = query.get("id");
+  
+    if (window.location.pathname === "/board/new") {
+      const step1Url = idParam
+        ? `/board/new/step1?id=${idParam}`
+        : "/board/new/step1";
+      navigate(step1Url);
+    }
+  }, [navigate]);
+
   const selectedIndex = cutCubeIds.indexOf(cutCubeId || "");
   const selectedGlbUrl = selectedIndex !== -1 ? glbUrls[selectedIndex] : "";
   const selectedCutPoints: THREE.Vector3[] | [] = selectedIndex !== -1 ? cutPoints[selectedIndex] : [];
-
-  useEffect(() => {
-    if (window.location.pathname === "/board/new") {
-      navigate("/board/new/step1");
-    }
-  }, [navigate]);
 
   if(!isLoggedIn) { return (
     <div className="m-4 p-4">
@@ -40,7 +46,7 @@ const CreateBoard = () => {
 
   return (
     <Routes>
-      <Route path="/step1" element={
+      <Route path="step1" element={
           <CreateStep1
             cutCubeId={cutCubeId}
             setCutCubeId={setCutCubeId}
@@ -53,7 +59,7 @@ const CreateBoard = () => {
             onNext={() => navigate("/board/new/step2")}
           />} />
       <Route
-        path="/step2"
+        path="step2"
         element={
           <CreateStep2
             glbUrl={selectedGlbUrl}
@@ -72,7 +78,7 @@ const CreateBoard = () => {
         }
       />
       <Route
-        path="/step3"
+        path="step3"
         element={
           <CreateStep3 
             cutCubeId={cutCubeId}

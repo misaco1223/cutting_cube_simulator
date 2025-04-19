@@ -77,6 +77,8 @@ const LoginForm = () => {
         type="email"
         value={email}
         onChange={handleEmailForm}
+        autoComplete="email"
+        name="email"
         placeholder="メールアドレス"
         className="w-full p-2 mb-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
       />

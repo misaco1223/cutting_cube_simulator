@@ -27,6 +27,9 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
   const navigate = useNavigate();
   const [ isOrbitBoardCube, setIsOrbitBoardCube ] = useState(false);
   const [ isOrbitCutCube, setIsOrbitCutCube ] = useState(false);
+  const [ isPointOpen, setIsPointOpen] = useState(false);
+
+  const togglePoint = () => setIsPointOpen((prev)=> !prev);
 
   useEffect(() => {
     if (!cutPoints) return;
@@ -44,9 +47,9 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
   const handleCreateBoard= async() => {
     const boardParams = {
       cut_cube_id: cutCubeId,
-      question: question,
-      answer: answer,
-      explanation: explanation,
+      question: replaceKeywords(question),
+      answer: replaceKeywords(answer),
+      explanation: replaceKeywords(explanation),
       published: published
     };
 
@@ -66,14 +69,42 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
       }
     }
 
+    const formattedCutPoints = () => {
+      if (!cutPoints) return [];
+      const replaceCutPoints: string[] = [];
+    
+      pointsInfo.forEach((pointInfo) => {
+        if (pointInfo.isVertex) {
+          replaceCutPoints.push(`頂点${pointInfo.vertexLabel}`);
+        } else {
+          replaceCutPoints.push(
+            `辺${pointInfo.edgeLabel}を${pointInfo.edgeRatio.left}:${pointInfo.edgeRatio.right}に分ける点`
+          );
+        }
+      });
+    
+      return replaceCutPoints;
+    };
+    
+    const replaceKeywords = (input: string): string => {
+      return input.replace(/\[\[(.+?)\]\]/g, (_, key) => {
+        if (key === "切断点") {
+          const points = formattedCutPoints();
+          return points.length > 0 ? points.join("、") : "[[切断点]]";
+        } else {
+          return `[[${key}]]`; // 他のキーワードはそのまま
+        }
+      });
+    };
+
   return (
-    <div className="w-full p-4">
+    <div className="w-full p-4 md:p-12">
       <div className="m-4">
         <h1 className="text-xl font-bold">プレビュー</h1>
       </div>
 
       {/*問題*/}
-      <div className="mx-auto my-4 p-6 border-2 rounded-md shadow-lg">
+      <div className="mx-auto my-4 md:p-6 p-2 border-2 rounded-md shadow-lg">
         {/*タグ*/}
         {tags && (
           <div className="flex flex-wrap gap-2">
@@ -86,45 +117,66 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
         {/* 問題文 */}
         <div className="mt-4 mb-2 p-2 items-center space-y-4">
           <h1 className="text-md font-bold mb-4">問題</h1>
-          <span className="text-md font-semibold whitespace-pre-line">{question}</span>
+          <span className="text-md font-semibold whitespace-pre-line">{replaceKeywords(question)}</span>
         </div>
 
-        {/* 切断前立体表示エリア */}
-        <div className="flex justify-end">
-          {isOrbitBoardCube ? (
-            <button onClick={()=> setIsOrbitBoardCube(false)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
-              <span className="mr-2 text-xs">立体: 回転モード中</span>
-              <FontAwesomeIcon icon={faHand} className="mx-auto"/>
-            </button>
-          ):(
-            <button onClick={()=> setIsOrbitBoardCube(true)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
-              <span className="mr-2 text-xs">立体: 固定モード中</span>
-              <FontAwesomeIcon icon={faPause} className="mx-auto"/>
-            </button>
-          )}
+        <div className="flex justify-between">
+          {/* 切断点情報 */}
+          <div className="m-2 text-sm flex justify-start">
+              <div className="relative group">
+                <button onClick={togglePoint} className="text-xs">
+                  切断点を確認する <FontAwesomeIcon icon={faCaretDown}className={`transition-transform ${isPointOpen ? "rotate-180" : ""}`}  />
+                </button>
+                <div className={`absolute z-50 w-64 bg-white border border-gray-300 shadow-xl p-4 ${isPointOpen ? "": "hidden"}`}>
+                  {pointsInfo.map((pointInfo, index) => (
+                    <div key={index} className="w-full px-4">
+                      {pointInfo.isVertex
+                      ? ( <div className="w-full flex space-x-2">
+                              <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
+                              <span className="p-1 my-auto">頂点 {pointInfo.vertexLabel}</span>
+                          </div>
+                      ):( <div className="w-full flex space-x-2">
+                              <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
+                              <span className="p-1 my-auto">辺 {pointInfo.edgeLabel}</span>
+                              <span className="text-sm my-auto text-center">{pointInfo.edgeRatio.left}</span>
+                              <span className="my-auto"> : </span>
+                              <span className="text-sm my-auto text-center">{pointInfo.edgeRatio.right}</span>
+                          </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+          </div>
+          {/* 切断前立体表示エリア */}
+          <div className="flex justify-end m-2">
+            {isOrbitBoardCube ? (
+              <div className="relative group">
+                <button onClick={()=> setIsOrbitBoardCube(false)} className="flex">
+                  <span className="mr-2 my-auto text-xs">立体: 回転モードON</span>
+                  <FontAwesomeIcon icon={faToggleOn} size="lg" className="mx-auto text-green-500"/>
+                </button>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+                  立体を固定する
+                </div>
+              </div>
+              ):(
+                <div className="relative group">
+                  <button onClick={()=> setIsOrbitBoardCube(true)} className="flex">
+                    <span className="mr-2 my-auto text-xs">立体: 回転モードOFF</span>
+                    <FontAwesomeIcon icon={faToggleOff} size="lg" className="mx-auto"/>
+                  </button>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+                    立体を回転する
+                  </div>
+                </div>
+              )}
+          </div>
         </div>
-        <div className="h-[300px]">
+
+        <div className={`h-[300px] ${isOrbitBoardCube ? "cursor-grab" : ""}`}>
           <BoardCubeModel cutPoints={cutPoints} isOrbit={isOrbitBoardCube}/>
         </div>
-
-        {/* 切断点情報 */}
-        {pointsInfo.map((pointInfo, index) => (
-            <div key={index} className="w-full px-4">
-              {pointInfo.isVertex
-              ? ( <div className="w-full flex space-x-2">
-                    <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
-                    <span className="p-1 my-auto">頂点 {pointInfo.vertexLabel}</span>
-                  </div>
-              ):( <div className="w-full flex space-x-2">
-                    <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
-                    <span className="p-1 my-auto">辺 {pointInfo.edgeLabel}</span>
-                    <span className="text-sm p-1 rounded text-center my-auto">{pointInfo.edgeRatio.left}</span>
-                    <span className="my-auto"> : </span>
-                    <span className="text-sm p-1 rounded text-center my-auto">{pointInfo.edgeRatio.right}</span>
-                  </div>
-              )}
-            </div>
-          ))}
         
         {/* 回答、解説エリア アコーディオン*/}
         <div id="accordion-collapse" data-accordion="collapse">
@@ -145,47 +197,62 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
             {/* 答え */}
             <div className="my-4 items-center space-y-4">
               <h1 className="text-md font-bold mb-4">答え</h1>
-              <span className="text-lg font-semibold">{answer}</span>
+              <span className="text-lg font-semibold">{replaceKeywords(answer)}</span>
             </div>
 
             {/* 切断後の立体表示 */}
-            {/* 切り替えボタン */}
-            <div className="mt-4 mb-2 flex justify-end"  role="tablist">
-              {(["all", "geometry1", "geometry2"] as const).map((tab) => (
-                  <button
-                  key={tab}
-                  role="tab"
-                  className={`px-2 py-2 border-b-2 text-sm ${
-                      selectedGeometry === tab ? "border-blue-500 font-semibold" : ""
-                  }`}
-                  onClick={() => setSelectedGeometry(tab)}
-                  >
-                  {tabLabels[tab]}
+            <div className="mb-2 md:flex justify-end space-x-4">
+              {/* 回転モード切り替えボタン */}
+              <div className="flex justify-end my-auto">
+                {isOrbitBoardCube ? (
+                <div className="relative group">
+                  <button onClick={()=> setIsOrbitBoardCube(false)} className="flex">
+                    <span className="mr-2 my-auto text-xs">立体: 回転モードON</span>
+                    <FontAwesomeIcon icon={faToggleOn} size="lg" className="mx-auto text-green-500"/>
                   </button>
-              ))}
-            </div>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+                    立体を固定する
+                  </div>
+                </div>
+                ):(
+                  <div className="relative group">
+                    <button onClick={()=> setIsOrbitBoardCube(true)} className="flex">
+                      <span className="mr-2 my-auto text-xs">立体: 回転モードOFF</span>
+                      <FontAwesomeIcon icon={faToggleOff} size="lg" className="mx-auto"/>
+                    </button>
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+                      立体を回転する
+                    </div>
+                  </div>
+                )}
+              </div>
 
-            {/* OrbitControll切り替えボタン */}
-            <div className="flex justify-end">
-            {isOrbitCutCube ? (
-              <button onClick={()=> setIsOrbitCutCube(false)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
-                <span className="mr-2 text-xs">立体:回転モード中</span>
-                <FontAwesomeIcon icon={faHand} className="mx-auto"/>
-              </button>
-            ):(
-              <button onClick={()=> setIsOrbitCutCube(true)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
-                <span className="mr-2 text-xs">立体: 固定モード中</span>
-                <FontAwesomeIcon icon={faPause} className="mx-auto"/>
-              </button>
-            )}
+              {/* 切り替えボタン */}
+              <div className="flex space-x-8 text-xs justify-end my-auto"  role="tablist">
+                <div>
+                  {(["all", "geometry1", "geometry2"] as const).map((tab) => (
+                      <button
+                      key={tab}
+                      role="tab"
+                      className={`p-1 border-b-2 ${
+                          selectedGeometry === tab ? "border-blue-500 font-semibold" : ""
+                      }`}
+                      onClick={() => setSelectedGeometry(tab)}
+                      >
+                      {tabLabels[tab]}
+                      </button>
+                  ))}
+                </div>
+              </div>
             </div>
-            
-            <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry} isOrbit={isOrbitCutCube}/>
+            <div className={`h-[300px] ${isOrbitCutCube ? "cursor-grab" : ""}`}>
+              <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry} isOrbit={isOrbitCutCube}/>
+            </div>
 
             {/* 解説 */}
             <div className="mt-4 mb-2 items-center space-y-4">
               <h1 className="text-md font-bold mb-4">解説</h1>
-              <span className="text-md whitespace-pre-line">{explanation}</span>
+              <span className="text-md whitespace-pre-line">{replaceKeywords(explanation)}</span>
             </div>
           </div>
         </div>

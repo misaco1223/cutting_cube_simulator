@@ -14,9 +14,14 @@ const Home = () => {
       <ScrollMessage/>
       <div className="flex items-center">
         <h1 className="text-xl m-4 font-bold p-2">切断をシミュレーションする</h1>
-        <button onClick={toggleInfo}>
-          <FontAwesomeIcon icon={faCircleInfo} size="lg" className="hover:text-gray-300 transition duration-300"/>
-        </button>
+        <div className="relative group">
+          <button onClick={toggleInfo}>
+            <FontAwesomeIcon icon={faCircleInfo} size="lg" className="hover:text-gray-300 transition duration-300"/>
+          </button>
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+            {isInfoOpen ? "切断点の選び方を閉じる" : "切断点の選び方を開く"}
+          </div>
+        </div>
       </div>
       {isInfoOpen && (
         <div className="absolute z-50 top-32 left-1/2 transform -translate-x-1/2 w-11/12 md:w-2/3 bg-white border border-gray-300 shadow-xl rounded-md p-6 text-sm leading-relaxed">

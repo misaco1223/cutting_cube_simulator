@@ -59,7 +59,7 @@ export const LandingPage = () => {
         <h2 className="text-xl font-bold">小学生にも使いやすく</h2>
         <p className="mt-4">
           切断点は辺の比の形式で直感的に選べます。</p>
-          <img src="/landsec_support.png" className="h-full mx-auto max-w-80" />
+          <img src="/landsec_support.png" className="h-full mx-auto max-w-72" />
       </div>
     </section>
 

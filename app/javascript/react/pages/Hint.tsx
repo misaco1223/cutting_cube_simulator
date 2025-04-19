@@ -13,7 +13,7 @@ const Hint = () => {
 
 
   return(
-    <div className="w-full p-4 md:p-6">
+    <div className="w-full p-4 md:p-12">
       <div className="m-4">
         <h1 className="text-xl font-bold p-2">このアプリの使い方</h1>
 
@@ -35,6 +35,8 @@ const Hint = () => {
           >
             <span>
             このアプリでは立方体を1回切断できます(2回以上は準備中...)。<br/>
+            また切断後の体積を計算する機能も準備中です。<br/>
+            <br/>
             Cookieを承認またはユーザー登録をすると切断履歴を残せます。 <br/>
             ユーザー登録をするとマイページで自分の切断をコレクションしたり 問題を作って投稿したり、他ユーザーの問題を閲覧することができます。<br/>
             ユーザー登録はメールアドレスの登録がいるので <b>必ず保護者の人に確認してから登録しましょう。</b> 
@@ -111,7 +113,7 @@ const Hint = () => {
           >
             <span>
               <Link to="/history" className="text-blue-700 border-b-2">切断履歴</Link>は、ユーザー未登録かつCookieの承認がない場合、ブラウザに最大5件まで保存されます。<br/>
-              ブラウザに保存されたデータはGoogleChromeの開発ツール＞Application＞LocalStorageから確認できます。<br/>
+              <span className="text-gray-500">(ブラウザに保存されたデータはGoogleChromeの開発ツール＞Application＞LocalStorageから確認できます。)</span><br/>
               Cookie保持者と登録済みユーザーは、履歴数の制限はありません。<br/>
               切断履歴は必要に応じて削除することができます。一度削除した切断は戻りません。
             </span>
@@ -198,7 +200,8 @@ const Hint = () => {
             <span>
             <Link to="/boards" className="text-blue-700 border-b-2">学びページ</Link>では、みんなの問題を見ることができます。<br/>
             サイドメニューの「新着順」「人気順」では、表示順を指定することができます。タグ別ではタグの検索ができます。<br/>
-            「いいね」はあなたがいいねした問題のみが表示され、「スター」はあなたがスターを押した問題のみが表示されます。<br/>
+            「いいね」はあなたがいいねした問題が表示され、「キープ」はあなたがキープした問題が表示されます。<br/>
+            キープは、「後で見返したい」「保存しておきたい」と思った問題に活用してください。
             </span>
           </div>
         </div>

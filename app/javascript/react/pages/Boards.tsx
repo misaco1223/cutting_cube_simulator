@@ -11,7 +11,7 @@ const Boards = () => {
   const [filter, setFilter] = useState<string|null>("新着順");
 
   const tabLabels: Record<"boards" | "learning", string> = {
-    boards: "みんなの切断",
+    boards: "みんなの問題",
     learning: "切断の基本",
   };
 
@@ -21,7 +21,7 @@ const Boards = () => {
         {isLoggedIn &&
           <BoardsSideBar filter={filter} setFilter={setFilter}/>
         }
-        <div className="w-full md:mx-4 mx-2 my-4">
+        <div className="w-full md:mx-4 mx-2 mt-4 mb-2">
           <div className="flex justify-start p-2"  role="tablist">
           {(["boards", "learning" ] as const).map((tab) => (
             <button
@@ -36,9 +36,6 @@ const Boards = () => {
             </button>
           ))}
           </div>
-          {isLoggedIn && filter && selectedTab === "boards" && 
-            <div className="text-gray-500 text-sm flex mr-4 justify-end">表示: {filter}</div>
-          }
           <div className="m-2">
           { selectedTab === "learning"
             ? <BasicEducation/>

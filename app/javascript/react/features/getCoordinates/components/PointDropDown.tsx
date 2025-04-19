@@ -27,19 +27,24 @@ const PointDropdown = ({ index, leftRatio, rightRatio, setLeftRatio, setRightRat
 
   return (
     <div className="relative w-full max-w-60 bg-gray-200 border border-gray-300 inline-block text-left">
-      <button
-        type="button"
-        onClick={() => {setIsOpen(!isOpen); setIsCollect(index,false);}}
-        className="inline-flex justify-between w-full px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50"
-      >
-        <span className="justify-start">比</span>
-        {leftRatio && rightRatio
-        ? `${leftRatio} : ${rightRatio}`
-        : pointInfoRatio.left && pointInfoRatio.right
-        ? `${pointInfoRatio.left} : ${pointInfoRatio.right}`
-        : "比を選択してください"}
-        <FontAwesomeIcon icon={faCaretDown} className={`ml-2 transition-transform ${isOpen ? "rotate-180" : ""}`} />
-      </button>
+      <div className="relative group">
+        <button
+          type="button"
+          onClick={() => {setIsOpen(!isOpen); setIsCollect(index,false);}}
+          className="inline-flex justify-between w-full px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50"
+        >
+          <span className="justify-start">比</span>
+          {leftRatio && rightRatio
+          ? `${leftRatio} : ${rightRatio}`
+          : pointInfoRatio.left && pointInfoRatio.right
+          ? `${pointInfoRatio.left} : ${pointInfoRatio.right}`
+          : "比を選択してください"}
+          <FontAwesomeIcon icon={faCaretDown} className={`ml-2 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        </button>
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+          辺の比を選択する
+        </div>
+      </div>
 
       <div className={`absolute right-0 w-full flex flex-col space-y-1 p-2 bg-white z-50 ring-1 ring-black ring-opacity-5 overflow-y-auto max-h-40 ${isOpen ? "" : "hidden"}`}>
         {/*タグから選択*/}
