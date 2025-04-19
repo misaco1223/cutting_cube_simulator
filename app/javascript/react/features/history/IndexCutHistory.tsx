@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo, startTransition  } from "react";
 import HistoryCard from "./HistoryCard";
 import { useGetCutCubes } from "./useGetCutCubes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft, faAngleRight, faTriangleExclamation, faTrashCan, faBookmark, faPause, faHand } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faAngleRight, faTriangleExclamation, faTrashCan, faBookmark, faPause, faHand, faToggleOn, faToggleOff } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -100,6 +100,18 @@ const IndexCutHistory = () => {
     }
   }
 
+  const formattedDate = (createdAt: string | null | undefined): string => {
+    if (!createdAt) return "";
+    return new Date(createdAt).toLocaleString("ja-JP", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).replace(/\//g, "-");
+  };
+
   return (
     <div>
       {/* 切断履歴 */}
@@ -111,22 +123,33 @@ const IndexCutHistory = () => {
         </span>
       : ""}
 
-      <div className="flex justify-end mr-2">
-      {isOrbit ? (
-        <button onClick={()=> setIsOrbit(false)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
-          <span className="mr-2 text-xs">立体: 回転モード中</span>
-          <FontAwesomeIcon icon={faHand} className="mx-auto"/>
-        </button>
-      ):(
-        <button onClick={()=> setIsOrbit(true)} className="flex mb-4 border bg-gray-300 px-4 hover:bg-blue-300">
-          <span className="mr-2 text-xs">立体: 固定モード中</span>
-          <FontAwesomeIcon icon={faPause} className="mx-auto"/>
-        </button>
-      )}
+      <div className="flex justify-end">
+      
+        {isOrbit ? (
+          <div className="relative group">
+            <button onClick={()=> setIsOrbit(false)} className="flex md:px-4">
+              <span className="mr-2 my-auto text-xs">立体: 回転モードON</span>
+              <FontAwesomeIcon icon={faToggleOn} size="lg" className="mx-auto text-green-500"/>
+            </button>
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+              立体を固定する
+            </div>
+          </div>
+          ):(
+            <div className="relative group">
+              <button onClick={()=> setIsOrbit(true)} className="flex md:px-4">
+                <span className="mr-2 my-auto text-xs">立体: 回転モードOFF</span>
+                <FontAwesomeIcon icon={faToggleOff} size="lg" className="mx-auto"/>
+              </button>
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+                立体を回転する
+              </div>
+            </div>
+          )}
       </div>
 
       {/* カード */}
-      <div className="grid lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 grid-cols-2 gap-4 min-w-0">
+      <div className="md:p-4 pt-2 grid lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 grid-cols-2 gap-4 min-w-0">
       {!isLoaded && 
         <p className="mt-6 p-2">ロード中...</p>
       }
@@ -135,7 +158,7 @@ const IndexCutHistory = () => {
       : currentGlbUrls.map((glbUrl, index) => (
         <div className="w-full border border-gray-200 px-4 py-6 rounded-lg shadow-md flex flex-col justify-between">
           <HistoryCard
-            key={index}
+            cutCubeId={currentCutCubeIds[index]}
             glbUrl={glbUrl}
             cutPoints={currentCutPoints[index]}
             createdAt={currentCreatedAt[index]}
@@ -144,30 +167,52 @@ const IndexCutHistory = () => {
             isOrbit={isOrbit}
           />
 
-          <div className="p-2 justify-end mt-4">
-            <Link to={`/result/${currentCutCubeIds[index]}`} className="text-blue-500 hover:underline">詳細を見る</Link>
-            {/*下部ボタン*/}
+          {/*下部日付とボタン*/}
+          <div className="xl:flex justify-between items-center mt-4">
+            <div className="flex justify-start">
+              <p className="text-gray-500 text-xs mt-2">{formattedDate(currentCreatedAt[index])}</p>
+            </div>
+            {/*ボタン*/}
             <div className="flex space-x-4 mt-4 justify-end">
+              {/*ブックマークボタン*/}
               { isLoggedIn  && (
-                currentBookmarkIds[index] ? (
-                  <button onClick={() => handleRemoveBookmark(currentBookmarkIds[index]!, index)}>
-                    <FontAwesomeIcon icon={faBookmark} className="text-yellow-500"/>
+                <div className="relative group">
+                  <button
+                    onClick={() =>
+                      currentBookmarkIds[index] ? 
+                        handleRemoveBookmark(currentBookmarkIds[index]!, index)
+                      : handleCreateBookmark(currentCutCubeIds[index], index)
+                    }
+                  >
+                    <FontAwesomeIcon
+                      icon={faBookmark}
+                      className={
+                        currentBookmarkIds[index]
+                          ? "text-yellow-500 hover:text-yellow-100"
+                          : "hover:text-yellow-500"
+                      }
+                    />
                   </button>
-                ):(
-                  <button onClick={() => handleCreateBookmark(currentCutCubeIds[index], index)}>
-                    <FontAwesomeIcon icon={faBookmark} className="hover:text-yellow-500"/>
-                  </button>
-                )
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+                    {currentBookmarkIds[index] ? "コレクションからはずす" : "コレクションに追加する"}
+                  </div>
+                </div>
               )}
-              <button 
-                onClick={() => {
-                  if (window.confirm("切断を削除しますか？")) {
-                    handleRemoveCutCube(currentCutCubeIds[index]);
-                  }} 
-                }
-              >
-                <FontAwesomeIcon icon={faTrashCan} className="hover:text-red-600"/>
-              </button>
+              {/*削除ボタン*/}
+              <div className="relative group">
+                <button 
+                  onClick={() => {
+                    if (window.confirm("切断を削除しますか？")) {
+                      handleRemoveCutCube(currentCutCubeIds[index]);
+                    }} 
+                  }
+                >
+                  <FontAwesomeIcon icon={faTrashCan} className="hover:text-red-600"/>
+                </button>
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+                  履歴から削除する
+                </div>
+              </div>
             </div>
           </div>
         </div>

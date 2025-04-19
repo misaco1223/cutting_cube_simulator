@@ -44,7 +44,7 @@ export const useGetCutCubes = () => {
 
       const data = await response.json();
       if (data.cut_cubes) {
-        setCutCubeIds(data.cut_cubes.ids);
+        setCutCubeIds(data.cut_cubes.ids.map((id: number) => String(id)));
         setGlbUrls(data.cut_cubes.glb_urls);
 
         const transformedPoints = data.cut_cubes.cut_points.map((points: number[][]) => {

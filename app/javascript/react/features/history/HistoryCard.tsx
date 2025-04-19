@@ -4,8 +4,10 @@ import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { useGLTF, Text } from "@react-three/drei";
 import * as THREE from "three";
 import {vertices, vertexLabels} from "../getCoordinates/types/ThreeScene";
+import { Link } from "react-router-dom";
 
 interface CutCubeProps {
+  cutCubeId: string;
   glbUrl: string;
   cutPoints: THREE.Vector3[];
   createdAt: string;
@@ -14,7 +16,7 @@ interface CutCubeProps {
   isOrbit: boolean;
 }
 
-const HistoryCard = ({ glbUrl, cutPoints, createdAt, title, memo, isOrbit }: CutCubeProps) => {
+const HistoryCard = ({ cutCubeId, glbUrl, cutPoints, createdAt, title, memo, isOrbit }: CutCubeProps) => {
   const { scene } = useGLTF(glbUrl);
 
   useEffect(() => {
@@ -73,17 +75,6 @@ const HistoryCard = ({ glbUrl, cutPoints, createdAt, title, memo, isOrbit }: Cut
     []
   );
 
-  const formattedDate = createdAt ? new Date(createdAt).toLocaleString("ja-JP", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: undefined,
-    hour12: false,
-  }).replace(/\//g, "-")
-  : "";
-
   function CustomCamera() {
     const cameraRef = useRef<THREE.PerspectiveCamera>(null)
     const { camera, set } = useThree()
@@ -119,9 +110,8 @@ const HistoryCard = ({ glbUrl, cutPoints, createdAt, title, memo, isOrbit }: Cut
       </Canvas>
       </div>
       <div className="w-full">
-        <h2 className="text-md font-bold mb-2">{title || "No Title"}</h2>
-        <p className="text-gray-500 text-md line-clamp-3 overflow-hidden">{memo}</p>
-        <p className="text-gray-500 text-xs mt-2">{formattedDate}</p>
+        <Link to={`/result/${cutCubeId}`} className="text-md font-bold mb-2 hover:text-blue-700 hover:underline line-clamp-1 overflow-hidden">{title || "No Title"}</Link>
+        <p className="text-gray-500 text-sm mt-2 line-clamp-3 overflow-hidden">{memo}</p>
       </div>
     </div>
   );

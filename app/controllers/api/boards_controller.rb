@@ -21,7 +21,8 @@ class Api::BoardsController < ApplicationController
         questions: boards.map(&:question),
         created_at: boards.map(&:created_at),
         published: boards.map(&:published),
-        tags: boards.map(&:tag_names)
+        tags: boards.map(&:tag_names),
+        like_counts: boards.map{ |board| board.likes.count },
       }
     render json: { boards: boards_data }, status: :ok
   end
@@ -30,10 +31,10 @@ class Api::BoardsController < ApplicationController
     boards = Board.is_published.with_associations.order(created_at: :desc)
     
     if params[:tag_id].present?
-      boards = Board.is_published.with_tag(params[:tag_id])
+      boards = Board.is_published.with_tag(params[:tag_id]).order(created_at: :desc)
     elsif params[:filter].present?
       if params[:filter] == "tag"
-        boards = boards.joins(board_tags: :tag)
+        boards = boards.joins(board_tags: :tag).order(created_at: :desc)
       elsif params[:filter] == "popular"
         boards = Board.is_published.popular
       elsif params[:filter] == "like"
@@ -92,7 +93,7 @@ class Api::BoardsController < ApplicationController
 
     if board.update(board_update_params)
       board.update_tags_by_name(params[:tags]) if params[:tags].present?
-      render json: { status: "success", message: 'Board updated successfully' }, status: :ok
+      render json: { status: "success", message: 'Board updated successfully', board: {question: board.question, answer: board.answer, explanation: board.explanation} }, status: :ok
     else
       render json: { error: 'Failed to update board' }, status: :not_found
     end

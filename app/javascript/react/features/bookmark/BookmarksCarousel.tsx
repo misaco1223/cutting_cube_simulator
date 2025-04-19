@@ -48,6 +48,18 @@ const BookmarksCarousel= () => {
     }
   }
 
+  const formattedDate = (createdAt: string | null | undefined): string => {
+    if (!createdAt) return "";
+    return new Date(createdAt).toLocaleString("ja-JP", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).replace(/\//g, "-");
+  };
+
   return (
     <div className="relative flex h-full w-full p-2 max-w-full">
       {!isLoaded ?
@@ -64,6 +76,7 @@ const BookmarksCarousel= () => {
         <div key={bookmarkId} className="shrink-0">
           <div className="w-48 h-full border border-gray-200 p-2 rounded-lg shadow-md flex flex-grow flex-col justify-between ">
             <BookmarkCard
+              cutCubeId={cutCubeIds[index]}
               glbUrl={glbUrls[index]}
               cutPoints={cutPoints[index]}
               createdAt={createdAt[index]}
@@ -71,20 +84,26 @@ const BookmarksCarousel= () => {
               memo={memos[index]}
               isOrbit={isOrbit}
             />
-            <div className="px-4 mt-auto flex space-x-4">
-              <Link to={`/result/${cutCubeIds[index]}`} className="text-blue-500 hover:underline">詳細を見る</Link>
-              <div className="items-center">
-                <button 
-                  onClick={() => {
-                    if (window.confirm("ブックマークをはずします。")) {
-                      handleRemoveBookmark(bookmarkId);
-                    }} 
-                  }
-                  className="flex flex-col space-y-1"
-                >
-                  <FontAwesomeIcon icon={faBookmark} size="lg" className="text-yellow-500 hover:text-yellow-100"/>
-                  <span className="text-xs text-gray-600">はずす</span>
-                </button>
+            <div className="px-4 mt-auto xl:flex justify-between items-center">
+              <div className="flex justify-start">
+                <p className="text-gray-500 text-xs">{formattedDate(createdAt[index])}</p>
+              </div>
+              <div className="flex justify-end">
+                <div className="relative group">
+                  <button 
+                    onClick={() => {
+                      if (window.confirm("コレクションからはずします。")) {
+                        handleRemoveBookmark(bookmarkId);
+                      }} 
+                    }
+                  >
+                    <FontAwesomeIcon icon={faBookmark} size="lg" className="text-yellow-500 hover:text-yellow-100"/>
+                  </button>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+                    コレクションからはずす
+                  </div>
+              </div>
+              
               </div>
             </div>
           </div>

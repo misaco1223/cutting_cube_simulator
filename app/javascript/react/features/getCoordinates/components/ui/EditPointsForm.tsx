@@ -125,12 +125,17 @@ const EditPointsForm = ( {points, onUpdatePoints, isCollect, setIsCollect}: Edit
             </div>
             {/*右側 削除ボタン*/}
             <div className="w-24 flex justify-end">
-              <button 
-                onClick={() => handleRemovePoint(index)} 
-                className="hover:text-red-600"
-                >
-                <FontAwesomeIcon icon={faTrashCan}/>
-              </button>
+              <div className="relative group">
+                <button 
+                  onClick={() => handleRemovePoint(index)} 
+                  className="hover:text-red-600"
+                  >
+                  <FontAwesomeIcon icon={faTrashCan}/>
+                </button>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+                  切断点{index+1}を取り消し
+                </div>
+              </div>
             </div>
           </div>
         </div>

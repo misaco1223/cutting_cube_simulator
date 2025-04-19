@@ -1,6 +1,6 @@
 import {useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAnglesLeft, faAnglesRight, faBell, faThumbsUp, faFire, faStar, faTags, faCircleXmark} from "@fortawesome/free-solid-svg-icons";
+import { faAnglesLeft, faAnglesRight, faBell, faThumbsUp, faFire, faFolderClosed, faTags, faCircleXmark} from "@fortawesome/free-solid-svg-icons";
 
 interface BoardsSideBarProps {
     filter: string | null;
@@ -15,19 +15,22 @@ const BoardsSideBar = ({ filter, setFilter }: BoardsSideBarProps) => {
 
   return (
     <div className={`relative`}>
-    <div className={`w-[60px] px-1 py-4 border-r border-gray-300 bg-gray-700 text-white ${!isSideBarOpen && "hidden"}`}>
-        <h2 className="text-lg font-semibold mb-4 text-center">
-        <button 
-            onClick={()=>setIsSideBarOpen(!isSideBarOpen)}
-            className="text-lg font-semibold mb-4 text-center"
-        ><FontAwesomeIcon icon={faAnglesLeft} />
-        </button>
-        </h2>
+    <div className={`sticky top-0 w-[60px] px-1 py-4 border-r border-gray-300 bg-gray-700 text-white ${!isSideBarOpen && "hidden"}`}>
+        <div className="relative group text-center">
+          <button 
+              onClick={()=>setIsSideBarOpen(!isSideBarOpen)}
+              className="text-lg font-semibold mb-4 text-center"
+          ><FontAwesomeIcon icon={faAnglesLeft} />
+          </button>
+          <div className="absolute bottom-full left-12 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+            サイドバーをとじる
+          </div>
+        </div>
         <ul className="space-y-6">
         <li>
             <button
             onClick={() => setFilter(filters[0])}
-            className={`hover:underline flex flex-col space-y-1 mx-auto ${filter === filters[0] ? "text-yellow-400" : ""}`}
+            className={`hover:underline flex flex-col space-y-1 mx-auto ${filter === filters[0] ? "text-yellow-300" : ""}`}
             >
             <FontAwesomeIcon icon={faBell} />
             <span className="text-xs  text-center">{filters[0]}</span>
@@ -54,13 +57,13 @@ const BoardsSideBar = ({ filter, setFilter }: BoardsSideBarProps) => {
 
           {filter === filters[2] && (
             <div className={`absolute left-2 -top-2 ml-11 z-50 border border-gray-700 ${isTagMenuOpen ? "" : "hidden"}`}>
-              <div className="bg-gray-50 p-2 shadow-lg w-24">
-                    <button
-                      onClick={() => setIsTagMenuOpen(!isTagMenuOpen)} // フィルタ解除 or メニュー閉じ
-                      className="w-full text-right pr-0 text-gray-500 hover:bg-gray-100"
-                    >
-                      <FontAwesomeIcon icon={faCircleXmark} size="xs" />
-                    </button>
+              <div className="bg-white p-2 shadow-lg w-24 z-50">
+                <button
+                  onClick={() => setIsTagMenuOpen(!isTagMenuOpen)} // フィルタ解除 or メニュー閉じ
+                  className="w-full text-right pr-0 text-gray-500 hover:bg-gray-100"
+                >
+                  <FontAwesomeIcon icon={faCircleXmark} size="xs" />
+                </button>
                 <ul className="space-y-2">
                   {tags.map((tag) => (
                     <li key={tag}>
@@ -94,9 +97,9 @@ const BoardsSideBar = ({ filter, setFilter }: BoardsSideBarProps) => {
         <li>
             <button
             onClick={() => setFilter(filters[4])}
-            className={`hover:underline flex flex-col space-y-1 mx-auto ${filter === filters[4] ? " text-yellow-200" : ""}`}
+            className={`hover:underline flex flex-col space-y-1 mx-auto ${filter === filters[4] ? " text-cyan-600" : ""}`}
             >
-            <FontAwesomeIcon icon={faStar} />
+            <FontAwesomeIcon icon={faFolderClosed} />
             <span className="text-xs  text-center">{filters[4]}</span>
             </button>
         </li>
@@ -104,14 +107,19 @@ const BoardsSideBar = ({ filter, setFilter }: BoardsSideBarProps) => {
     </div>
 
     {!isSideBarOpen && (
-        <div
-        className="absolute left-0 top-1 pr-2 opacity-20 transform -translate-y-1 bg-gray-700 p-2 rounded-r-xl cursor-pointer"
-            onClick={() => setIsSideBarOpen(!isSideBarOpen)}
+      <div className="relative group">
+        <button
+          onClick={() => setIsSideBarOpen(!isSideBarOpen)}
+          className="absolute left-0 top-1 pr-2 opacity-20 transform -translate-y-1 bg-gray-700 p-2 cursor-pointer"
         >
-        <span className="text-white text-lg"><FontAwesomeIcon icon={faAnglesRight} /></span>
+          <FontAwesomeIcon icon={faAnglesRight} className="text-white"/>
+        </button>
+        <div className="absolute bottom-full left-12 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+          サイドバーをひらく
         </div>
+      </div>
     )}
-    </div>
+  </div>
   );
 };
   

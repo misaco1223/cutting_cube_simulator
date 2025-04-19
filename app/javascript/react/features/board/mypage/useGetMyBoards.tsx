@@ -7,6 +7,7 @@ export const useGetMyBoards = () => {
   const [questions, setQuestions] = useState<string[]>([]);
   const [createdAt, setCreatedAt] = useState<string[]>([]);
   const [published, setPublished] = useState<boolean[]>([]);
+  const [likeCounts, setLikeCounts] = useState<number[]>([]);
   const [tags, setTags] = useState<string[][]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
@@ -35,6 +36,7 @@ export const useGetMyBoards = () => {
         setCreatedAt(data.boards.created_at);
         setPublished(data.boards.published);
         setTags(data.boards.tags);
+        setLikeCounts(data.boards.like_counts);
         setIsLoaded(true);
       } else {
         console.log("データなし");
@@ -48,5 +50,5 @@ export const useGetMyBoards = () => {
     fetchMyBoards();  
   }, []);
 
-  return { boardIds, cutPoints, createdAt, questions, published, setPublished, tags, isLoaded};
+  return { boardIds, cutPoints, createdAt, questions, published, setPublished, tags, isLoaded, likeCounts};
 };

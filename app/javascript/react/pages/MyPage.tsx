@@ -32,20 +32,20 @@ const MyPage = () => {
         { !isLoggedIn
         ? <p>ログインが必要です</p>
         : ( <>
-            <div>
-              <span><FontAwesomeIcon icon={faBookmark} className="mr-2" /> あなたの切断コレクション</span>
-              <div className="m-2 w-full h-200 bg-white">
+            <div className="pt-4">
+              <span className="font-semibold"><FontAwesomeIcon icon={faBookmark} className="mr-2" /> あなたの切断コレクション</span>
+              <div className="w-full h-200 bg-white">
                 <BookmarksCarousel/>
               </div>
             </div>
             <div className="my-6">
               <div className="flex space-x-4">
-              <span><FontAwesomeIcon icon={faQ} className="mr-2" /> あなたの作った問題ボード</span>
-                <Link to="/board/new" className="flex flex-col">
-                  <span className="text-xs font-semibold text-red-600 pt-1"><FontAwesomeIcon icon={faPlus} />問題を作成する</span>
+              <span className="font-semibold"><FontAwesomeIcon icon={faQ} className="mr-1" /> あなたの作った問題ボード</span>
+                <Link to="/board/new" className="">
+                  <span className="text-xs text-white bg-red-500 px-2 rounded-lg py-1.5 z-50 shadow-md hover:bg-red-300"><FontAwesomeIcon icon={faPlus} className="mr-2"/>問題をつくる</span>
                 </Link>
               </div>
-              <div className="container mt-2 w-full h-200 bg-white">
+              <div className="w-full h-200 bg-white">
                 <MyBoardsCarousel/>
               </div>
             </div>

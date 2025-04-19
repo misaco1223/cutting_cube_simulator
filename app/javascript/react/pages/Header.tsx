@@ -72,7 +72,7 @@ const Header = () => {
 
           <ul className="space-y-4">
             <li>
-              <Link to="/home" className="hover:text-gray-300 flex flex-col space-y-1 items-center">
+              <Link to="/home" className="hover:text-gray-300 flex flex-col space-y-1 items-center" onClick={toggleMenu}>
                 <FontAwesomeIcon icon={faCube} size="lg" />
                 <span className="text-xs text-gray-600">切断</span>
               </Link>

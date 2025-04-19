@@ -5,7 +5,7 @@ const Board = () => {
   const { id } = useParams<{ id: string }>();
   if(!id) return;
   return(
-    <div className="container mx-auto w-full mt-4 px-4">
+    <div className="mx-auto w-full mt-4 md:px-12 px-4">
       <ShowBoard id={id}/>
       <div className="mt-12 mb-4">
         <button

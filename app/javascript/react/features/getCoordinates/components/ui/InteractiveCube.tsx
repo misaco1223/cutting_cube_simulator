@@ -103,50 +103,52 @@ const InteractiveCube = () => {
 
   return (
     <div>
-      <Canvas style={{ height: '320px'}}>
-        <ambientLight intensity={0.1} />
-        <directionalLight color="white" position={[0, 0, 5]} />
-        <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={40}/>
+      <div className="cursor-pointer">
+        <Canvas style={{ height: '320px'}}>
+          <ambientLight intensity={0.1} />
+          <directionalLight color="white" position={[0, 0, 5]} />
+          <PerspectiveCamera makeDefault position={[2, 2, 5]} fov={40}/>
 
-        {/* 遠近感のあるグリッド */}
-        <gridHelper args={[10, 10, 0x000000, 0x888888]} position={[0, -1, 0]}/>
+          {/* 遠近感のあるグリッド */}
+          <gridHelper args={[10, 10, 0x000000, 0x888888]} position={[0, -1, 0]}/>
+      
+          <mesh scale= {[2, 2, 2]} >
+            <boxGeometry args={[1, 1, 1]} />
+            <meshBasicMaterial transparent opacity={0.2} />
+          </mesh>
+
+          <ClickableEdges 
+            onClick={handleEdgeClick}
+            highlightedEdges={isEdgeValidateReady ? (edgeValidate ?? []) : []}
+            nonHighlightedEdges={isEdgeValidateReady ? (nonEdgeValidate ?? []) : []}   />
     
-        <mesh scale= {[2, 2, 2]} >
-          <boxGeometry args={[1, 1, 1]} />
-          <meshBasicMaterial transparent opacity={0.2} />
-        </mesh>
+          {points.map((point, index) => (
+            <mesh key={index} position={[point.x, point.y, point.z]}>
+              <sphereGeometry args={[0.05, 32, 32]} />
+              <meshBasicMaterial color="red"/>
+              <Text fontSize={0.2} color="black" anchorX="left" anchorY="bottom">点{index+1}</Text>
+            </mesh>
+          ))}
 
-        <ClickableEdges 
-          onClick={handleEdgeClick}
-          highlightedEdges={isEdgeValidateReady ? (edgeValidate ?? []) : []}
-          nonHighlightedEdges={isEdgeValidateReady ? (nonEdgeValidate ?? []) : []}   />
-  
-        {points.map((point, index) => (
-          <mesh key={index} position={[point.x, point.y, point.z]}>
-            <sphereGeometry args={[0.05, 32, 32]} />
-            <meshBasicMaterial color="red"/>
-            <Text fontSize={0.2} color="black" anchorX="left" anchorY="bottom">点{index+1}</Text>
-          </mesh>
-        ))}
+          {vertices.map((vertex, index) => (
+            <Text key={index} position={vertex} fontSize={0.2} color="black" anchorX="center" anchorY="middle"
+            >
+              {vertexLabels[index]}
+            </Text>
+          ))}
 
-        {vertices.map((vertex, index) => (
-          <Text key={index} position={vertex} fontSize={0.2} color="black" anchorX="center" anchorY="middle"
-          >
-            {vertexLabels[index]}
-          </Text>
-        ))}
+          {midpoints.map((midpoint, index) => (
+            <>
+            <mesh key={index} position={midpoint}>
+              <sphereGeometry args={[0.02, 32, 32]} />
+              <meshBasicMaterial color="black"/>
+            </mesh>
+            </>
+          ))}
 
-        {midpoints.map((midpoint, index) => (
-          <>
-          <mesh key={index} position={midpoint}>
-            <sphereGeometry args={[0.02, 32, 32]} />
-            <meshBasicMaterial color="black"/>
-          </mesh>
-          </>
-        ))}
-
-        <OrbitControls />
-      </Canvas>
+          <OrbitControls />
+        </Canvas>
+      </div>
 
       <div className="my-6 w-full lg:w-1/2 md:w-3/4 mx-auto text-center">
         <SendPointsButton points={points} isCollect = {isCollect}/>

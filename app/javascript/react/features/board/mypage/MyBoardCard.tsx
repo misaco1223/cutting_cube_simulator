@@ -4,8 +4,10 @@ import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { Text } from "@react-three/drei";
 import * as THREE from "three";
 import {vertices, vertexLabels} from "../../getCoordinates/types/ThreeScene";
+import { Link } from "react-router-dom";
 
 interface BoardProps {
+    boardId: string;
     cutPoints: THREE.Vector3[];
     createdAt: string;
     question: string;
@@ -13,7 +15,7 @@ interface BoardProps {
     isOrbit: boolean;
 }
 
-const MyBoardCard = ({ cutPoints, createdAt, question, tag, isOrbit }: BoardProps) => {
+const MyBoardCard = ({ boardId, cutPoints, createdAt, question, tag, isOrbit }: BoardProps) => {
 
   const spheres = useMemo(() => {
     return cutPoints.map((point, index) => (
@@ -70,11 +72,11 @@ const MyBoardCard = ({ cutPoints, createdAt, question, tag, isOrbit }: BoardProp
 
   return (
     <div className="flex flex-col min-h-[300px]">
-      <div className="mb-auto">
+      <div className="mb-2 min-h-6">
       {tag && (
         <div className="flex flex-wrap gap-1">
           { tag.map((t, index) => (
-            <span key={index} className="bg-orange-100 text-gray-700 font-bold text-xs px-4 py-2"> {t} </span>
+            <span key={index} className="bg-orange-100 font-semibold text-gray-700 text-xs px-2 py-1"> {t} </span>
           ))}
         </div>
       )}
@@ -98,8 +100,7 @@ const MyBoardCard = ({ cutPoints, createdAt, question, tag, isOrbit }: BoardProp
         </lineSegments>
       </Canvas>
       <div className="p-4 w-full mb-auto">
-        <h2 className="text-md mb-2 line-clamp-3 overflow-hidden">{question}</h2>
-        <p className="text-gray-500 text-xs">{formattedDate}</p>
+        <Link to={`/board/${boardId}`} className="text-sm mb-2 font-semibold hover:text-blue-700 hover:underline line-clamp-3 overflow-hidden">{question}</Link>
       </div>
     </div>
   );

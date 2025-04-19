@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import CutCubeModel from "./CutCubeModel";
 import { useGetCutCube } from "./useGetCutCube";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil, faBookmark, faHand, faPause} from "@fortawesome/free-solid-svg-icons";
-import { useCheckPointsInfo} from "../getCoordinates/hooks/useCheckPointsInfo"
-import { useAuth } from "../../contexts/AuthContext"
+import { faPencil, faBookmark, faPlus} from "@fortawesome/free-solid-svg-icons";
+import { useCheckPointsInfo} from "../getCoordinates/hooks/useCheckPointsInfo";
+import { useAuth } from "../../contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 const ResultCutCube = ({ id }: { id: string}) => {
   const { glbUrl, cutPoints, title, memo, createdAt, bookmarkId, setBookmarkId } = useGetCutCube(id);
@@ -176,37 +177,51 @@ const ResultCutCube = ({ id }: { id: string}) => {
       </div>
 
       {/*ボタン*/}
-      <div className="mt-4 mb-2 flex space-x-2 justify-end"  role="tablist">
+      <div className="flex justify-between"  role="tablist">
         {/*ブックマークボタン*/}
+        <div className="flex justify-start space-x-6 px-4 py-2 items-end">
         {isLoggedIn && id && (
-          !bookmarkId
-          ? ( <button 
-                onClick={() => handleCreateBookmark(id)} 
-              >
-                <span className="text-xs text-gray-600 mr-2">コレクションに追加</span>
-                <FontAwesomeIcon icon={faBookmark} className="hover:text-yellow-500"/>
-              </button>)
-          : ( <button
-                onClick={() => handleRemoveBookmark(bookmarkId)} 
-              >
-                <span className="text-xs text-gray-600 mr-2">コレクションをはずす</span>
-                <FontAwesomeIcon icon={faBookmark} className="text-yellow-500 hover:text-yellow-100" />
-              </button>)
+          <div className="relative group">
+          <button onClick={() => (
+            bookmarkId ? handleRemoveBookmark(bookmarkId) : handleCreateBookmark(id)
+          )}>
+            <FontAwesomeIcon 
+              icon={faBookmark} 
+              className={bookmarkId ? "text-yellow-500 hover:text-yellow-100" : "hover:text-yellow-500"} 
+            />
+          </button>
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+            {bookmarkId ? "コレクションをはずす" : "コレクションに追加"}
+          </div>
+        </div>
         )}
+        {/*問題を作成する*/}
+        {isLoggedIn && (
+          <div className="relative group">
+            <Link to={`/board/new?id=${id}`}>
+              <FontAwesomeIcon icon={faPlus} className="text-red-600" />
+            </Link>
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+              問題を作成する
+            </div>
+          </div>
+        )}
+        </div>
+
         {/* 切り替えボタン */}
-        <div>
-          {(["all", "geometry1", "geometry2"] as const).map((tab) => (
-            <button
-              key={tab}
-              role="tab"
-              className={`px-2 py-2 border-b-2 text-sm ${
-                selectedGeometry === tab ? "border-blue-500 font-semibold" : ""
-              }`}
-              onClick={() => setSelectedGeometry(tab)}
-            >
-              {tabLabels[tab]}
-            </button>
-          ))}
+        <div className="flex justify-end mt-4 mb-2">
+        {(["all", "geometry1", "geometry2"] as const).map((tab) => (
+          <button
+            key={tab}
+            role="tab"
+            className={`px-2 py-2 border-b-2 text-sm ${
+              selectedGeometry === tab ? "border-blue-500 font-semibold" : ""
+            }`}
+            onClick={() => setSelectedGeometry(tab)}
+          >
+            {tabLabels[tab]}
+          </button>
+        ))}
         </div>
       </div>
 
@@ -226,11 +241,11 @@ const ResultCutCube = ({ id }: { id: string}) => {
       </div> */}
   
       {/* 3Dモデル表示 */}
-      <div>
+      <div className={`h-[300px] ${isOrbit ? "cursor-grab" : ""}`}>
         <CutCubeModel glbUrl={glbUrl} cutPoints={cutPoints} selectedGeometry={selectedGeometry} isOrbit={isOrbit}/>
       </div>
 
-      <div className="lg:flex lg:space-x-4 mt-4 mb-2 mx-auto">
+      <div className="lg:flex lg:space-x-4 gap-2 mt-6 mb-2 mx-auto">
         {/* 座標表示 */}
         <div className="lg:w-1/2 border p-4">
           <h1>------ 切断点 ------</h1>
