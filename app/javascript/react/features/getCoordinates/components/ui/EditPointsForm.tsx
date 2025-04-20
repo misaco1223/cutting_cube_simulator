@@ -15,7 +15,7 @@ const EditPointsForm = ( {points, onUpdatePoints, isCollect, setIsCollect}: Edit
   // pointInfoは、頂点判定isVertexと中点判定isMidpointと辺の比の情報edgeRatioなどを含んでいる。
   useEffect(() => {
     checkPointInfo(points);
-    console.log("pointsは:", points);
+    // console.log("pointsは:", points);
     
     if (Object.keys(isCollect).length !== points.length) {
       setIsCollect((prev) => {
@@ -35,10 +35,10 @@ const EditPointsForm = ( {points, onUpdatePoints, isCollect, setIsCollect}: Edit
   // pointInfo(ポイント詳細)が点を修正している場合、pointをそれに合わせる
   // 新規に追加されたpointについて、isCollect状態をpointInfoの状態に応じて追加する
   useEffect(() => {
-    console.log("pointsInfo が更新されました:", pointsInfo);
+    // console.log("pointsInfo が更新されました:", pointsInfo);
     const extractedPoints = pointsInfo.map(info => info.point);
-    console.log("extractedPoints:", extractedPoints);
-    console.log("isCollectの状態は:", isCollect);
+    // console.log("extractedPoints:", extractedPoints);
+    // console.log("isCollectの状態は:", isCollect);
     
     const isDifferent = points.some((point, index) => {
       const extracted = extractedPoints[index];
@@ -46,7 +46,7 @@ const EditPointsForm = ( {points, onUpdatePoints, isCollect, setIsCollect}: Edit
     });
 
     if (isDifferent) {
-      console.log("pointsとpointsInfoに違いがあったので修正しました")
+      // console.log("pointsとpointsInfoに違いがあったので修正しました")
       onUpdatePoints(extractedPoints);
     }
   }, [pointsInfo]);

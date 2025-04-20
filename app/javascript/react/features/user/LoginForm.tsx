@@ -51,11 +51,11 @@ const LoginForm = () => {
       }
 
       const data = await response.json();
-      console.log("ログイン成功:", data.user.name);
+      // console.log("ログイン成功:", data.user.name);
       login({ name: data.user.name });
       navigate("/mypage");
     } catch(error){
-      console.error("通信エラー", error);
+      // console.error("通信エラー", error);
       setPassword("");
       setErrors([error instanceof Error ? error.message : "通信エラーが発生しました。再試行してください。"]);
     };

@@ -55,7 +55,7 @@ const IndexCutHistory = () => {
       localStorage.setItem("cutCube", JSON.stringify(updatedCutCubes));
       window.location.reload();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 
@@ -74,9 +74,9 @@ const IndexCutHistory = () => {
       const updatedBookmarkIds = [...bookmarkIds];
       updatedBookmarkIds[index] = data.bookmark_id;
       setBookmarkIds(updatedBookmarkIds);
-      console.log("ブックマークを作成しました")
+      // console.log("ブックマークを作成しました")
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 
@@ -96,7 +96,7 @@ const IndexCutHistory = () => {
       updatedBookmarkIds[index] = null;
       setBookmarkIds(updatedBookmarkIds);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 

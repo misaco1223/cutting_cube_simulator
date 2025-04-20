@@ -23,7 +23,7 @@ export const useGetMyBoards = () => {
 
       const data = await response.json();
       if (data.boards) {
-        console.log("データは,", data.boards);
+        // console.log("データは,", data.boards);
         setBoardIds(data.boards.board_ids);
 
         const transformedPoints = data.boards.cut_points.map((points: number[][]) => {
@@ -39,10 +39,10 @@ export const useGetMyBoards = () => {
         setLikeCounts(data.boards.like_counts);
         setIsLoaded(true);
       } else {
-        console.log("データなし");
+        // console.log("データなし");
       }
     } catch (error) {
-      console.error("cut_cubeの取得に失敗しました", error);
+      // console.error("cut_cubeの取得に失敗しました", error);
     }
   };
 

@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userName, setUserName] = useState<string | null>(sessionStorage.getItem("userName"));
 
   const login = (userData: { name: string }) => {
-    console.log("Login function called with", userData);
+    // console.log("Login function called with", userData);
     sessionStorage.setItem("isLoggedIn", "true");
     sessionStorage.setItem("userName", userData.name);
     setIsLoggedIn(true);

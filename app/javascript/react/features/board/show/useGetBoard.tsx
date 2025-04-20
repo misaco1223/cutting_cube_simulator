@@ -52,7 +52,7 @@ export const useGetBoard = (id: string|undefined) => {
           setFavorite(data.board.favorite);
         }
       } catch (error) {
-        console.error("boardの取得に失敗しました", error);
+        // console.error("boardの取得に失敗しました", error);
       }
     };
 

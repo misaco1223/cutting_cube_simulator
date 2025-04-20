@@ -82,7 +82,7 @@ const UserMe= () => {
       if (!response.ok) throw new Error("更新に失敗しました");
 
       const data = await response.json ();
-      console.log("data",data);
+      // console.log("data",data);
 
       if (data.user) {
         if (data.user.name) {
@@ -107,7 +107,7 @@ const UserMe= () => {
       }
 
     } catch (error) {
-      console.error("更新エラー:", error);
+      // console.error("更新エラー:", error);
       setErrors(["更新に失敗しました"])
     }
   };
@@ -130,7 +130,7 @@ const UserMe= () => {
       logout();
       navigate("/");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       setErrors(["ユーザーの削除ができませんでした。パスワードを確認してください。"]);
       setIsPasswordModalOpen(false);
       setPassword(null);
