@@ -38,7 +38,7 @@ export const useGetCutCube = (id: string|undefined) => {
           setBookmarkId(data.bookmark_id);
         }
       } catch (error) {
-        console.error("cut_cubeの取得に失敗しました", error);
+        // console.error("cut_cubeの取得に失敗しました", error);
       }
     };
 

@@ -71,7 +71,7 @@ export const checkPointInfo = (point: THREE.Vector3): PointInfo => {
         }
       }
     };
-  console.log("辺が見つかりませんでした");
+  // console.log("辺が見つかりませんでした");
   return {
     point,
     isVertex: true,

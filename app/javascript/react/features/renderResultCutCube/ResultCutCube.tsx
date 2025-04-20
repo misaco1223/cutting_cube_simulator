@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 const ResultCutCube = ({ id }: { id: string}) => {
   const { glbUrl, cutPoints, title, memo, createdAt, bookmarkId, setBookmarkId } = useGetCutCube(id);
-  console.log("bookmarkIdは", bookmarkId);
+  // console.log("bookmarkIdは", bookmarkId);
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
   const { isLoggedIn } = useAuth();
@@ -64,8 +64,8 @@ const ResultCutCube = ({ id }: { id: string}) => {
 
       const storedCutCubes = JSON.parse(localStorage.getItem("cutCube") || "[]");
       const updatedCutCubes = storedCutCubes.map((cutCube: any) => {
-        console.log("typeof cutCube.id:", typeof cutCube.id, "value:", cutCube.id); //出力 number
-        console.log("typeof id:", typeof id, "value:", id);
+        // console.log("typeof cutCube.id:", typeof cutCube.id, "value:", cutCube.id); //出力 number
+        // console.log("typeof id:", typeof id, "value:", id);
         if (String(cutCube.id) === id) {
           return { ...cutCube, title: currentTitle, memo: currentMemo };
         }
@@ -74,7 +74,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
       localStorage.setItem("cutCube", JSON.stringify(updatedCutCubes));
 
     } catch (error) {
-      console.error("更新エラー:", error);
+      // console.error("更新エラー:", error);
     }
   };
 
@@ -89,9 +89,9 @@ const ResultCutCube = ({ id }: { id: string}) => {
       });
       const data = await response.json();
       setBookmarkId(data.bookmark_id);
-      console.log("ブックマークを作成しました")
+      // console.log("ブックマークを作成しました")
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 
@@ -105,7 +105,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
       const data = await response.json();
       setBookmarkId(null);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 

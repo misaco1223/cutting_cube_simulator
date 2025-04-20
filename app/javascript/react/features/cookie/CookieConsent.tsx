@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 
-console.log("承認状況は", localStorage.getItem("cookieAccepted"))
+// console.log("承認状況は", localStorage.getItem("cookieAccepted"))
 // localStorage.removeItem("cookieAccepted"); console.log("承認状況をnullにしました");
 
 const CookieConsent = () => {
@@ -17,10 +17,10 @@ const CookieConsent = () => {
         const response = await fetch('/api/cookies', { method: "GET" });
         if (!response.ok) throw new Error("cookiesへのfetchに失敗しました");
         const data = await response.json();
-        console.log("cookieの取得に成功しました", data);
+        // console.log("cookieの取得に成功しました", data);
         setIsHide(true);
       } catch (error) {
-        console.error("cookieの取得に失敗しました", error);
+        // console.error("cookieの取得に失敗しました", error);
         localStorage.removeItem("cookieAccepted")
         setIsAccepted(false);
       }
@@ -35,11 +35,11 @@ const CookieConsent = () => {
       const response = await fetch('/api/cookies', { method: "POST" });
       if (!response.ok) throw new Error("cookiesへのfetchに失敗しました");
       const data = await response.json();
-      console.log("cookieの取得に成功しました", data);
+      // console.log("cookieの取得に成功しました", data);
       localStorage.setItem("cookieAccepted", "true");
       setIsHide(true)
     } catch (error) {
-      console.error("cookieの取得に失敗しました", error);
+      // console.error("cookieの取得に失敗しました", error);
     }
   };
 

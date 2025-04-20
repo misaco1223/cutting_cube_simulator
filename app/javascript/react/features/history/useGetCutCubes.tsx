@@ -14,7 +14,7 @@ export const useGetCutCubes = () => {
 
   const loadHistoryFromStorage = () => {
     const storedCutCubes = JSON.parse(localStorage.getItem("cutCube") || "[]");
-    console.log("storedCutCubesの個数は", storedCutCubes.length)
+    // console.log("storedCutCubesの個数は", storedCutCubes.length)
     if (storedCutCubes.length > 0) {
       storedCutCubes.sort((a: any, b: any) => b.createdAt.localeCompare(a.createdAt));
 
@@ -59,10 +59,10 @@ export const useGetCutCubes = () => {
         setBookmarkIds(data.bookmark_ids);
         setIsLoaded(true);
       } else {
-        console.log("データなし");
+        // console.log("データなし");
       }
     } catch (error) {
-      console.error("cut_cubeの取得に失敗しました", error);
+      // console.error("cut_cubeの取得に失敗しました", error);
       loadHistoryFromStorage();
       setIsStorageUser(true);
     }

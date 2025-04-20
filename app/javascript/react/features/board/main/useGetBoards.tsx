@@ -56,7 +56,7 @@ export const useGetBoards = (filter: string | null) => {
 
       const data = await response.json();
       if (data.boards) {
-        console.log("データは,", data.boards);
+        // console.log("データは,", data.boards);
         setUserNames(data.boards.user_names);
         setBoardIds(data.boards.board_ids);
 
@@ -73,10 +73,10 @@ export const useGetBoards = (filter: string | null) => {
         setLikeCounts(data.boards.like_counts);
         setFavorites(data.boards.favorites);
       } else {
-        console.log("データなし");
+        // console.log("データなし");
       }
     } catch (error) {
-      console.error("cut_cubeの取得に失敗しました", error);
+      // console.error("cut_cubeの取得に失敗しました", error);
     }
   };
 

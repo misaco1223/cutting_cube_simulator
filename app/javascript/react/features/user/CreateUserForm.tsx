@@ -75,7 +75,7 @@ const CreateUserForm = () => {
         }
       };
 
-      console.log("User Paramsは", userParams);
+      // console.log("User Paramsは", userParams);
 	  
     try {
       const response = await fetch('/api/users', {
@@ -95,11 +95,11 @@ const CreateUserForm = () => {
       }
 
       const data = await response.json();
-      console.log("ユーザー登録が完了しました", data.user);
+      // console.log("ユーザー登録が完了しました", data.user);
       login({ name: data.user.name });
       navigate("/");
     } catch(error) {
-      console.error("通信エラー", error);
+      // console.error("通信エラー", error);
       setPassword("");
       setPasswordConfirmation("");
       setErrors([error instanceof Error ? error.message : "通信エラーが発生しました。再試行してください。"]);

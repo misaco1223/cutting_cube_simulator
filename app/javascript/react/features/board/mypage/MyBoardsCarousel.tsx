@@ -43,7 +43,7 @@ const MyBoardsCarousel= () => {
       const data = await response.json();
       window.location.reload();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 
@@ -61,9 +61,9 @@ const MyBoardsCarousel= () => {
       updatedPublished[index] = !updatedPublished[index];
       setPublished(updatedPublished);
 
-      console.log("更新しました");
+      // console.log("更新しました");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

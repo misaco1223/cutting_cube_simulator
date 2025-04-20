@@ -62,14 +62,14 @@ const IndexBoards = ( {filter}:IndexBoardsProps ) => {
       });
       if (!response.ok) throw new Error("更新に失敗しました");
       const data = await response.json();
-      if (data) {console.log(data.message)}
+      // if (data) { console.log(data.message);}
       
       const updatedFavorites = [...favorites];
       updatedFavorites[index] = !data.favorite;
       setFavorites(updatedFavorites);
 
     } catch (error) {
-      console.error("更新エラー:", error);
+      // console.error("更新エラー:", error);
     }
   }
 
@@ -86,13 +86,13 @@ const IndexBoards = ( {filter}:IndexBoardsProps ) => {
       });
       if (!response.ok) throw new Error("更新に失敗しました");
       const data = await response.json();
-      if (data) {console.log(data.message)}
+      // if (data) {console.log(data.message)}
       
       const updatedLikes = [...likes];
       updatedLikes[index] = !data.like;
       setLikes(updatedLikes);
     } catch (error) {
-      console.error("更新エラー:", error);
+      // console.error("更新エラー:", error);
     }
   }
   
