@@ -62,10 +62,10 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
         body: JSON.stringify({ board: boardParams, tags: tags }),
       });
         const data = await response.json();
-        console.log("問題を作成しました");
+        // console.log("問題を作成しました");
         navigate("/mypage");
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
 
@@ -285,7 +285,7 @@ const CreateStep3 = ({ cutCubeId, glbUrl, cutPoints,question, answer, explanatio
             </button>
           </div>
           <button onClick={handleCreateBoard} className="bg-blue-500 text-white px-4 py-2 my-auto rounded-md hover:bg-blue-600 transition">
-            投稿
+            登録
           </button>
         </div>
       </div>

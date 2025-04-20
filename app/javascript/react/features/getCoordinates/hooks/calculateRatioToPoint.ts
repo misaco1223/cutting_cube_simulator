@@ -19,7 +19,7 @@ export const calculateRatioToPoint = (left: string, right: string, edgeLabel: st
   const newZ = start.z + t * (end.z - start.z);
 
   const newPoint = new THREE.Vector3(newX,newY,newZ)
-  console.log("辺の比から新しい点を計算しました", newPoint)
+  // console.log("辺の比から新しい点を計算しました", newPoint)
 
   return { point: newPoint};
 };

@@ -27,7 +27,7 @@ export const useGetUser= () => {
           logout();
         }
       } catch (error) {
-        console.error("cut_cubeの取得に失敗しました", error);
+        // console.error("cut_cubeの取得に失敗しました", error);
       }
     };
 

@@ -25,7 +25,7 @@ const SendPointsButton = ({ points, isCollect }: SendPointsButtonProps)=> {
     ?.getAttribute("content");
 
     if (!csrfToken) {
-      console.error("CSRFトークンが取得できませんでした");
+      // console.error("CSRFトークンが取得できませんでした");
       return;
     }
 
@@ -43,7 +43,7 @@ const SendPointsButton = ({ points, isCollect }: SendPointsButtonProps)=> {
       if (!response.ok) throw new Error("切断点の送信に失敗しました");
 
       const data = await response.json();
-      console.log("切断点が送信されました:", data);
+      // console.log("切断点が送信されました:", data);
       setIsLoading(false);
 
       const cut_cube_id = data.cut_cube.id;
@@ -68,12 +68,12 @@ const SendPointsButton = ({ points, isCollect }: SendPointsButtonProps)=> {
         }
       } catch (e) {
         if (e instanceof DOMException && e.name === "QuotaExceededError") {
-          console.error("LocalStorageの容量がオーバーしました");
+          // console.error("LocalStorageの容量がオーバーしました");
         }
       }
       if (cut_cube_id) { navigate(`/result/${cut_cube_id}`); }
     } catch (error) {
-      console.error("送信エラー:", error);
+      // console.error("送信エラー:", error);
       setIsLoading(false); 
     }
   }, [points]);

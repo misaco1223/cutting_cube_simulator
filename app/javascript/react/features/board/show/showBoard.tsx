@@ -113,7 +113,7 @@ const ShowBoard = ({ id }: { id: string }) => {
       }
 
     } catch (error) {
-      console.error("更新エラー:", error);
+      // console.error("更新エラー:", error);
     }
   };
 
@@ -135,10 +135,12 @@ const ShowBoard = ({ id }: { id: string }) => {
       });
       if (!response.ok) throw new Error("更新に失敗しました");
       const data = await response.json();
-      if (data) {console.log(data.message)}
-      setFavorite(!data.favorite);
+      if (data) {
+        // console.log(data.message);
+        setFavorite(!data.favorite);
+      } 
     } catch (error) {
-      console.error("更新エラー:", error);
+      // console.error("更新エラー:", error);
     }
   }
 
@@ -152,10 +154,12 @@ const ShowBoard = ({ id }: { id: string }) => {
       });
       if (!response.ok) throw new Error("更新に失敗しました");
       const data = await response.json();
-      if (data) {console.log(data.message)}
-      setLike(!data.like);
-    } catch (error) {
-      console.error("更新エラー:", error);
+      if (data) {
+        // console.log(data.message)}
+        setLike(!data.like);
+      } 
+    }catch (error) {
+      // console.error("更新エラー:", error);
     }
   }
 
