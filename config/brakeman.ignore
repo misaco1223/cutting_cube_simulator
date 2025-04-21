@@ -1,0 +1,116 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Path Traversal",
+      "warning_code": 125,
+      "fingerprint": "45a2f5a6509355d8c8844ecd5347a14cb3280c1c51f80d0fc4806d68bbbe0cee",
+      "check_name": "Pathname",
+      "message": "Absolute paths in `Pathname#join` cause the entire path to be relative to the absolute path, ignoring any prior values",
+      "file": "app/controllers/api/cut_cubes_controller.rb",
+      "line": 42,
+      "link": "https://brakemanscanner.org/docs/warning_types/path_traversal/",
+      "code": "Rails.root.join(\"shared\", \"exported_cube_#{params[:id]}.glb\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Api::CutCubesController",
+        "method": "create"
+      },
+      "user_input": "params[:id]",
+      "confidence": "High",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "53fe87767f0863e2accff6684c7a3857d9157f2af4759b158142299be2750f0b",
+      "check_name": "FileAccess",
+      "message": "Parameter value used in file name",
+      "file": "app/controllers/api/cut_cubes_controller.rb",
+      "line": 57,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "File.delete(Rails.root.join(\"shared\", \"exported_cube_#{params[:id]}.glb\"))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Api::CutCubesController",
+        "method": "create"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "5cda479af580985d0252ebf7c7e1c1c2e8c8d0f43528a511d3d62fbad2423a90",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "app/controllers/api/cut_cubes_controller.rb",
+      "line": 31,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "Open3.capture3(\"blender\", \"-b\", \"-P\", \"/app/lib/python_scripts/main.py\", \"--\", { :id => params[:id], :points => params[:points] }.to_json)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Api::CutCubesController",
+        "method": "create"
+      },
+      "user_input": "params[:points]",
+      "confidence": "High",
+      "cwe_id": [
+        77
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "d88e93ffd830af7d3882a830bf5686c49cbe3b7699668256cc909de85198e563",
+      "check_name": "FileAccess",
+      "message": "Parameter value used in file name",
+      "file": "app/controllers/api/cut_cubes_controller.rb",
+      "line": 54,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "File.open(Rails.root.join(\"shared\", \"exported_cube_#{params[:id]}.glb\"))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Api::CutCubesController",
+        "method": "create"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unmaintained Dependency",
+      "warning_code": 121,
+      "fingerprint": "edf687f759ec9765bd5db185dbc615c80af77d6e7e19386fc42934e7a80307af",
+      "check_name": "EOLRuby",
+      "message": "Support for Ruby 3.1.6 ended on 2025-03-31",
+      "file": ".ruby-version",
+      "line": 1,
+      "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
+      "code": null,
+      "render_path": null,
+      "location": null,
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        1104
+      ],
+      "note": ""
+    }
+  ],
+  "brakeman_version": "7.0.2"
+}
