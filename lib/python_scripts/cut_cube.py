@@ -2,10 +2,11 @@ import bpy
 import bmesh
 from mathutils import Vector
 
+
 def cut_cube(cube, points):
     point1, point2, point3 = points
 
-    #もとのCubeを複製して残す
+    # もとのCubeを複製して残す
     # original_cube = cube.copy()
     # original_cube.data = cube.data.copy()
     # bpy.context.collection.objects.link(original_cube)
@@ -29,7 +30,8 @@ def cut_cube(cube, points):
     )
 
     # 切断後のジオメトリをフィルタリングしてエッジを取得
-    edges = [ele for ele in result["geom_cut"] if isinstance(ele, bmesh.types.BMEdge)]
+    edges = [ele for ele in result["geom_cut"]
+             if isinstance(ele, bmesh.types.BMEdge)]
 
     # 分割処理（必要なら分割されたエッジに対して適用）
     if edges:
