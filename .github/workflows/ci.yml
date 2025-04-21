@@ -38,6 +38,29 @@ jobs:
       # - name: Scan for security vulnerabilities in JavaScript dependencies
       # run: bin/importmap audit
 
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: cd app/javascript/react && npm ci
+      - run: yarn lint
+      - run: yarn build
+      - run: yarn test
+
+  blender:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - run: pip install flake8
+      - run: flake8 app/lib/python_scripts/
+
   lint:
     runs-on: ubuntu-latest
     steps:
