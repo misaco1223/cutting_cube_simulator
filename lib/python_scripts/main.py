@@ -1,24 +1,25 @@
+from export_glb import export_glb
+from cut_cube import cut_cube
+from cube import create_cube
+from parse_args import parse_args
 import sys
 import os
 import bpy
 from mathutils import Vector
 
 script_dir = os.path.dirname(__file__)  # lib/python_scripts のパスになる
-sys.path.append(script_dir) 
+sys.path.append(script_dir)
 
-from parse_args import parse_args
-from cube import create_cube
-from cut_cube import cut_cube
-from export_glb import export_glb
 
 def clear_scene():
     """ Blenderのシーン内の全オブジェクトを削除する """
     bpy.ops.object.select_all(action='SELECT')
     bpy.ops.object.delete()
 
+
 def main():
     clear_scene()
-    
+
     cut_id, points = parse_args()
     cube = create_cube()
     objects = cut_cube(cube, points)
@@ -36,7 +37,8 @@ def main():
         os.makedirs(shared_dir, exist_ok=True)
 
         export_path = os.path.join(shared_dir, f"exported_cube_{cut_id}.glb")
-        export_glb(export_path, objects)    
+        export_glb(export_path, objects)
+
 
 if __name__ == "__main__":
     main()

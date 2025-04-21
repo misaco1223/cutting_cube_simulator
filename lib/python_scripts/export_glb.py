@@ -1,5 +1,6 @@
 import bpy
 
+
 def export_glb(file_path, objects):
     bpy.ops.export_scene.gltf(
         filepath=file_path,
