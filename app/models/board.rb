@@ -16,7 +16,7 @@ class Board < ApplicationRecord
     .includes(:likes, :favorites, board_tags: :tag)
   }
 
-  scope :is_published, -> { where(published: true)}
+  scope :is_published, -> { where(published: true) }
 
   scope :with_tag, ->(tag_id) {
     joins(board_tags: :tag).where(board_tags: { tag_id: tag_id })
@@ -24,9 +24,9 @@ class Board < ApplicationRecord
 
   scope :popular, -> {
     joins(:likes)
-    .group('boards.id')
-    .select('boards.*, COUNT(likes.id) AS likes_count')
-    .order('likes_count DESC')
+    .group("boards.id")
+    .select("boards.*, COUNT(likes.id) AS likes_count")
+    .order("likes_count DESC")
   }
 
   def user_name
@@ -51,7 +51,7 @@ class Board < ApplicationRecord
 
   def create_tags_by_names(tag_names)
     return if tag_names.blank?
-  
+
     tag_names.each do |name|
       tag = Tag.find_by(name: name)
       board_tags.create(tag: tag) if tag

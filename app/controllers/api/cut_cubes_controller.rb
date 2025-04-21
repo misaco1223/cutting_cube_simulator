@@ -1,14 +1,18 @@
-require 'open3'
+require "open3"
 class Api::CutCubesController < ApplicationController
-
   def create
     cut_id = params[:id]
+
+    unless cut_id&.match?(/\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\z/)
+      render json: { error: "Invalid UUID format" }, status: :bad_request and return
+    end
+
     cut_points = params[:points]
     cookie_id = cookies[:guest_id]
     puts "cookies[:guest_id]は: #{cookies[:guest_id]}"
 
     if cut_id.present? && cut_points.present?
-      cut_data = { id: cut_id, points: cut_points}.to_json
+      cut_data = { id: cut_id, points: cut_points }.to_json
       # puts `which blender`
       # command = `blender -b -P #{Rails.root.join('lib/python_scripts/main.py')} -- '#{cut_data}'`
       # result = `docker-compose run --rm blender blender -b -P /scripts/main.py -- '#{cut_data}'`
@@ -17,8 +21,14 @@ class Api::CutCubesController < ApplicationController
 
       # script_path = Rails.root.join('lib/python_scripts/main.py').to_s
       # puts "script_path: #{script_path}"
-      command = "blender -b -P /app/lib/python_scripts/main.py -- '#{cut_data}'"
-      stdout, stderr, status = Open3.capture3(command)
+      command = [
+        "blender",
+        "-b",
+        "-P", "/app/lib/python_scripts/main.py",
+        "--",
+        cut_data
+      ]
+      stdout, stderr, status = Open3.capture3(*command)
       puts "Blender標準出力: #{stdout}"
       puts "Blenderエラー出力: #{stderr}"
 
@@ -29,7 +39,7 @@ class Api::CutCubesController < ApplicationController
       end
 
       glb_file_name = "exported_cube_#{cut_id}.glb"
-      shared_glb_url = Rails.root.join('shared', glb_file_name)
+      shared_glb_url = Rails.root.join("shared", glb_file_name)
       puts "GLBファイルの保存先であるshared_glb_urlは: #{shared_glb_url}"
 
       user_id = current_user&.id
@@ -63,10 +73,10 @@ class Api::CutCubesController < ApplicationController
   end
 
   def show
-    cut_cube = CutCube.find_by(id:params[:id])
+    cut_cube = CutCube.find_by(id: params[:id])
 
     if cut_cube.nil?
-      render json: { error: 'CutCube not found' }, status: :not_found
+      render json: { error: "CutCube not found" }, status: :not_found
     end
 
     cut_cube_data = {
@@ -84,12 +94,12 @@ class Api::CutCubesController < ApplicationController
 
   def index
     cut_cubes = CutCube.owned_by_user_or_cookie(current_user, cookies[:guest_id])
-  
+
     if cut_cubes.present?
       cut_cubes_data = {
         ids: cut_cubes.map(&:id),
-        glb_urls: cut_cubes.map { |cut_cube| url_for(cut_cube.gltf_file)},
-        cut_points: cut_cubes.map { |cut_cube| JSON.parse(cut_cube.cut_points)},
+        glb_urls: cut_cubes.map { |cut_cube| url_for(cut_cube.gltf_file) },
+        cut_points: cut_cubes.map { |cut_cube| JSON.parse(cut_cube.cut_points) },
         titles: cut_cubes.map(&:title),
         memos: cut_cubes.map(&:memo),
         created_at: cut_cubes.map(&:created_at)
@@ -98,7 +108,7 @@ class Api::CutCubesController < ApplicationController
     bookmark_ids = cut_cubes.map { |cut_cube| cut_cube.bookmark_id_for(current_user) }
     render json: { cut_cubes: cut_cubes_data, bookmark_ids: bookmark_ids }, status: :ok
     else
-      render json: { error: 'CutCube not found' }, status: :not_found
+      render json: { error: "CutCube not found" }, status: :not_found
     end
   end
 
@@ -107,9 +117,9 @@ class Api::CutCubesController < ApplicationController
     if cut_cube
       cut_cube.destroy
       cut_cube.gltf_file.purge
-      render json: { status: "success", message: 'CutCube deleted successfully' }, status: :ok
+      render json: { status: "success", message: "CutCube deleted successfully" }, status: :ok
     else
-      render json: { error: 'CutCube not found' }, status: :not_found
+      render json: { error: "CutCube not found" }, status: :not_found
     end
   end
 
@@ -117,9 +127,9 @@ class Api::CutCubesController < ApplicationController
     cut_cube = CutCube.find_by_user_or_cookie(current_user, cookies[:guest_id], params[:id])
     if cut_cube
       cut_cube.update(cut_cube_update_params)
-      render json: { status: "success", message: 'CutCube updated successfully' }, status: :ok
+      render json: { status: "success", message: "CutCube updated successfully" }, status: :ok
     else
-      render json: { error: 'CutCube not found' }, status: :not_found
+      render json: { error: "CutCube not found" }, status: :not_found
     end
   end
 

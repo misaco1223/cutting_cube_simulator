@@ -4,7 +4,7 @@ class Api::CookiesController < ApplicationController
       cookies[:guest_id] = {
         value: SecureRandom.uuid,
         expires: 1.year.from_now,
-        path: '/api',
+        path: "/api",
         same_site: :lax,
         httponly: true, # XSS対策
         secure: Rails.env.production? # HTTPSのみ（本番環境）
@@ -16,7 +16,7 @@ class Api::CookiesController < ApplicationController
 
   def index
     if cookies[:guest_id].present?
-     render json: {message: "Cookieが確認できました"}, status: :ok
+     render json: { message: "Cookieが確認できました" }, status: :ok
     end
   end
 end

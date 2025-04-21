@@ -8,7 +8,7 @@ class Api::LikesController < ApplicationController
       current_user.likes.create(board_id: params[:board_id])
       message = "いいねを追加しました"
     end
-    
+
     render json: { message: message, like: like.present? }, status: :ok
-  end    
+  end
 end
