@@ -2,6 +2,11 @@ require "open3"
 class Api::CutCubesController < ApplicationController
   def create
     cut_id = params[:id]
+
+    unless cut_id&.match?(/\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\z/)
+      render json: { error: "Invalid UUID format" }, status: :bad_request and return
+    end
+
     cut_points = params[:points]
     cookie_id = cookies[:guest_id]
     puts "cookies[:guest_id]は: #{cookies[:guest_id]}"
@@ -16,8 +21,14 @@ class Api::CutCubesController < ApplicationController
 
       # script_path = Rails.root.join('lib/python_scripts/main.py').to_s
       # puts "script_path: #{script_path}"
-      command = "blender -b -P /app/lib/python_scripts/main.py -- '#{cut_data}'"
-      stdout, stderr, status = Open3.capture3(command)
+      command = [
+        "blender",
+        "-b",
+        "-P", "/app/lib/python_scripts/main.py",
+        "--",
+        cut_data
+      ]
+      stdout, stderr, status = Open3.capture3(*command)
       puts "Blender標準出力: #{stdout}"
       puts "Blenderエラー出力: #{stderr}"
 
