@@ -13,7 +13,7 @@ class Api::BoardsController < ApplicationController
     boards = current_user.boards
       .with_associations
       .order(created_at: :desc)
-    
+
     boards_data =
       {
         board_ids: boards.map(&:id),
@@ -22,14 +22,14 @@ class Api::BoardsController < ApplicationController
         created_at: boards.map(&:created_at),
         published: boards.map(&:published),
         tags: boards.map(&:tag_names),
-        like_counts: boards.map{ |board| board.likes.count },
+        like_counts: boards.map { |board| board.likes.count }
       }
     render json: { boards: boards_data }, status: :ok
   end
 
   def index
     boards = Board.is_published.with_associations.order(created_at: :desc)
-    
+
     if params[:tag_id].present?
       boards = Board.is_published.with_tag(params[:tag_id]).order(created_at: :desc)
     elsif params[:filter].present?
@@ -53,10 +53,10 @@ class Api::BoardsController < ApplicationController
         created_at: boards.map(&:created_at),
         tags: boards.map(&:tag_names),
         likes: boards.map { |board| board.liked_by?(current_user) },
-        like_counts: boards.map{ |board| board.likes.count },
-        favorites: boards.map { |board| board.favorited_by?(current_user)}
+        like_counts: boards.map { |board| board.likes.count },
+        favorites: boards.map { |board| board.favorited_by?(current_user) }
       }
-      
+
     render json: { boards: boards_data }, status: :ok
   end
 
@@ -80,7 +80,7 @@ class Api::BoardsController < ApplicationController
         like_count: board.likes.count,
         favorite: board.favorited_by?(current_user)
       }
-      render json: { board: board_data}, status: :ok
+      render json: { board: board_data }, status: :ok
     end
   end
 
@@ -88,14 +88,14 @@ class Api::BoardsController < ApplicationController
     board = current_user.boards.find_by(id: params[:id])
 
     if board.nil?
-      return render json: { error: 'Board not found' }, status: :not_found
+      return render json: { error: "Board not found" }, status: :not_found
     end
 
     if board.update(board_update_params)
       board.update_tags_by_name(params[:tags]) if params[:tags].present?
-      render json: { status: "success", message: 'Board updated successfully', board: {question: board.question, answer: board.answer, explanation: board.explanation} }, status: :ok
+      render json: { status: "success", message: "Board updated successfully", board: { question: board.question, answer: board.answer, explanation: board.explanation } }, status: :ok
     else
-      render json: { error: 'Failed to update board' }, status: :not_found
+      render json: { error: "Failed to update board" }, status: :not_found
     end
   end
 
@@ -104,12 +104,12 @@ class Api::BoardsController < ApplicationController
 
     if board.present?
       board.destroy
-      render json: { status: "success", message: 'Board deleted successfully' }, status: :ok
+      render json: { status: "success", message: "Board deleted successfully" }, status: :ok
     else
-      render json: { error: 'Board not found' }, status: :not_found
+      render json: { error: "Board not found" }, status: :not_found
     end
   end
-      
+
   private
 
   def board_params

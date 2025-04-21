@@ -5,8 +5,8 @@
 
 # Example:
 #
-require File.expand_path(File.dirname(__FILE__) + '/environment')
-rails_env = ENV['RAILS_ENV'] || :development
+require File.expand_path(File.dirname(__FILE__) + "/environment")
+rails_env = ENV["RAILS_ENV"] || :development
 set :environment, rails_env
 set :output, "#{Rails.root}/log/cron.log"
 #
@@ -16,7 +16,7 @@ set :output, "#{Rails.root}/log/cron.log"
 #   rake "some:great:rake:task"
 # end
 
-every 1.day, at: '00:00 am' do
+every 1.day, at: "00:00 am" do
   rake "cleanup:delete_expired_guest_data"
 end
 #

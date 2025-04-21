@@ -8,7 +8,7 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-tags = ["基礎", "応用", "5年", "6年前期", "6年後期"]
+tags = [ "基礎", "応用", "5年", "6年前期", "6年後期" ]
 
 tags.each do |tag_name|
   Tag.find_or_create_by(name: tag_name)

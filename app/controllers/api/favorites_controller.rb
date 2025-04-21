@@ -8,7 +8,7 @@ class Api::FavoritesController < ApplicationController
       current_user.favorites.create(board_id: params[:board_id])
       message = "お気に入りに追加しました"
     end
-    
+
     render json: { message: message, favorite: favorite.present? }, status: :ok
-  end  
+  end
 end
