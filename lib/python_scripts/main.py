@@ -1,7 +1,3 @@
-from export_glb import export_glb
-from cut_cube import cut_cube
-from cube import create_cube
-from parse_args import parse_args
 import sys
 import os
 import bpy
@@ -10,6 +6,10 @@ from mathutils import Vector
 script_dir = os.path.dirname(__file__)  # lib/python_scripts のパスになる
 sys.path.append(script_dir)
 
+from export_glb import export_glb
+from cut_cube import cut_cube
+from cube import create_cube
+from parse_args import parse_args
 
 def clear_scene():
     """ Blenderのシーン内の全オブジェクトを削除する """
