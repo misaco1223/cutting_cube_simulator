@@ -8,6 +8,7 @@ export const useGetCutCube = (id: string|undefined) => {
   const [memo, setMemo] = useState<string|null>(null);
   const [createdAt, setCreatedAt] = useState<string|null>(null);
   const [bookmarkId, setBookmarkId] = useState<string|null>(null);
+  const [cutFaceName, setCutFaceName] = useState<string|null>(null);
 
   useEffect(() => {
     const fetchCutCube = async (id: string | undefined) => {
@@ -36,6 +37,7 @@ export const useGetCutCube = (id: string|undefined) => {
           setMemo(data.cut_cube.memo);
           setCreatedAt(data.cut_cube.created_at);
           setBookmarkId(data.bookmark_id);
+          setCutFaceName(data.cut_cube.cut_face_name);
         }
       } catch (error) {
         // console.error("cut_cubeの取得に失敗しました", error);
@@ -45,5 +47,5 @@ export const useGetCutCube = (id: string|undefined) => {
     fetchCutCube(id);
   }, [id]);
 
-  return { glbUrl, cutPoints, title, memo, createdAt, bookmarkId, setBookmarkId};
+  return { glbUrl, cutPoints, title, memo, createdAt, bookmarkId, setBookmarkId, cutFaceName, setCutFaceName};
 };

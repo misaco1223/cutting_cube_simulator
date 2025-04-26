@@ -79,7 +79,8 @@ class Api::CutCubesController < ApplicationController
       cut_points: JSON.parse(cut_cube.cut_points),
       title: cut_cube.title,
       memo: cut_cube.memo,
-      created_at: cut_cube.created_at
+      created_at: cut_cube.created_at,
+      cut_face_name: cut_cube.cut_face_name
     }
 
     bookmark_id = cut_cube.bookmark_id_for(current_user)
@@ -131,6 +132,6 @@ class Api::CutCubesController < ApplicationController
   private
 
   def cut_cube_update_params
-    params.require(:cut_cube).permit(:title, :memo)
+    params.require(:cut_cube).permit(:title, :memo, :cut_face_name)
   end
 end
