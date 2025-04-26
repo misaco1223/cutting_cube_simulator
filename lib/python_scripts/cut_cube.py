@@ -1,7 +1,22 @@
 import bpy
 import bmesh
 from mathutils import Vector
+import mathutils
 
+
+def convex_hull(verts):
+    # Z軸で投影した2D座標のリスト
+    points_2d = [(v.co.x, v.co.y) for v in verts]
+
+    try:
+        indices = mathutils.geometry.convex_hull_2d(points_2d)
+    except ValueError as e:
+        print("convex_hull_2d failed:", e)
+        return []
+
+    # インデックスから並び替えた頂点を返す
+    sorted_verts = [verts[i] for i in indices]
+    return sorted_verts
 
 def cut_cube(cube, points):
     point1, point2, point3 = points
@@ -15,6 +30,9 @@ def cut_cube(cube, points):
     # BMeshで切断
     bm = bmesh.new()
     bm.from_mesh(cube.data)
+
+    # 切断面に関するジオメトリ
+    bm_cut = bmesh.new()
 
     # 平面の法線を計算
     plane_normal = (point2 - point1).cross(point3 - point1).normalized()
@@ -33,10 +51,15 @@ def cut_cube(cube, points):
     edges = [ele for ele in result["geom_cut"]
              if isinstance(ele, bmesh.types.BMEdge)]
 
-    # 分割処理（必要なら分割されたエッジに対して適用）
     if edges:
+        # 切断によって分割されたエッジを適用
         bmesh.ops.split_edges(bm, edges=edges)
-
+        for edge in edges:
+            # それぞれのエッジのBMVertジオメトリを取得
+            verts_in_face = [edge.verts[0].co, edge.verts[1].co]
+            bm_cut.verts.new(verts_in_face[0])
+            bm_cut.verts.new(verts_in_face[1])
+    
     # 結果をメッシュに適用
     bm.to_mesh(cube.data)
     bm.free()
@@ -68,5 +91,30 @@ def cut_cube(cube, points):
         bpy.ops.mesh.select_all(action='SELECT')
         bpy.ops.mesh.fill_holes(sides=0)  # 全ての穴を埋める
         bpy.ops.object.mode_set(mode='OBJECT')
+    
+    unique_verts = list(bm_cut.verts)
 
-    return separated_objects  # 2つのオブジェクトがリストとして返される
+    # 頂点の順番を整える
+    sorted_verts = convex_hull(unique_verts)
+    
+    if len(sorted_verts) >= 3:
+        try:
+            bm_cut.faces.new(sorted_verts)  # 頂点順に面を作成
+        except ValueError:
+            print("面の作成に失敗しました。頂点数が足りないか、他のエラーが発生しています。")
+    else:
+        print("頂点が不足しています。面を作成できません。")
+       
+    # bm_cutのジオメトリに法線を与える
+    bm_cut.normal_update()
+
+    # mesh_cutというメッシュオブジェクトにする
+    mesh_cut = bpy.data.meshes.new("CutFace")
+    bm_cut.to_mesh(mesh_cut)
+    bm_cut.free()
+    
+    # object_cutという3Dオブジェクトにする
+    obj_cut = bpy.data.objects.new("Geometry003", mesh_cut)
+    bpy.context.collection.objects.link(obj_cut)
+
+    return separated_objects + [obj_cut]

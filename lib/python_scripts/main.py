@@ -24,10 +24,10 @@ def main():
     cube = create_cube()
     objects = cut_cube(cube, points)
 
-    if len(objects) == 2:
+    if len(objects) == 3:
         print("切断完了: 立方体を分割しました")
         for obj in objects:
-            print(f"オブジェクト名: {obj.name}")
+            print(f"オブジェクト名: {obj.name}, 型: {type(obj)}")
         print("id:", cut_id, "points:", points)
 
         for obj in objects:

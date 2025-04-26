@@ -15,19 +15,14 @@ class Api::CutCubesController < ApplicationController
       cut_data = { id: cut_id, points: cut_points }.to_json
       # puts `which blender`
       # command = `blender -b -P #{Rails.root.join('lib/python_scripts/main.py')} -- '#{cut_data}'`
+      command = [ "blender", "-b", "-P", "#{Rails.root.join('lib/python_scripts/main.py')}", "--", cut_data ]
       # result = `docker-compose run --rm blender blender -b -P /scripts/main.py -- '#{cut_data}'`
       # result = `docker exec blender blender -b -P /scripts/main.py -- '#{cut_data}'`
       # puts "Blender実行結果: #{result}"
 
       # script_path = Rails.root.join('lib/python_scripts/main.py').to_s
       # puts "script_path: #{script_path}"
-      command = [
-        "blender",
-        "-b",
-        "-P", "/app/lib/python_scripts/main.py",
-        "--",
-        cut_data
-      ]
+      # command = [ "blender", "-b", "-P", "/app/lib/python_scripts/main.py", "--", cut_data ]
       stdout, stderr, status = Open3.capture3(*command)
       puts "Blender標準出力: #{stdout}"
       puts "Blenderエラー出力: #{stderr}"
