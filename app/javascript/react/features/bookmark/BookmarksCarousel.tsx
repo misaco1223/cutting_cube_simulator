@@ -17,8 +17,8 @@ const BookmarksCarousel= () => {
       
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
 
-      // スクロール位置が 5つ目（4番目の要素）より右に行ったらボタンを表示
-      const threshold = (scrollWidth / bookmarkIds.length) * 14; // 5つ目
+      // スクロール位置が 7つ目（6番目の要素）より右に行ったらボタンを表示
+      const threshold = (scrollWidth / bookmarkIds.length) * 6; // 7つ目
       setShowMoreButton(scrollLeft >= threshold - clientWidth);
     };
 
@@ -72,7 +72,7 @@ const BookmarksCarousel= () => {
       <div  ref={scrollRef}
         className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory p-2 scrollbar-hide"
       >
-        {bookmarkIds.map((bookmarkId, index) => (
+        {bookmarkIds.slice(0,7).map((bookmarkId, index) => (
         <div key={bookmarkId} className="shrink-0">
           <div className="w-48 h-full border border-gray-200 p-2 rounded-lg shadow-md flex flex-grow flex-col justify-between ">
           <div className="min-h-8">
@@ -117,9 +117,9 @@ const BookmarksCarousel= () => {
 
       <div className="flex justify-center items-center flex-1">
         {showMoreButton && (
-          <button className="w-full my-auto font-bold text-blue-500" onClick={() => alert("もっと見る")}>
+          <Link to="/bookmarks" className="w-full my-auto font-bold text-blue-500" >
             <FontAwesomeIcon icon={faAngleRight} size="xl"/>
-          </button>
+          </Link>
         )}
       </div>
     </div>
