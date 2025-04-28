@@ -14,10 +14,11 @@ export interface CreateStep1Props {
   titles: string[];
   memos: string[];
   createdAt: string[];
+  cutFaceNames?: (string | null)[];
   onNext: () => void;
 }
 
-const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,titles, memos, createdAt, onNext }:CreateStep1Props) => {
+const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,titles, memos, createdAt, onNext, cutFaceNames }:CreateStep1Props) => {
   const [ isOrbit, setIsOrbit ] = useState(false);
 
   const query = new URLSearchParams(useLocation().search);
@@ -28,6 +29,18 @@ const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,ti
       setCutCubeId(String(initialId));
     }
   }, [initialId]);
+
+  const formattedDate = (createdAt: string | null | undefined): string => {
+    if (!createdAt) return "";
+    return new Date(createdAt).toLocaleString("ja-JP", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).replace(/\//g, "-");
+  };
 
   return (
     <div className="w-full p-4 md:p-12">
@@ -73,15 +86,26 @@ const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,ti
                   cutCubeId === cutCubeIds[index] ? "bg-blue-400" : "hover:bg-blue-100"
                 }`}
               >
-                <BookmarkCard
-                  key={index}
-                  glbUrl={glbUrl}
-                  cutPoints={cutPoints[index]}
-                  createdAt={createdAt[index]}
-                  title={titles[index]}
-                  memo={memos[index]}
-                  isOrbit={isOrbit}
-                />
+                <div className="min-h-8">
+                  <div className="flex justify-start">
+                    {cutFaceNames && cutFaceNames[index] && (
+                      <span key={index} className="bg-blue-100 font-semibold text-gray-700 text-xs px-2 py-1"> {cutFaceNames[index]} </span>
+                    )}
+                  </div>
+                </div>
+                <div className="min-h-[300px]">
+                  <BookmarkCard
+                    key={index}
+                    glbUrl={glbUrl}
+                    cutPoints={cutPoints[index]}
+                    title={titles[index]}
+                    memo={memos[index]}
+                    isOrbit={isOrbit}
+                  />
+                </div>
+                <div className="flex justify-end px-2">
+                  <p className="text-gray-500 text-xs">{formattedDate(createdAt[index])}</p>
+                </div>
               </button>
             ))
           ):( <p className="m-4">切断履歴がありません</p>)

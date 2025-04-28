@@ -98,7 +98,8 @@ class Api::CutCubesController < ApplicationController
         cut_points: cut_cubes.map { |cut_cube| JSON.parse(cut_cube.cut_points) },
         titles: cut_cubes.map(&:title),
         memos: cut_cubes.map(&:memo),
-        created_at: cut_cubes.map(&:created_at)
+        created_at: cut_cubes.map(&:created_at),
+        cut_face_names: cut_cubes.map(&:cut_face_name)
     }
 
     bookmark_ids = cut_cubes.map { |cut_cube| cut_cube.bookmark_id_for(current_user) }

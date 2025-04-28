@@ -93,7 +93,7 @@ const HistoryCard = ({ cutCubeId, glbUrl, cutPoints, createdAt, title, memo, isO
 
   return (
     <div>
-      <div style={{ height: "150px" , width: "100%" }}>
+      <div className="w-full min-h-[150px] mb-auto">
       <Canvas>
         <ambientLight intensity={0.3} />
         <directionalLight color="white" position={[0, 0, 5]} intensity={1} />
@@ -111,7 +111,7 @@ const HistoryCard = ({ cutCubeId, glbUrl, cutPoints, createdAt, title, memo, isO
       </div>
       <div className="w-full">
         <Link to={`/result/${cutCubeId}`} className="text-md font-bold mb-2 hover:text-blue-700 hover:underline line-clamp-1 overflow-hidden">{title || "No Title"}</Link>
-        <p className="text-gray-500 text-sm mt-2 line-clamp-3 overflow-hidden">{memo}</p>
+        <p className="text-gray-500 text-sm mt-2 line-clamp-3 overflow-hidden min-h-14">{memo}</p>
       </div>
     </div>
   );

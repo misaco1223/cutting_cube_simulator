@@ -127,7 +127,8 @@ const CutFaceFlowChart = ({handleCutCubeUpdate, setIsFaceFlowOpen}:CutFaceFlowCh
           </div>
         )  
       ):(
-        <div className="md:w-1/2 mx-auto">
+        <div className="w-full">
+        <div className="lg:w-2/3 mx-auto">
           <AnimatePresence mode="wait">
           <motion.div
             key={currentQuestion.text}
@@ -160,12 +161,13 @@ const CutFaceFlowChart = ({handleCutCubeUpdate, setIsFaceFlowOpen}:CutFaceFlowCh
                 <button onClick={() => handleAnswer("yes")} className="px-4 py-2 bg-green-200 rounded hover:bg-green-300 flex justify-start">はい</button>
                 <button onClick={() => handleAnswer("no")} className="px-4 py-2 bg-red-200 rounded hover:bg-red-300 flex justify-end">いいえ</button>
               </div>
-              <div className="min-h-14">
-                <button onClick={handleBack} className={`mt-8 text-gray-500 ${history.length === 0 ? "hidden" :""}`} disabled={history.length === 0} >1つ前に戻る</button>
-              </div>
             </motion.div>
           </AnimatePresence>
         </div>
+        <div className="min-h-14 flex justify-start">
+          <button onClick={handleBack} className={`mt-8 text-gray-500 ${history.length === 0 ? "hidden" :""}`} disabled={history.length === 0} >1つ前に戻る</button>
+        </div>
+      </div>
       )}
     </div>
   );

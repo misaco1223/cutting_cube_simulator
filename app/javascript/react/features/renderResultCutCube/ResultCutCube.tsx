@@ -288,7 +288,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
           </div>
           {/*切断面の形フローチャート*/}
           { isFaceFlowOpen && (
-            <motion.div drag className="absolute z-50 top-32 left-1/2 transform -translate-x-1/2 w-11/12 md:w-2/3 bg-white border border-gray-300 shadow-xl rounded-md p-6 text-sm leading-relaxed">
+            <motion.div drag className="absolute z-50 top-32 left-1/2 transform -translate-x-1/2 w-11/12 md:w-1/3 bg-white border border-gray-300 shadow-xl rounded-md p-6 text-sm leading-relaxed">
               <span className="flex justify-between">
                 <div className="text-gray-400 flex justify-start">切断面の形 フローチャート</div>
                 <FontAwesomeIcon icon={faXmark} size="xl" onClick={()=>setIsFaceFlowOpen(false)} className="flex justify-end"/>

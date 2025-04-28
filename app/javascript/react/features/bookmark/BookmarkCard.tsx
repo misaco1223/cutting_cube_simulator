@@ -10,7 +10,6 @@ interface BookmarkProps {
     cutCubeId?: string;
     glbUrl: string;
     cutPoints: THREE.Vector3[];
-    createdAt: string;
     title: string;
     memo: string;
     isOrbit: boolean;
@@ -90,7 +89,7 @@ const BookmarkCard = ({ cutCubeId, glbUrl, cutPoints, title, memo, isOrbit }: Bo
     return (
       <PerspectiveCamera ref={cameraRef} position={[2, 2, 5]} fov={50} />
     )
-  }
+  };
 
   return (
     <div>
