@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
 const IndexCutHistory = () => {
-  const { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isStorageUser, bookmarkIds, setBookmarkIds, isLoaded } = useGetCutCubes();
+  const { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isStorageUser, bookmarkIds, setBookmarkIds, isLoaded, cutFaceNames } = useGetCutCubes();
   const { isLoggedIn } = useAuth();
   const [ isOrbit, setIsOrbit ] = useState(false);
   if (!glbUrls || !cutPoints || glbUrls.length !== cutPoints.length || !bookmarkIds ) return null;
@@ -19,7 +19,7 @@ const IndexCutHistory = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { currentGlbUrls, currentCutPoints, currentCutCubeIds, currentCreatedAt, currentTitles, currentMemos, currentBookmarkIds } = useMemo(() => {
+  const { currentGlbUrls, currentCutPoints, currentCutCubeIds, currentCreatedAt, currentTitles, currentMemos, currentBookmarkIds, currentCutFaceNames } = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
   
@@ -30,9 +30,10 @@ const IndexCutHistory = () => {
       currentCreatedAt: createdAt.slice(startIndex, endIndex),
       currentTitles: titles.slice(startIndex, endIndex),
       currentMemos: memos.slice(startIndex, endIndex),
-      currentBookmarkIds: bookmarkIds.slice(startIndex, endIndex)
+      currentBookmarkIds: bookmarkIds.slice(startIndex, endIndex),
+      currentCutFaceNames: cutFaceNames.slice(startIndex, endIndex)
     };
-  }, [currentPage, glbUrls, cutPoints, cutCubeIds, createdAt, titles, memos, bookmarkIds]);
+  }, [currentPage, glbUrls, cutPoints, cutCubeIds, createdAt, titles, memos, bookmarkIds, cutFaceNames]);
 
   const handlePageClick = (selectedPage: number) => {
     if (selectedPage < 1 || selectedPage > totalPages + 1) return;
@@ -157,6 +158,11 @@ const IndexCutHistory = () => {
         (<p className="my-4">履歴はありません</p>)
       : currentGlbUrls.map((glbUrl, index) => (
         <div className="w-full border border-gray-200 px-4 py-6 rounded-lg shadow-md flex flex-col justify-between">
+          <div className="min-h-8">
+            {currentCutFaceNames[index] && (
+              <span key={index} className="bg-blue-100 font-semibold text-gray-700 text-xs px-2 py-1"> {currentCutFaceNames[index]} </span>
+            )}
+          </div>
           <HistoryCard
             cutCubeId={currentCutCubeIds[index]}
             glbUrl={glbUrl}

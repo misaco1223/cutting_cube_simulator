@@ -10,7 +10,6 @@ interface BookmarkProps {
     cutCubeId?: string;
     glbUrl: string;
     cutPoints: THREE.Vector3[];
-    createdAt: string;
     title: string;
     memo: string;
     isOrbit: boolean;
@@ -90,7 +89,7 @@ const BookmarkCard = ({ cutCubeId, glbUrl, cutPoints, title, memo, isOrbit }: Bo
     return (
       <PerspectiveCamera ref={cameraRef} position={[2, 2, 5]} fov={50} />
     )
-  }
+  };
 
   return (
     <div>
@@ -110,9 +109,9 @@ const BookmarkCard = ({ cutCubeId, glbUrl, cutPoints, title, memo, isOrbit }: Bo
             <primitive object={scene} />
         </Canvas>
       </div>
-      <div className="p-4 w-full">
-        <button onClick={()=> navigate(`/result/${cutCubeId}`)}  disabled={!cutCubeId} className="text-sm font-semibold mb-2 hover:text-blue-700 hover:underline">{title || "No Title"}</button>
-        <p className="text-gray-500 my-2 text-sm line-clamp-3 mt-2 overflow-hidden">{memo}</p>
+      <div className="lg:p-4 text-left w-full min-h-[100px]">
+        <button onClick={()=> navigate(`/result/${cutCubeId}`)}  disabled={!cutCubeId} className="text-sm font-semibold hover:text-blue-700 hover:underline line-clamp-1 overflow-hidden">{title || "No Title"}</button>
+        <p className="text-gray-500 my-2 text-sm mt-2 line-clamp-3 overflow-hidden">{memo}</p>
       </div>
     </div>
   );

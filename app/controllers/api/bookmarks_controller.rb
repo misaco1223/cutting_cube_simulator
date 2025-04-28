@@ -21,7 +21,8 @@ class Api::BookmarksController < ApplicationController
         cut_points: bookmarks.map { |bookmark| JSON.parse(bookmark.cut_cube.cut_points) },
         created_at: bookmarks.map(&:created_at),
         titles: bookmarks.map { |bookmark| bookmark.cut_cube.title },
-        memos: bookmarks.map { |bookmark| bookmark.cut_cube.memo }
+        memos: bookmarks.map { |bookmark| bookmark.cut_cube.memo },
+        cut_face_names: bookmarks.map { |bookmark| bookmark.cut_cube.cut_face_name}
         }
       render json: { bookmarks: bookmarks_data }, status: :ok
     end

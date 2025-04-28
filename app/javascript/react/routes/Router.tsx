@@ -13,6 +13,8 @@ import { PrivacyPolicy } from "../pages/Footer";
 import { ServiceTerms } from "../pages/Footer";
 import UserMe from "../features/user/UserMe"
 import LandingPage from "../pages/LandingPage";
+import IndexBookmarks from "../features/bookmark/IndexBookmarks";
+import IndexMyBoards from "../features/board/mypage/IndexMyBoards";
 
 const Router = () => {
   return (
@@ -31,6 +33,8 @@ const Router = () => {
       <Route path="/privacy_policy" element={<PrivacyPolicy/>} />
       <Route path="/service_terms" element={<ServiceTerms/>} />
       <Route path="/" element={<LandingPage/>} />
+      <Route path="/bookmarks" element={<IndexBookmarks/>} />
+      <Route path="/my_boards" element={<IndexMyBoards/>} />
     </Routes>
   )
 };

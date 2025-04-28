@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark} from "@fortawesome/free-solid-svg-icons";
 
 // console.log("承認状況は", localStorage.getItem("cookieAccepted"))
 // localStorage.removeItem("cookieAccepted"); console.log("承認状況をnullにしました");
@@ -55,14 +57,18 @@ const CookieConsent = () => {
   if (isAccepted || isHide) return null;
 
   return (
-    <div className="cookie-banner fixed bottom-0 left-0 w-full bg-gray-900 text-white p-4">
+    <div className="flex flex-col justify-between cookie-banner fixed bottom-0 left-0 w-full bg-gray-900 text-white p-4">
+      <div className="flex justify-between">
+        <span></span>
+        <FontAwesomeIcon icon={faXmark} size="xl" onClick={handleHideBanner} className="flex justify-end"/>
+      </div>
       <div className="mx-auto items-center justify-center text-center">
-        <p className="w-full text-center">このサイトでは Cookie を使用します。<br/>よろしいですか？</p>
+        <div className="md:flex w-full">
+          <p className="text-center">このサイトでは Cookie を使用します。</p>
+          <p className="text-center">よろしいですか？</p>
+        </div>
         <button onClick={handleAccept} className="px-4 py-2 bg-blue-500 text-white rounded mt-2 mx-2">
           承諾する
-        </button>
-        <button onClick={handleHideBanner} className="px-4 py-2 bg-gray-500 text-white rounded mt-2 mx-2">
-          閉じる
         </button>
       </div>
     </div>

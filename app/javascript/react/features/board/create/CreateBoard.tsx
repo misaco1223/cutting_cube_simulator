@@ -8,7 +8,7 @@ import * as THREE from "three";
 import { useAuth } from "../../../contexts/AuthContext"
 
 const CreateBoard = () => {
-  const { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos} = useGetCutCubes();
+  const { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, cutFaceNames} = useGetCutCubes();
   const [cutCubeId, setCutCubeId] = useState<string | null>(null);
   const [question, setQuestion] = useState<string>("");
   const [answer, setAnswer] = useState<string>("");
@@ -56,6 +56,7 @@ const CreateBoard = () => {
             titles={titles}
             memos={memos}
             createdAt={createdAt}
+            cutFaceNames={cutFaceNames}
             onNext={() => navigate("/board/new/step2")}
           />} />
       <Route

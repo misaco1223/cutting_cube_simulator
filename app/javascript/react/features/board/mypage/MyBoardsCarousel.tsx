@@ -2,7 +2,8 @@ import { useRef, useState, useEffect } from "react";
 import MyBoardCard from "./MyBoardCard";
 import { useGetMyBoards } from "./useGetMyBoards";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleRight, faTrashCan, faToggleOn, faToggleOff, faArrowUpRightFromSquare, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import { faAngleRight, faTrashCan, faToggleOn, faToggleOff, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 const MyBoardsCarousel= () => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -16,8 +17,8 @@ const MyBoardsCarousel= () => {
       
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
 
-      // スクロール位置が 5つ目（4番目の要素）より右に行ったらボタンを表示
-      const threshold = (scrollWidth / boardIds.length) * 14; // 5つ目
+      // スクロール位置が 7つ目（6番目の要素）より右に行ったらボタンを表示
+      const threshold = (scrollWidth / boardIds.length) * 6; // 7つ目
       setShowMoreButton(scrollLeft >= threshold - clientWidth);
     };
 
@@ -91,7 +92,7 @@ const MyBoardsCarousel= () => {
       <div  ref={scrollRef}
         className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory p-2 scrollbar-hide"
       >
-        {boardIds.map((boardId, index) => (
+        {boardIds.slice(0, 7).map((boardId, index) => (
         <div key={boardId} className="shrink-0">
           <div className="w-48 h-full border border-gray-200 p-2 rounded-lg shadow-md flex flex-grow flex-col justify-between ">
             <MyBoardCard
@@ -106,11 +107,16 @@ const MyBoardsCarousel= () => {
             <p className="text-gray-500 text-xs px-4 mb-4">{formattedDate(createdAt[index])}</p>
             {/*ボタン*/}
             <div className="flex justify-between px-4">
-              <div className="justify-start flex space-x-4">
+              <div className="justify-start flex space-x-10">
                 {/*いいね*/}
-                <div className="flex mt-auto space-x-1 my-auto">
-                  <FontAwesomeIcon icon={faThumbsUp} size="lg"/>
-                  <span className="text-xs text-gray-600 m-auto">{likeCounts[index]}</span>
+                <div className="relative group h-full">
+                  <div className="flex space-x-1 absolute bottom-2">
+                    <FontAwesomeIcon icon={faThumbsUp}/>
+                    <span className="text-xs text-gray-600 m-auto">{likeCounts[index]}</span>
+                  </div>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+                    みんなにもらったいいねの数
+                  </div>
                 </div>
                 {/*公開非公開*/}
                 <div>
@@ -177,9 +183,9 @@ const MyBoardsCarousel= () => {
 
       <div className="flex justify-center items-center flex-1">
         {showMoreButton && (
-          <button className="w-full my-auto font-bold text-blue-500" onClick={() => alert("もっと見る")}>
+          <Link to="/my_boards" className="w-full my-auto font-bold text-blue-500">
             <FontAwesomeIcon icon={faAngleRight} size="xl"/>
-          </button>
+          </Link>
         )}
       </div>
     </div>

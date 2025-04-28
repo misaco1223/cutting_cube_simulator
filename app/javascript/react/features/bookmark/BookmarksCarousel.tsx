@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const BookmarksCarousel= () => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { bookmarkIds, cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isLoaded } = useGetBookmarks();
+  const { bookmarkIds, cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isLoaded, cutFaceNames } = useGetBookmarks();
   const [showMoreButton, setShowMoreButton] = useState(false);
   const [ isOrbit, setIsOrbit ] = useState(false);
 
@@ -17,8 +17,8 @@ const BookmarksCarousel= () => {
       
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
 
-      // スクロール位置が 5つ目（4番目の要素）より右に行ったらボタンを表示
-      const threshold = (scrollWidth / bookmarkIds.length) * 14; // 5つ目
+      // スクロール位置が 7つ目（6番目の要素）より右に行ったらボタンを表示
+      const threshold = (scrollWidth / bookmarkIds.length) * 6; // 7つ目
       setShowMoreButton(scrollLeft >= threshold - clientWidth);
     };
 
@@ -72,14 +72,18 @@ const BookmarksCarousel= () => {
       <div  ref={scrollRef}
         className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory p-2 scrollbar-hide"
       >
-        {bookmarkIds.map((bookmarkId, index) => (
+        {bookmarkIds.slice(0,7).map((bookmarkId, index) => (
         <div key={bookmarkId} className="shrink-0">
           <div className="w-48 h-full border border-gray-200 p-2 rounded-lg shadow-md flex flex-grow flex-col justify-between ">
+          <div className="min-h-8">
+            {cutFaceNames[index] && (
+              <span key={index} className="bg-blue-100 font-semibold text-gray-700 text-xs px-2 py-1"> {cutFaceNames[index]} </span>
+            )}
+          </div>
             <BookmarkCard
               cutCubeId={cutCubeIds[index]}
               glbUrl={glbUrls[index]}
               cutPoints={cutPoints[index]}
-              createdAt={createdAt[index]}
               title={titles[index]}
               memo={memos[index]}
               isOrbit={isOrbit}
@@ -113,9 +117,9 @@ const BookmarksCarousel= () => {
 
       <div className="flex justify-center items-center flex-1">
         {showMoreButton && (
-          <button className="w-full my-auto font-bold text-blue-500" onClick={() => alert("もっと見る")}>
+          <Link to="/bookmarks" className="w-full my-auto font-bold text-blue-500" >
             <FontAwesomeIcon icon={faAngleRight} size="xl"/>
-          </button>
+          </Link>
         )}
       </div>
     </div>

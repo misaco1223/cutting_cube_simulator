@@ -69,7 +69,7 @@ const BoardsSideBar = ({ filter, setFilter }: BoardsSideBarProps) => {
                     <li key={tag}>
                     <button
                       onClick={() => {setFilter(tag); setIsTagMenuOpen(!isTagMenuOpen);}}
-                      className={`w-full text-left px-1 py-2 text-gray-800 ${
+                      className={`w-full text-left px-1 py-2 mx-auto text-gray-800 ${
                         filter === tag
                       ? "bg-blue-200"
                       : "hover:bg-blue-100"

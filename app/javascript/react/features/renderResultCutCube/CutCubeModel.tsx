@@ -2,20 +2,21 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { useGLTF, Text } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import {vertices, vertexLabels} from "../getCoordinates/types/ThreeScene";
+import { vertices, vertexLabels } from "../getCoordinates/types/ThreeScene";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 
 interface CutCubeProps {
-    glbUrl: string;
-    cutPoints: THREE.Vector3[];
-    selectedGeometry: "all" | "geometry1" | "geometry2";
-    isOrbit: boolean;
+  glbUrl: string;
+  cutPoints: THREE.Vector3[];
+  selectedGeometry: "all" | "geometry1" | "geometry2";
+  isOrbit: boolean;
 }
 
 const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry, isOrbit }: CutCubeProps) => {
   const { scene } = useGLTF(glbUrl);
   const [ref1, setRef1] = useState<THREE.Mesh | null>(null);
   const [ref2, setRef2] = useState<THREE.Mesh | null>(null);
+  const [ref3, setRef3] = useState<THREE.Mesh | null>(null);
 
   useEffect(() => {
     scene.traverse((object) => {
@@ -25,9 +26,20 @@ const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry, isOrbit }: CutCubeP
         if (object.name === "Geometry001") {
           material.color.set("#B6FF01");
           setRef1(object); // ref1の更新
-        } else if (object.name === "Geometry002") {
+        }
+        if (object.name === "Geometry002") {
           material.color.set("#4689FF");
           setRef2(object); // ref2の更新
+        }
+        if (object.name === "Geometry003") {
+          material = new THREE.MeshBasicMaterial({
+            color: "#FF6666",
+            side: THREE.DoubleSide,
+            polygonOffset: true,
+            polygonOffsetFactor: -1, // 小さい値ならOK
+            polygonOffsetUnits: -1,
+          });
+          setRef3(object); // ref2の更新
         }
 
         object.material = material;
@@ -99,12 +111,24 @@ const CutCubeModel = ({ glbUrl, cutPoints, selectedGeometry, isOrbit }: CutCubeP
           <lineBasicMaterial color="black" />
         </lineSegments>
         <primitive object={scene} />
-          {selectedGeometry === "all" || selectedGeometry === "geometry1" ? (
-            ref1 && <primitive object={ref1} /> // ref1がnullでない場合のみ表示
-          ) : null}
-            {selectedGeometry === "all" || selectedGeometry === "geometry2" ? (
-                ref2 && <primitive object={ref2} /> // ref2がnullでない場合のみ表示
-          ) : null}
+        {selectedGeometry === "all" && (
+          <>
+            {ref1 && <primitive object={ref1} />}
+            {ref2 && <primitive object={ref2} />}
+          </>
+        )}
+        {selectedGeometry === "geometry1" ? (
+          <>
+          { ref1 && <primitive object={ref1}/> }
+          { ref3 && <primitive object={ref3} />}
+          </>
+        ) : null}
+        {selectedGeometry === "geometry2" ? (
+          <>
+            { ref2 && <primitive object={ref2}/> }
+            { ref3 && <primitive object={ref3} />}
+          </>
+        ) : null}
       </Canvas>
     </div>
   );
