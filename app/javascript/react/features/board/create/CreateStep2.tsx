@@ -18,11 +18,12 @@ interface CreateStep2Props {
   setExplanation: (e: string) => void;
   tags: string[];
   setTags: (e: string[]) => void;
+  cutFaceName? : string|null;
   onNext: () => void;
   onBack: () => void;
 }
 
-const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnswer, explanation, setExplanation, tags, setTags, onNext, onBack }: CreateStep2Props) => {
+const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnswer, explanation, setExplanation, tags, setTags, cutFaceName, onNext, onBack }: CreateStep2Props) => {
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
   const [errorMessage, setErrorMessage] = useState("");
@@ -118,27 +119,41 @@ const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnsw
           <div className="text-sm flex justify-start my-auto">
             <div className="relative group">
               <button onClick={togglePoint} className="text-xs">
-                切断点を確認する <FontAwesomeIcon icon={faCaretDown}className={`transition-transform ${isPointOpen ? "rotate-180" : ""}`}  />
+                切断情報を確認する <FontAwesomeIcon icon={faCaretDown}className={`transition-transform ${isPointOpen ? "rotate-180" : ""}`}  />
               </button>
-              <div className={`absolute z-50 w-64 bg-white border border-gray-300 shadow-xl p-4 ${isPointOpen ? "": "hidden"}`}>
-                {pointsInfo.map((pointInfo, index) => (
-                  <div key={index} className="w-full px-4">
-                    {pointInfo.isVertex
-                    ? ( <div className="w-full flex space-x-2">
-                            <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
-                            <span className="p-1 my-auto">頂点 {pointInfo.vertexLabel}</span>
-                        </div>
-                    ):( <div className="w-full flex space-x-2">
-                            <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
-                            <span className="p-1 my-auto">辺 {pointInfo.edgeLabel}</span>
-                            <span className="text-sm my-auto text-center">{pointInfo.edgeRatio.left}</span>
-                            <span className="my-auto"> : </span>
-                            <span className="text-sm my-auto text-center">{pointInfo.edgeRatio.right}</span>
-                        </div>
-                    )}
+              <div className={`absolute z-50 w-64 bg-white border border-gray-300 shadow-xl p-4 overflow-y-auto max-h-40 ${isPointOpen ? "": "hidden"}`}>
+                <div className="flex justify-end mb-2">
+                  <span/>
+                  <FontAwesomeIcon icon={faXmark} size="xs" onClick={()=>setIsPointOpen(false)} className="flex justify-end"/>
+                </div>
+                <div>
+                  <p className="font-semibold">切断点</p>
+                  {pointsInfo.map((pointInfo, index) => (
+                    <div key={index} className="w-full px-4">
+                      {pointInfo.isVertex
+                      ? ( <div className="w-full flex space-x-2">
+                              <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
+                              <span className="p-1 my-auto">頂点 {pointInfo.vertexLabel}</span>
+                          </div>
+                      ):( <div className="w-full flex space-x-2">
+                              <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
+                              <span className="p-1 my-auto">辺 {pointInfo.edgeLabel}</span>
+                              <span className="text-sm my-auto text-center">{pointInfo.edgeRatio.left}</span>
+                              <span className="my-auto"> : </span>
+                              <span className="text-sm my-auto text-center">{pointInfo.edgeRatio.right}</span>
+                          </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                {cutFaceName && 
+                  <div className="mt-2">
+                    <p className="font-semibold">切断面</p>
+                    <span className="px-4">{cutFaceName}</span>
                   </div>
-                ))}
+                }
               </div>
+
             </div>
           </div>
           {/*モードとタブ*/}

@@ -33,6 +33,7 @@ const CreateBoard = () => {
   const selectedIndex = cutCubeIds.indexOf(cutCubeId || "");
   const selectedGlbUrl = selectedIndex !== -1 ? glbUrls[selectedIndex] : "";
   const selectedCutPoints: THREE.Vector3[] | [] = selectedIndex !== -1 ? cutPoints[selectedIndex] : [];
+  const selectedCutFaceName: string | null = selectedIndex !== -1 ? cutFaceNames[selectedIndex] : null;
 
   if(!isLoggedIn) { return (
     <div className="m-4 p-4">
@@ -73,6 +74,7 @@ const CreateBoard = () => {
             setExplanation={setExplanation} 
             tags={tags}
             setTags={setTags}
+            cutFaceName={selectedCutFaceName}
             onNext={() => navigate("/board/new/step3")}
             onBack={() => navigate("/board/new/step1")}
           />

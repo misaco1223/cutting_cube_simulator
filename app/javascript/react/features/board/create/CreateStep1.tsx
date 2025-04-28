@@ -93,7 +93,7 @@ const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,ti
                     )}
                   </div>
                 </div>
-                <div className="min-h-[300px]">
+                <div className="min-h-[300px] p-2">
                   <BookmarkCard
                     key={index}
                     glbUrl={glbUrl}

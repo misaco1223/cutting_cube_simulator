@@ -26,12 +26,12 @@ const ShowBoard = ({ id }: { id: string }) => {
   const [isEditingExplanation, setIsEditingExplanation] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(question);
   const [currentAnswer, setCurrentAnswer] = useState(answer);
-  const [currentExplanation, setCurrentExplanation] = useState(explanation || "解説なし");
+  const [currentExplanation, setCurrentExplanation] = useState(explanation || "");
 
   useEffect(() => {
     setCurrentQuestion(question);
     setCurrentAnswer(answer);
-    setCurrentExplanation(explanation || "解説なし")
+    setCurrentExplanation(explanation || "")
     setPublished(published);
   }, [question, answer, explanation]);
 
@@ -464,41 +464,62 @@ const ShowBoard = ({ id }: { id: string }) => {
 
           {/* 解説 */}
           <div className="my-4">
-              <h1 className="text-md font-bold mb-4">解説</h1>
               {isOwner ? (
-                  <div className="flex items-center space-x-2">
+                <>
                   {isEditingExplanation ? (
-                      <textarea
-                      value={currentExplanation !== null ? currentExplanation : explanation || "解説なし"}
-                      onChange={(e) => setCurrentExplanation(e.target.value)}
-                      onBlur={() => {
-                          setIsEditingExplanation(false);
-                          handleBoardUpdate();
-                      }}
-                      autoFocus
-                      className="w-full h-28 px-1 text-md border-b border-gray-100 focus:outline-none focus:border-red-500"
-                      />
-                  ) : (
-                      <h1
-                      className="text-md cursor-pointer whitespace-pre-line"
-                      onClick={() => setIsEditingExplanation(true)}
-                      >
-                      {currentExplanation}
-                      </h1>
+                    <>
+                      <h1 className="text-md font-bold mb-4">解説</h1>
+                      <div className="flex items-center space-x-2">
+                        <textarea
+                        value={currentExplanation !== null ? currentExplanation : explanation || "解説なし"}
+                        onChange={(e) => setCurrentExplanation(e.target.value)}
+                        onBlur={() => {
+                            setIsEditingExplanation(false);
+                            handleBoardUpdate();
+                        }}
+                        autoFocus
+                        className="w-full h-28 px-1 text-md border-b border-gray-100 focus:outline-none focus:border-red-500"
+                        />
+                        <FontAwesomeIcon
+                        icon={faPencil}
+                        size="xs"
+                        className="text-gray-500 cursor-pointer"
+                        onClick={() => setIsEditingExplanation(true)}
+                        />
+                      </div>
+                    </>
+                  ):(
+                    <>
+                      <h1 className="text-md font-bold mb-4">解説</h1>
+                      <div className="flex items-center space-x-2">
+                        <h1
+                        className="text-md cursor-pointer whitespace-pre-line"
+                        onClick={() => setIsEditingExplanation(true)}
+                        >
+                        {currentExplanation}
+                        </h1>
+                        <FontAwesomeIcon
+                        icon={faPencil}
+                        size="xs"
+                        className="text-gray-500 cursor-pointer"
+                        onClick={() => setIsEditingExplanation(true)}
+                        />
+                      </div>
+                    </>
                   )}
-                  <FontAwesomeIcon
-                      icon={faPencil}
-                      size="xs"
-                      className="text-gray-500 cursor-pointer"
-                      onClick={() => setIsEditingExplanation(true)}
-                  />
-                  </div>
+                </>
               ):(
-                  <div className="mt-4 mb-2 items-center space-y-4">
-                  <span className="text-md whitespace-pre-line">{currentExplanation}</span>
+                currentExplanation !== "解説なし" && (
+                  <>
+                  <h1 className="text-md font-bold mb-4">解説</h1>
+                  <div className="flex items-center space-x-2">
+                    <div className="mt-4 mb-2 items-center space-y-4">
+                      <span className="text-md whitespace-pre-line">{currentExplanation}</span>
+                    </div>
                   </div>
-              )
-              }
+                  </>
+                )
+              )}
           </div>
           </div>
         </div>
