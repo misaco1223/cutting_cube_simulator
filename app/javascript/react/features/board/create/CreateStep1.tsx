@@ -1,8 +1,8 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, useMemo, startTransition} from "react";
 import BookmarkCard from "../../bookmark/BookmarkCard";
 import * as THREE from "three";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faToggleOff, faToggleOn } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faAngleRight, faToggleOff, faToggleOn } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
 
 export interface CreateStep1Props {
@@ -29,6 +29,35 @@ const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,ti
       setCutCubeId(String(initialId));
     }
   }, [initialId]);
+
+  //ページ処理
+  const itemsPerPage = 12;
+  const totalItems = glbUrls.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const { currentCutCubeIds, currentGlbUrls, currentCutPoints, currentCreatedAt, currentTitles, currentMemos, currentCutFaceNames } = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+  
+    return {
+      currentGlbUrls: glbUrls.slice(startIndex, endIndex),
+      currentCutPoints: cutPoints.slice(startIndex, endIndex),
+      currentCutCubeIds: cutCubeIds.slice(startIndex, endIndex),
+      currentCreatedAt: createdAt.slice(startIndex, endIndex),
+      currentTitles: titles.slice(startIndex, endIndex),
+      currentMemos: memos.slice(startIndex, endIndex),
+      currentCutFaceNames: cutFaceNames?.slice(startIndex, endIndex)
+    };
+  }, [currentPage, glbUrls, cutPoints, cutCubeIds, createdAt, titles, memos, cutFaceNames]);
+
+  const handlePageClick = (selectedPage: number) => {
+    if (selectedPage < 1 || selectedPage > totalPages + 1) return;
+    startTransition(() => {
+        setCurrentPage(selectedPage);
+      });
+  };
 
   const formattedDate = (createdAt: string | null | undefined): string => {
     if (!createdAt) return "";
@@ -76,20 +105,20 @@ const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,ti
 
       {/* 切断カード一覧 */}
       <div className="grid lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 grid-cols-2 gap-4 md:m-4 min-w-0">
-        { glbUrls.length > 0 ? 
+        { currentGlbUrls.length > 0 ? 
           (
-            glbUrls.map((glbUrl, index) => (
+            currentGlbUrls.map((glbUrl, index) => (
               <button
                 key={index}
-                onClick={(e) => setCutCubeId(cutCubeIds[index])}
+                onClick={(e) => setCutCubeId(currentCutCubeIds[index])}
                 className={`border border-gray-200 px-2 py-6 rounded-lg shadow-md ${
-                  cutCubeId === cutCubeIds[index] ? "bg-blue-400" : "hover:bg-blue-100"
+                  cutCubeId === currentCutCubeIds[index] ? "bg-blue-400" : "hover:bg-blue-100"
                 }`}
               >
                 <div className="min-h-8">
                   <div className="flex justify-start">
-                    {cutFaceNames && cutFaceNames[index] && (
-                      <span key={index} className="bg-blue-100 font-semibold text-gray-700 text-xs px-2 py-1"> {cutFaceNames[index]} </span>
+                    {currentCutFaceNames && currentCutFaceNames[index] && (
+                      <span key={index} className="bg-blue-100 font-semibold text-gray-700 text-xs px-2 py-1"> {currentCutFaceNames[index]} </span>
                     )}
                   </div>
                 </div>
@@ -97,14 +126,14 @@ const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,ti
                   <BookmarkCard
                     key={index}
                     glbUrl={glbUrl}
-                    cutPoints={cutPoints[index]}
-                    title={titles[index]}
-                    memo={memos[index]}
+                    cutPoints={currentCutPoints[index]}
+                    title={currentTitles[index]}
+                    memo={currentMemos[index]}
                     isOrbit={isOrbit}
                   />
                 </div>
                 <div className="flex justify-end px-2">
-                  <p className="text-gray-500 text-xs">{formattedDate(createdAt[index])}</p>
+                  <p className="text-gray-500 text-xs">{formattedDate(currentCreatedAt[index])}</p>
                 </div>
               </button>
             ))
@@ -122,6 +151,37 @@ const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,ti
           </button>
         </div>
     </div>
+
+    {/* ページング*/}
+    <div className="my-12 mx-auto flex justify-center space-x-4">
+        {totalPages > 1 ? (
+          <>
+            <button
+              className="px-4 py-2"
+              onClick={() => handlePageClick(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+             <FontAwesomeIcon icon={faAngleLeft} />
+            </button>
+      
+            <div className="flex items-center">
+              <span className="text-lg">{currentPage} / {totalPages}</span>
+            </div>
+
+            <button
+              className="px-4 py-2"
+              onClick={() => handlePageClick(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              <FontAwesomeIcon icon={faAngleRight} />
+            </button>
+           </>
+        ):(
+          <div className="flex items-center">
+            <span className="text-lg">1 / 1</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
