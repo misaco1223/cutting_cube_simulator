@@ -101,11 +101,6 @@ const SendPointsButton = ({ points, isCollect }: SendPointsButtonProps)=> {
               className="bg-green-800 hover:bg-green-700 text-white rounded px-6 py-2">
               3点で切断する
           </button>
-          <div className="border mt-4 p-4 flex space-x-2">
-            <span className="my-auto">立方体の1辺の長さは</span>
-            <input type="text" placeholder="準備中..." className="border text-sm mx-auto rounded-sm p-1 w-20"/>
-            <span className="my-auto">cm</span>
-          </div>
           </>
         ): ( <div className="text-red-500">切断点を更新して最新の状態にしてください</div>
       ))}

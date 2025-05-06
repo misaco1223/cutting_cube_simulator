@@ -8,10 +8,10 @@ import { useAuth } from "../../contexts/AuthContext";
 import { Link } from "react-router-dom";
 import CutFaceFlowChart from "./CutFaceFlowChart";
 import { motion } from "framer-motion";
-
+import toIntegerRatio from "./useVolumeRatio"
 
 const ResultCutCube = ({ id }: { id: string}) => {
-  const { glbUrl, cutPoints, title, memo, createdAt, bookmarkId, setBookmarkId, cutFaceName, setCutFaceName } = useGetCutCube(id);
+  const { glbUrl, cutPoints, title, memo, createdAt, bookmarkId, setBookmarkId, cutFaceName, setCutFaceName, volumeRatio, edgeLength, setEdgeLength  } = useGetCutCube(id);
   // console.log("bookmarkIdは", bookmarkId);
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
@@ -20,6 +20,8 @@ const ResultCutCube = ({ id }: { id: string}) => {
   const [ isFaceDropOpen, setIsFaceDropOpen ] = useState(false);
   const [ isFaceFlowOpen, setIsFaceFlowOpen ] = useState(false);
   const faceNameTags = ["三角形", "正三角形", "二等辺三角形", "四角形", "ひし形", "正方形", "長方形", "平行四辺形", "台形", "等脚台形", "五角形", "六角形", "正六角形"];
+  const [ integerRatio, setIntegerRatio ] = useState<string | null>(null);
+  const [ volumes, setVolumes] = useState<number[]|null>(null);
 
   // 編集用の状態
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -31,6 +33,20 @@ const ResultCutCube = ({ id }: { id: string}) => {
     setCurrentTitle(title || "No Title");
     setCurrentMemo(memo || "No Memo");
   }, [title, memo]);
+
+  useEffect(() => {
+    if (!volumeRatio) return;
+    const a = volumeRatio;
+    const b = 1 - a;
+    const [x, y] = toIntegerRatio(a, b);
+    setIntegerRatio(`${x} : ${y}`);
+  }, [volumeRatio]);
+
+  useEffect(()=>{
+    if (!edgeLength)return;
+    handleCalculateVolumes(edgeLength);
+    handleCutCubeUpdate();
+  },[edgeLength])
 
   useEffect(() => {
     if (!cutPoints) return;
@@ -64,7 +80,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
       const response = await fetch(`/api/cut_cubes/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: currentTitle, memo: currentMemo, cut_face_name: faceName ?? cutFaceName }),
+        body: JSON.stringify({ title: currentTitle, memo: currentMemo, cut_face_name: faceName ?? cutFaceName, edge_length: edgeLength}),
       });
 
       if (!response.ok) throw new Error("更新に失敗しました");
@@ -114,6 +130,14 @@ const ResultCutCube = ({ id }: { id: string}) => {
     } catch (error) {
       // console.log(error);
     }
+  }
+
+  const handleCalculateVolumes = (length:number) => {
+    if (!volumeRatio) return;
+    const vol_1 = volumeRatio * (length **3);
+    const vol_2 = length **3 - vol_1;
+    const round = (v: number) => Math.round(v * 1000) / 1000;
+    setVolumes([round(vol_1), round(vol_2)]);
   }
 
   return (
@@ -257,7 +281,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
         <div className="border p-4">
           <h1 className="font-semibold mb-2">切断点</h1>
           {pointsInfo.map((pointInfo, index) => (
-            <div key={index} className="w-full">
+            <div key={index} className="w-full text-gray-700">
               {pointInfo.isVertex
               ? ( <div className="w-full flex space-x-1">
                     <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
@@ -282,13 +306,13 @@ const ResultCutCube = ({ id }: { id: string}) => {
               <h1 className="font-semibold">切断面の形</h1>
               <FontAwesomeIcon icon={faCircleRight} className="text-gray-500 cursor-pointer my-auto" onClick={()=>setIsFaceFlowOpen(!isFaceFlowOpen)}/>
             </div>
-            <div className="absolute bottom-full z-50 left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+            <div className="absolute bottom-full z-40 left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
               {isFaceFlowOpen ? "フローチャートを閉じる" : "切断面の形をフローチャートで決める"}
             </div>
           </div>
           {/*切断面の形フローチャート*/}
           { isFaceFlowOpen && (
-            <motion.div drag className="absolute z-50 top-32 left-1/2 transform -translate-x-1/2 w-11/12 md:w-1/3 bg-white border border-gray-300 shadow-xl rounded-md p-6 text-sm leading-relaxed">
+            <motion.div drag className="absolute z-50 top-32 left-1/2 transform -translate-x-1/2 w-11/12 lg:w-1/3 md:w-1/2 bg-white border border-gray-300 shadow-xl rounded-md p-6 text-sm leading-relaxed">
               <span className="flex justify-between">
                 <div className="text-gray-400 flex justify-start">切断面の形 フローチャート</div>
                 <FontAwesomeIcon icon={faXmark} size="xl" onClick={()=>setIsFaceFlowOpen(false)} className="flex justify-end"/>
@@ -301,7 +325,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
 
           {/*現在の切断面の形*/}
           <div className="min-h-14 mt-2">
-            <span className="w-full px-4 py-1 text-sm font-medium text-gray-700">{cutFaceName? cutFaceName : "未設定"}</span>
+            <span className={`w-full px-4 py-1 ${cutFaceName ? "font-bold" : "text-sm font-medium text-gray-700" }`}>{cutFaceName? cutFaceName : "未設定"}</span>
           </div>
           {/* 切断面の形ドロップダウン */}
           <div className="relative w-full max-w-60 bg-gray-200 border border-gray-300 inline-block text-left">
@@ -315,7 +339,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
                 <FontAwesomeIcon icon={faCaretDown} className={`ml-2 transition-transform ${isFaceDropOpen ? "rotate-180" : ""}`} />
               </button>
             </div>
-            <div className={`absolute right-0 w-full flex flex-col space-y-1 p-2 bg-white z-50 ring-1 ring-black ring-opacity-5 overflow-y-auto max-h-40 ${isFaceDropOpen ? "" : "hidden"}`}>
+            <div className={`absolute right-0 w-full flex flex-col space-y-1 p-2 bg-white z-40 ring-1 ring-black ring-opacity-5 overflow-y-auto max-h-40 ${isFaceDropOpen ? "" : "hidden"}`}>
               {/*タグから選択*/}
               {faceNameTags.map((faceTag, idx) => (
                 <button
@@ -347,8 +371,42 @@ const ResultCutCube = ({ id }: { id: string}) => {
 
         {/*体積比*/}
         <div className="border p-4">
-          <h1 className="font-semibold mb-2">体積</h1>
-          <span>準備中...</span>
+          <h1 className="font-semibold w-full">体積比</h1>
+          <div className="mt-2">
+          {integerRatio ?
+            <>
+            <span className="w-full min-h-14 px-4 py-1 font-bold mt-2">
+              {integerRatio}<span className="text-sm px-4 font-medium text-gray-700">(緑:青)</span>
+            </span>
+            <div className="mt-4 text-gray-700">
+              <span className="my-auto">立方体の1辺の長さを</span>
+              <br/>
+              <input
+                type="number"
+                value = {edgeLength || "未設定"}
+                placeholder = "一辺の長さ"
+                className="border text-center text-sm mx-auto rounded-sm p-1 w-24"
+                onChange={(e) => setEdgeLength(Number(e.target.value))}
+              />
+              <span className="my-auto">cmとすると</span>
+            </div>
+            {volumes && volumes[0]!==0 && volumes[1]!==0 &&
+            <div className="mt-2 text-gray-700">
+              <span className="my-auto">体積は</span>
+              <br/>
+              <span className="text-sm mx-auto p-1 w-20"/>
+              <span className="my-auto">緑の立体... <span className="font-bold">{volumes[0]}㎤</span></span>
+              <br/>
+              <span className="text-sm mx-auto p-1 w-20"/>
+              <span className="my-auto">青の立体... <span className="font-bold">{volumes[1]}㎤</span></span>
+              <br/>
+              <span className="text-sm font-medium text-gray-700">※ 小数第3位までのがい数(誤差があります)</span>
+            </div>
+            }
+             </>
+            : <span className="w-full px-4 py-1 text-sm font-medium text-gray-700">データがありません</span>
+          }
+          </div>
         </div>
       </div>
     </div>
