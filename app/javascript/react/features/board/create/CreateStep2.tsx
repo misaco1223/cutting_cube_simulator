@@ -19,11 +19,12 @@ interface CreateStep2Props {
   tags: string[];
   setTags: (e: string[]) => void;
   cutFaceName? : string|null;
+  volumeRatio? : string|null;
   onNext: () => void;
   onBack: () => void;
 }
 
-const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnswer, explanation, setExplanation, tags, setTags, cutFaceName, onNext, onBack }: CreateStep2Props) => {
+const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnswer, explanation, setExplanation, tags, setTags, cutFaceName, volumeRatio, onNext, onBack }: CreateStep2Props) => {
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
   const [errorMessage, setErrorMessage] = useState("");
@@ -114,30 +115,36 @@ const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnsw
                     <span/>
                     <FontAwesomeIcon icon={faXmark} size="xs" onClick={()=>setIsPointOpen(false)} className="flex justify-end"/>
                   </div>
-                  <div>
+                  <div className="text-xs">
                     <p className="font-semibold">切断点</p>
                     {pointsInfo.map((pointInfo, index) => (
                       <div key={index} className="w-full px-4">
                         {pointInfo.isVertex
                         ? ( <div className="w-full flex space-x-2">
-                                <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
+                                <h3 className="my-auto">切断点 {index + 1}</h3>
                                 <span className="p-1 my-auto">頂点 {pointInfo.vertexLabel}</span>
                             </div>
                         ):( <div className="w-full flex space-x-2">
-                                <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
+                                <h3 className="my-auto">切断点 {index + 1}</h3>
                                 <span className="p-1 my-auto">辺 {pointInfo.edgeLabel}</span>
-                                <span className="text-sm my-auto text-center">{pointInfo.edgeRatio.left}</span>
+                                <span className="my-auto text-center">{pointInfo.edgeRatio.left}</span>
                                 <span className="my-auto"> : </span>
-                                <span className="text-sm my-auto text-center">{pointInfo.edgeRatio.right}</span>
+                                <span className="my-auto text-center">{pointInfo.edgeRatio.right}</span>
                             </div>
                         )}
                       </div>
                     ))}
                   </div>
                   {cutFaceName && 
-                    <div className="mt-2">
+                    <div className="mt-2 text-xs">
                       <p className="font-semibold">切断面</p>
                       <span className="px-4">{cutFaceName}</span>
+                    </div>
+                  }
+                  {volumeRatio && 
+                    <div className="mt-2 text-xs">
+                      <p className="font-semibold">体積比</p>
+                      <span className="px-4">{volumeRatio}</span>
                     </div>
                   }
                 </div>
