@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import * as THREE from "three";
+import toIntegerRatio from "../renderResultCutCube/useVolumeRatio";
 
 export const useGetBookmarks = () => {
   const [bookmarkIds, setBookmarkIds] = useState<string[]>([]);
@@ -11,6 +12,7 @@ export const useGetBookmarks = () => {
   const [createdAt, setCreatedAt] = useState<string[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [cutFaceNames, setCutFaceNames] = useState<string[]>([]);
+  const [volumeRatios, setVolumeRatios] = useState<string[]>([]);
 
   const fetchCutCube = async () => {
     try {
@@ -39,6 +41,14 @@ export const useGetBookmarks = () => {
         setMemos(data.bookmarks.memos);
         setCreatedAt(data.bookmarks.created_at);
         setCutFaceNames(data.bookmarks.cut_face_names);
+        const transformedRatios = data.bookmarks.volume_ratios.map((ratio: number)=>{
+          if (!ratio || ratio == 0) return;
+          const a = ratio;
+          const b = 1-ratio;
+          const [r_1, r_2] = toIntegerRatio(a,b);
+          return `${r_1} : ${r_2}`;
+        })
+        setVolumeRatios(transformedRatios);
         setIsLoaded(true);
       } else {
         // console.log("データなし");
@@ -52,5 +62,5 @@ export const useGetBookmarks = () => {
     fetchCutCube();  
   }, []);
 
-  return { bookmarkIds, cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isLoaded, cutFaceNames};
+  return { bookmarkIds, cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isLoaded, cutFaceNames, volumeRatios};
 };

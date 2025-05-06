@@ -2,7 +2,7 @@ import {useEffect, useState, useMemo, startTransition} from "react";
 import BookmarkCard from "../../bookmark/BookmarkCard";
 import * as THREE from "three";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft, faAngleRight, faToggleOff, faToggleOn } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faAngleRight, faBookmark, faToggleOff, faToggleOn } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
 
 export interface CreateStep1Props {
@@ -14,11 +14,13 @@ export interface CreateStep1Props {
   titles: string[];
   memos: string[];
   createdAt: string[];
+  bookmarkIds: (string|null)[];
   cutFaceNames?: (string | null)[];
+  volumeRatios?: (string | null)[];
   onNext: () => void;
 }
 
-const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,titles, memos, createdAt, onNext, cutFaceNames }:CreateStep1Props) => {
+const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,titles, memos, createdAt, bookmarkIds, onNext, cutFaceNames, volumeRatios }:CreateStep1Props) => {
   const [ isOrbit, setIsOrbit ] = useState(false);
 
   const query = new URLSearchParams(useLocation().search);
@@ -37,7 +39,7 @@ const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,ti
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { currentCutCubeIds, currentGlbUrls, currentCutPoints, currentCreatedAt, currentTitles, currentMemos, currentCutFaceNames } = useMemo(() => {
+  const { currentCutCubeIds, currentGlbUrls, currentCutPoints, currentCreatedAt, currentTitles, currentMemos, currentBookmarkIds, currentCutFaceNames, currentVolumeRatios } = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
   
@@ -48,9 +50,11 @@ const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,ti
       currentCreatedAt: createdAt.slice(startIndex, endIndex),
       currentTitles: titles.slice(startIndex, endIndex),
       currentMemos: memos.slice(startIndex, endIndex),
-      currentCutFaceNames: cutFaceNames?.slice(startIndex, endIndex)
+      currentBookmarkIds: bookmarkIds.slice(startIndex, endIndex),
+      currentCutFaceNames: cutFaceNames?.slice(startIndex, endIndex),
+      currentVolumeRatios: volumeRatios?.slice(startIndex, endIndex)
     };
-  }, [currentPage, glbUrls, cutPoints, cutCubeIds, createdAt, titles, memos, cutFaceNames]);
+  }, [currentPage, glbUrls, cutPoints, cutCubeIds, createdAt, titles, memos, bookmarkIds, cutFaceNames, volumeRatios]);
 
   const handlePageClick = (selectedPage: number) => {
     if (selectedPage < 1 || selectedPage > totalPages + 1) return;
@@ -116,9 +120,12 @@ const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,ti
                 }`}
               >
                 <div className="min-h-8">
-                  <div className="flex justify-start">
+                  <div className="flex justify-start space-x-2">
                     {currentCutFaceNames && currentCutFaceNames[index] && (
                       <span key={index} className="bg-blue-100 font-semibold text-gray-700 text-xs px-2 py-1"> {currentCutFaceNames[index]} </span>
+                    )}
+                    {currentVolumeRatios && currentVolumeRatios[index] && (
+                      <span key={index} className="bg-pink-100 font-semibold text-gray-700 text-xs px-2 py-1"> {currentVolumeRatios[index]} </span>
                     )}
                   </div>
                 </div>
@@ -132,8 +139,13 @@ const CreateStep1 = ({cutCubeId, setCutCubeId, cutCubeIds, glbUrls, cutPoints,ti
                     isOrbit={isOrbit}
                   />
                 </div>
-                <div className="flex justify-end px-2">
-                  <p className="text-gray-500 text-xs">{formattedDate(currentCreatedAt[index])}</p>
+                <div className="flex justify-between px-2">
+                  <div className="flex justify-start">
+                    <FontAwesomeIcon icon={faBookmark} className={currentBookmarkIds[index] ? "text-yellow-500 hover:text-yellow-100" :""}/>
+                  </div>
+                  <div className="flex justify-end px-2">
+                    <p className="text-gray-500 text-xs">{formattedDate(currentCreatedAt[index])}</p>
+                  </div>
                 </div>
               </button>
             ))

@@ -155,7 +155,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
                 handleCutCubeUpdate();
               }}
               autoFocus
-              className="text-2xl font-bold border-b border-gray-100 focus:outline-none focus:border-red-500"
+              className="w-full text-2xl font-bold border-b border-gray-100 focus:outline-none focus:border-red-500"
             />
           ) : (
             <h1

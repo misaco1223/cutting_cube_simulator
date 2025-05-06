@@ -7,7 +7,7 @@ import { useAuth } from "../../contexts/AuthContext";
 
 
 const IndexBookmarks = () => {
-    const { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, bookmarkIds, isLoaded, cutFaceNames } = useGetBookmarks();
+    const { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, bookmarkIds, isLoaded, cutFaceNames, volumeRatios } = useGetBookmarks();
     const { isLoggedIn, userName } = useAuth();
     const [ isOrbit, setIsOrbit ] = useState(false);
     if (!glbUrls || !cutPoints || glbUrls.length !== cutPoints.length || !bookmarkIds ) return null;
@@ -19,7 +19,7 @@ const IndexBookmarks = () => {
   
     const [currentPage, setCurrentPage] = useState(1);
   
-    const { currentGlbUrls, currentCutPoints, currentCutCubeIds, currentCreatedAt, currentTitles, currentMemos, currentBookmarkIds, currentCutFaceNames } = useMemo(() => {
+    const { currentGlbUrls, currentCutPoints, currentCutCubeIds, currentCreatedAt, currentTitles, currentMemos, currentBookmarkIds, currentCutFaceNames, currentVolumeRatios } = useMemo(() => {
       const startIndex = (currentPage - 1) * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
     
@@ -31,9 +31,10 @@ const IndexBookmarks = () => {
         currentTitles: titles.slice(startIndex, endIndex),
         currentMemos: memos.slice(startIndex, endIndex),
         currentBookmarkIds: bookmarkIds.slice(startIndex, endIndex),
-        currentCutFaceNames: cutFaceNames.slice(startIndex, endIndex)
+        currentCutFaceNames: cutFaceNames.slice(startIndex, endIndex),
+        currentVolumeRatios: volumeRatios.slice(startIndex, endIndex)
       };
-    }, [currentPage, glbUrls, cutPoints, cutCubeIds, createdAt, titles, memos, bookmarkIds, cutFaceNames]);
+    }, [currentPage, glbUrls, cutPoints, cutCubeIds, createdAt, titles, memos, bookmarkIds, cutFaceNames, volumeRatios]);
   
     const handlePageClick = (selectedPage: number) => {
       if (selectedPage < 1 || selectedPage > totalPages + 1) return;
@@ -106,9 +107,12 @@ const IndexBookmarks = () => {
         (<p className="my-4">履歴はありません</p>)
       : currentGlbUrls.map((glbUrl, index) => (
         <div className="w-full border border-gray-200 px-4 py-6 rounded-lg shadow-md flex flex-col justify-between">
-          <div className="min-h-8">
+          <div className="min-h-8 space-x-2">
             {currentCutFaceNames[index] && (
               <span key={index} className="bg-blue-100 font-semibold text-gray-700 text-xs px-2 py-1"> {currentCutFaceNames[index]} </span>
+            )}
+            {currentVolumeRatios[index] && (
+              <span key={index} className="bg-pink-100 font-semibold text-gray-700 text-xs px-2 py-1"> {currentVolumeRatios[index]} </span>
             )}
           </div>
           <BookmarkCard
