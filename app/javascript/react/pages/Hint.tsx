@@ -24,7 +24,7 @@ const Hint = () => {
         <div id="accordion-collapse" data-accordion="collapse">
           <h2 id="accordion-collapse-heading-1">
           <button type="button" className="flex items-center justify-between w-full mt-6 p-2 text-lg font-bold rtl:text-right focus:ring-gray-200 gap-3" 
-              onClick={() => setisOpen0(!isOpen0)}
+              onClick={() => setIsOpen0(!isOpen0)}
               aria-expanded={isOpen0}
               aria-controls="accordion-collapse-body-1"
           >
