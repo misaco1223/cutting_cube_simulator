@@ -34,8 +34,12 @@ class Api::CutCubesController < ApplicationController
       end
 
       glb_file_name = "exported_cube_#{cut_id}.glb"
+      ratio_file_name="ratio_#{cut_id}.txt"
       shared_glb_url = Rails.root.join("shared", glb_file_name)
+      shared_ratio_url = Rails.root.join("shared", ratio_file_name)
+      ratio = File.read(shared_ratio_url).to_f
       puts "GLBファイルの保存先であるshared_glb_urlは: #{shared_glb_url}"
+      puts "ファイルにあるratioの値は: #{ratio}"
 
       user_id = current_user&.id
 
@@ -44,13 +48,16 @@ class Api::CutCubesController < ApplicationController
         cookie_id: cookie_id,
         cut_id: cut_id,
         cut_points: cut_points,
-        glb_file_name: glb_file_name
+        glb_file_name: glb_file_name,
+        volume_ratio: ratio
       )
       cut_cube.gltf_file.attach(io: File.open(shared_glb_url), filename: glb_file_name)
       cut_cube.save!
 
       File.delete(shared_glb_url) if File.exist?(shared_glb_url)
+      File.delete(shared_ratio_url) if File.exist?(shared_ratio_url)
       puts "GLBファイル削除済み: #{shared_glb_url}"
+      puts "ratioファイル削除済み: #{shared_ratio_url}"
 
       render_cut_cube = {
         id: cut_cube.id,
@@ -80,7 +87,9 @@ class Api::CutCubesController < ApplicationController
       title: cut_cube.title,
       memo: cut_cube.memo,
       created_at: cut_cube.created_at,
-      cut_face_name: cut_cube.cut_face_name
+      cut_face_name: cut_cube.cut_face_name,
+      volume_ratio: cut_cube.volume_ratio,
+      edge_length: cut_cube.edge_length
     }
 
     bookmark_id = cut_cube.bookmark_id_for(current_user)
@@ -99,7 +108,8 @@ class Api::CutCubesController < ApplicationController
         titles: cut_cubes.map(&:title),
         memos: cut_cubes.map(&:memo),
         created_at: cut_cubes.map(&:created_at),
-        cut_face_names: cut_cubes.map(&:cut_face_name)
+        cut_face_names: cut_cubes.map(&:cut_face_name),
+        volume_ratios: cut_cubes.map(&:volume_ratio)
     }
 
     bookmark_ids = cut_cubes.map { |cut_cube| cut_cube.bookmark_id_for(current_user) }
@@ -133,6 +143,6 @@ class Api::CutCubesController < ApplicationController
   private
 
   def cut_cube_update_params
-    params.require(:cut_cube).permit(:title, :memo, :cut_face_name)
+    params.require(:cut_cube).permit(:title, :memo, :cut_face_name, :edge_length)
   end
 end
