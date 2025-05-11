@@ -65,7 +65,11 @@ class Api::CutCubesController < ApplicationController
         cut_points: JSON.parse(cut_cube.cut_points),
         title: cut_cube.title,
         memo: cut_cube.memo,
-        created_at: cut_cube.created_at
+        created_at: cut_cube.created_at,
+        cut_face_name: nil,
+        edge_length: nil,
+        volume_ratio: ratio,
+
       }
 
       render json: { status: "success", cut_cube: render_cut_cube }, status: :ok
@@ -134,7 +138,15 @@ class Api::CutCubesController < ApplicationController
     cut_cube = CutCube.find_by_user_or_cookie(current_user, cookies[:guest_id], params[:id])
     if cut_cube
       cut_cube.update(cut_cube_update_params)
-      render json: { status: "success", message: "CutCube updated successfully" }, status: :ok
+
+      cut_cube_data = {
+      title: cut_cube.title,
+      memo: cut_cube.memo,
+      volume_ratio: cut_cube.volume_ratio,
+      cut_face_name: cut_cube.cut_face_name,
+      edge_length: cut_cube.edge_length
+    }
+      render json: { status: "success", message: "CutCube updated successfully", cut_cube: cut_cube_data }, status: :ok
     else
       render json: { error: "CutCube not found" }, status: :not_found
     end

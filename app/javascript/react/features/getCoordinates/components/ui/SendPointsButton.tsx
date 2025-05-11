@@ -54,6 +54,9 @@ const SendPointsButton = ({ points, isCollect }: SendPointsButtonProps)=> {
         title: data.cut_cube.title,
         memo: data.cut_cube.memo,
         createdAt: data.cut_cube.created_at,
+        cutFaceName: data.cut_cube.cut_face_name,
+        edgeLength: data.cut_cube.edge_length,
+        volumeRatio: data.cut_cube.volume_ratio
       };
       try {
         const storedCutCubes = JSON.parse(localStorage.getItem("cutCube") || "[]");

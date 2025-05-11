@@ -27,12 +27,12 @@ const ResultCutCube = ({ id }: { id: string}) => {
   // 編集用の状態
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingMemo, setIsEditingMemo] = useState(false);
-  const [currentTitle, setCurrentTitle] = useState(title || "No Title");
-  const [currentMemo, setCurrentMemo] = useState(memo || "No Memo");
+  const [currentTitle, setCurrentTitle] = useState<string|null>(title);
+  const [currentMemo, setCurrentMemo] = useState<string|null>(memo);
 
   useEffect(() => {
-        setCurrentTitle(title || "No Title");
-    setCurrentMemo(memo || "No Memo");
+    setCurrentTitle(title ?? "No Title");
+    setCurrentMemo(memo ?? "No Memo");
   }, [title, memo]);
 
   useEffect(() => {
@@ -46,7 +46,6 @@ const ResultCutCube = ({ id }: { id: string}) => {
   useEffect(()=>{
     if (!edgeLength)return;
     handleCalculateVolumes(edgeLength);
-    handleCutCubeUpdate();
   },[edgeLength])
 
   useEffect(() => {
@@ -81,17 +80,30 @@ const ResultCutCube = ({ id }: { id: string}) => {
       const response = await fetch(`/api/cut_cubes/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: currentTitle, memo: currentMemo, cut_face_name: faceName ?? cutFaceName, edge_length: edgeLength}),
+        body: JSON.stringify({ 
+          title: currentTitle == "No Title" ? null : currentTitle ?? title, 
+          memo: currentMemo == "No Memo" ? null : currentMemo ?? memo, 
+          cut_face_name: faceName ?? cutFaceName, 
+          edge_length: edgeLength
+        }),
       });
 
       if (!response.ok) throw new Error("更新に失敗しました");
 
-          const storedCutCubes = JSON.parse(localStorage.getItem("cutCube") || "[]");
+      const data = await response.json();
+
+      const storedCutCubes = JSON.parse(localStorage.getItem("cutCube") || "[]");
       const updatedCutCubes = storedCutCubes.map((cutCube: any) => {
-//         console.log("typeof cutCube.id:", typeof cutCube.id, "value:", cutCube.id); //出力 number
-//         console.log("typeof id:", typeof id, "value:", id);
+      // console.log("typeof cutCube.id:", typeof cutCube.id, "value:", cutCube.id); //出力 number
+      // console.log("typeof id:", typeof id, "value:", id);
         if (String(cutCube.id) === id) {
-          return { ...cutCube, title: currentTitle, memo: currentMemo };
+          return { 
+            ...cutCube, 
+            title: data.cut_cube.title, 
+            memo: data.cut_cube.memo, 
+            cutFaceName: data.cut_cube.cut_face_name, 
+            volumeRatio: data.cut_cube.volume_ratio, 
+            edgeLength: data.cut_cube.edge_length};
         }
         return cutCube;
       });
@@ -183,7 +195,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
           {isEditingTitle ? (
             <input
               type="text"
-              value={currentTitle}
+              value={currentTitle ?? "No Title"}
               onChange={(e) => setCurrentTitle(e.target.value)}
               onBlur={() => {
                 setIsEditingTitle(false);
@@ -197,7 +209,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
               className="text-2xl font-bold cursor-pointer"
               onClick={() => setIsEditingTitle(true)}
             >
-              {currentTitle}
+              {currentTitle ?? "No Title"}
             </h1>
           )}
           <FontAwesomeIcon
@@ -211,7 +223,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
         <div className="flex items-center px-1 mt-2 space-x-2">
           {isEditingMemo ? (
             <textarea
-              value={currentMemo}
+              value={currentMemo ?? "No Memo"}
               onChange={(e) => setCurrentMemo(e.target.value)}
               onBlur={() => {
                 setIsEditingMemo(false);
@@ -225,7 +237,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
               className="text-sm cursor-pointer whitespace-pre-line"
               onClick={() => setIsEditingMemo(true)}
             >
-              {currentMemo}
+              {currentMemo ?? "NoMemo"}
             </p>
           )}
           <FontAwesomeIcon
@@ -422,6 +434,9 @@ const ResultCutCube = ({ id }: { id: string}) => {
                 placeholder = "一辺の長さ"
                 className="border text-center text-sm mx-auto rounded-sm p-1 w-24"
                 onChange={(e) => setEdgeLength(Number(e.target.value))}
+                onBlur={(e) => {
+                  handleCutCubeUpdate();
+                }}
               />
               <span className="my-auto">cmとすると</span>
             </div>

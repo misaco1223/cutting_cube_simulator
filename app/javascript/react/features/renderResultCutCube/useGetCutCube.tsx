@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import * as THREE from "three";
+import { useAuth } from "../../contexts/AuthContext";
 
 export const useGetCutCube = (id: string|undefined) => {
   const [glbUrl, setGlbUrl] = useState<string|null>(null);
@@ -11,6 +12,25 @@ export const useGetCutCube = (id: string|undefined) => {
   const [cutFaceName, setCutFaceName] = useState<string|null>(null);
   const [volumeRatio, setVolumeRatio] = useState<number|null>(null);
   const [edgeLength, setEdgeLength] = useState<number|null>(null);
+
+  const loadCutCubeFromStorage = (id: string) => {
+    const { isLoggedIn } = useAuth();
+    if (!isLoggedIn) {
+      const storedCutCubes = JSON.parse(localStorage.getItem("cutCube") || "[]");
+  
+      const targetCube = storedCutCubes.find((cutCube: any) => String(cutCube.id) === id);
+  
+      if (targetCube) {
+        setGlbUrl(targetCube.glbUrl || null);
+        setCutPoints(targetCube.cutPoints || []);
+        setTitle(targetCube.title || null);
+        setMemo(targetCube.memo || null);
+        setCutFaceName(targetCube.cutFaceName || null);
+        setVolumeRatio(targetCube.volumeRatio || null);
+        setEdgeLength(targetCube.edgeLength ||  null);
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchCutCube = async (id: string | undefined) => {
@@ -45,6 +65,7 @@ export const useGetCutCube = (id: string|undefined) => {
         }
       } catch (error) {
         // console.error("cut_cubeの取得に失敗しました", error);
+        loadCutCubeFromStorage(id);
       }
     };
 
