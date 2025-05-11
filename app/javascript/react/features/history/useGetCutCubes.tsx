@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import * as THREE from "three";
-import toIntegerRatio from "../renderResultCutCube/useVolumeRatio"
+import toIntegerRatio from "../renderResultCutCube/useToIntegerRatio"
 
 export const useGetCutCubes = () => {
   const [cutCubeIds, setCutCubeIds] = useState<string[]>([]);

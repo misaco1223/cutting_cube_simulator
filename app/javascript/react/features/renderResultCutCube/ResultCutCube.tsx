@@ -8,7 +8,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import { Link } from "react-router-dom";
 import CutFaceFlowChart from "./CutFaceFlowChart";
 import { motion } from "framer-motion";
-import toIntegerRatio from "./useVolumeRatio"
+import toIntegerRatio from "./useToIntegerRatio";
+import approximateFraction from "./useApproximateFraction";
 
 const ResultCutCube = ({ id }: { id: string}) => {
   const { glbUrl, cutPoints, title, memo, createdAt, bookmarkId, setBookmarkId, cutFaceName, setCutFaceName, volumeRatio, edgeLength, setEdgeLength  } = useGetCutCube(id);
@@ -21,7 +22,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
   const [ isFaceFlowOpen, setIsFaceFlowOpen ] = useState(false);
   const faceNameTags = ["三角形", "正三角形", "二等辺三角形", "四角形", "ひし形", "正方形", "長方形", "平行四辺形", "台形", "等脚台形", "五角形", "六角形", "正六角形"];
   const [ integerRatio, setIntegerRatio ] = useState<string | null>(null);
-  const [ volumes, setVolumes] = useState<number[]|null>(null);
+  const [ volumes, setVolumes] = useState<[number,number][]|null>(null);
 
   // 編集用の状態
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -30,7 +31,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
   const [currentMemo, setCurrentMemo] = useState(memo || "No Memo");
 
   useEffect(() => {
-    setCurrentTitle(title || "No Title");
+        setCurrentTitle(title || "No Title");
     setCurrentMemo(memo || "No Memo");
   }, [title, memo]);
 
@@ -85,17 +86,17 @@ const ResultCutCube = ({ id }: { id: string}) => {
 
       if (!response.ok) throw new Error("更新に失敗しました");
 
-      const storedCutCubes = JSON.parse(localStorage.getItem("cutCube") || "[]");
+          const storedCutCubes = JSON.parse(localStorage.getItem("cutCube") || "[]");
       const updatedCutCubes = storedCutCubes.map((cutCube: any) => {
-        // console.log("typeof cutCube.id:", typeof cutCube.id, "value:", cutCube.id); //出力 number
-        // console.log("typeof id:", typeof id, "value:", id);
+//         console.log("typeof cutCube.id:", typeof cutCube.id, "value:", cutCube.id); //出力 number
+//         console.log("typeof id:", typeof id, "value:", id);
         if (String(cutCube.id) === id) {
           return { ...cutCube, title: currentTitle, memo: currentMemo };
         }
         return cutCube;
       });
       localStorage.setItem("cutCube", JSON.stringify(updatedCutCubes));
-
+      
     } catch (error) {
       // console.error("更新エラー:", error);
     }
@@ -132,12 +133,46 @@ const ResultCutCube = ({ id }: { id: string}) => {
     }
   }
 
+  const StyledFraction = ({ numerator, denominator }: { numerator: number; denominator: number }) => {
+    if (denominator === 1) {
+      return <span className="font-bold">{numerator}</span>;
+    }
+
+    const mixedNumber = Math.floor(numerator/ denominator);
+    if (mixedNumber > 0) {
+      const mixedNumerator = numerator % denominator;
+      return (
+        <div className="inline-flex">
+        <span className="my-auto text-xs font-bold pr-1">{mixedNumber}</span>
+        <span className="inline-flex flex-col items-center pb-2 text-xs font-bold">
+          <span>{mixedNumerator}</span>
+          <span className="w-full border-t border-black my-[1px]" />
+          <span>{denominator}</span>
+        </span>
+        </div>
+      );
+    } else {
+      return (
+        <span className="inline-flex flex-col items-center pb-2 text-xs font-bold">
+          <span>{numerator}</span>
+          <span className="w-full border-t border-black my-[1px]" />
+          <span>{denominator}</span>
+        </span>
+      );
+    };
+  };
+
   const handleCalculateVolumes = (length:number) => {
     if (!volumeRatio) return;
     const vol_1 = volumeRatio * (length **3);
     const vol_2 = length **3 - vol_1;
-    const round = (v: number) => Math.round(v * 1000) / 1000;
-    setVolumes([round(vol_1), round(vol_2)]);
+    // const round = (v: number) => Math.round(v * 1000) / 1000;
+    // setVolumes([round(vol_1), round(vol_2)]);
+
+    const [n1, d1] = approximateFraction(vol_1);
+    const [n2, d2] = approximateFraction(vol_2);
+
+    setVolumes([[n1, d1],[n2,d2]]);
   }
 
   return (
@@ -277,7 +312,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
       </div>
 
       <div className="w-full grid md:grid-cols-3 md:gap-4 grid-cols-1 gap-2 mt-6 mb-2 mx-auto">
-        {/* 座標表示 */}
+        {/* 座標表示エリア */}
         <div className="border p-4">
           <h1 className="font-semibold mb-2">切断点</h1>
           {pointsInfo.map((pointInfo, index) => (
@@ -299,7 +334,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
           ))}
         </div>
 
-        {/*切断面の形*/}
+        {/*切断面の形エリア*/}
         <div className="border p-4">
           <div className="relative group">
             <div className="flex space-x-4 my-auto">
@@ -369,7 +404,7 @@ const ResultCutCube = ({ id }: { id: string}) => {
           </div>
         </div>
 
-        {/*体積比*/}
+        {/*体積エリア*/}
         <div className="border p-4">
           <h1 className="font-semibold w-full">体積比</h1>
           <div className="mt-2">
@@ -390,20 +425,23 @@ const ResultCutCube = ({ id }: { id: string}) => {
               />
               <span className="my-auto">cmとすると</span>
             </div>
-            {volumes && volumes[0]!==0 && volumes[1]!==0 &&
-            <div className="mt-2 text-gray-700">
-              <span className="my-auto">体積は</span>
-              <br/>
-              <span className="text-sm mx-auto p-1 w-20"/>
-              <span className="my-auto">緑の立体... <span className="font-bold">{volumes[0]}㎤</span></span>
-              <br/>
-              <span className="text-sm mx-auto p-1 w-20"/>
-              <span className="my-auto">青の立体... <span className="font-bold">{volumes[1]}㎤</span></span>
-              <br/>
-              <span className="text-sm font-medium text-gray-700">※ 小数第3位までのがい数(誤差があります)</span>
+            {/*体積表示*/}
+            {volumes && volumes[0][0]!==0 && volumes[1][0]!==0 &&
+            <div className="mt-4 text-gray-700">
+              <h2>体積は</h2>
+              <div className=" flex ml-4">
+                <p className="my-auto mr-2">緑の立体・・・</p>
+                <StyledFraction numerator={volumes[0][0]} denominator={volumes[0][1]}/>
+                <span className="font-bold my-auto ml-2">㎤</span>
+              </div>
+              <div className="mt-2 flex ml-4">
+                <p className="my-auto mr-2">青の立体・・・</p>
+                <StyledFraction numerator={volumes[1][0]} denominator={volumes[1][1]} />
+                <span className="font-bold my-auto ml-2">㎤</span>
+              </div>
             </div>
             }
-             </>
+            </>
             : <span className="w-full px-4 py-1 text-sm font-medium text-gray-700">データがありません</span>
           }
           </div>
