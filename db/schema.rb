@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_26_064216) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_06_060505) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -86,6 +86,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_26_064216) do
     t.string "title"
     t.string "memo"
     t.string "cut_face_name"
+    t.float "volume_ratio"
+    t.float "edge_length"
     t.index ["user_id"], name: "index_cut_cubes_on_user_id"
   end
 

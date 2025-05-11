@@ -4,12 +4,15 @@ import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom"
 
 const Hint = () => {
-  const [isOpen1, setIsOpen1] = useState<boolean>(true);
-  const [isOpen2, setIsOpen2] = useState<boolean>(true);
-  const [isOpen3, setIsOpen3] = useState<boolean>(true);
-  const [isOpen4, setIsOpen4] = useState<boolean>(true);
-  const [isOpen5, setIsOpen5] = useState<boolean>(true);
-  const [isOpen6, setIsOpen6] = useState<boolean>(true);
+  const [isOpen0, setIsOpen0] = useState<boolean>(true);
+  const [isOpen1, setIsOpen1] = useState<boolean>(false);
+  const [isOpen2, setIsOpen2] = useState<boolean>(false);
+  const [isOpen3, setIsOpen3] = useState<boolean>(false);
+  const [isOpen4, setIsOpen4] = useState<boolean>(false);
+  const [isOpen5, setIsOpen5] = useState<boolean>(false);
+  const [isOpen6, setIsOpen6] = useState<boolean>(false);
+  const [isOpen7, setIsOpen7] = useState<boolean>(false);
+  const [isOpen8, setIsOpen8] = useState<boolean>(false);
 
 
   return(
@@ -21,21 +24,20 @@ const Hint = () => {
         <div id="accordion-collapse" data-accordion="collapse">
           <h2 id="accordion-collapse-heading-1">
           <button type="button" className="flex items-center justify-between w-full mt-6 p-2 text-lg font-bold rtl:text-right focus:ring-gray-200 gap-3" 
-              onClick={() => setIsOpen1(!isOpen1)}
-              aria-expanded={isOpen1}
+              onClick={() => setIsOpen0(!isOpen0)}
+              aria-expanded={isOpen0}
               aria-controls="accordion-collapse-body-1"
           >
               <span>0. はじめに</span>
-              <FontAwesomeIcon icon={faCaretDown}className={`transition-transform ${isOpen1 ? "rotate-180" : ""}`}  />
+              <FontAwesomeIcon icon={faCaretDown}className={`transition-transform ${isOpen0 ? "rotate-180" : ""}`}  />
           </button>
           </h2>
           <div id="accordion-collapse-body-1"
-          className={`p-5 border bg-gray-100 border-gray-200 ${isOpen1 ? "" : "hidden"}`}
+          className={`p-5 border bg-gray-100 border-gray-200 ${isOpen0 ? "" : "hidden"}`}
           aria-labelledby="accordion-collapse-heading-1"
           >
             <span>
             このアプリでは立方体を1回切断できます(2回以上は準備中...)。<br/>
-            また切断後の体積を計算する機能も準備中です。<br/>
             <br/>
             Cookieを承認またはユーザー登録をすると切断履歴を残せます。 <br/>
             ユーザー登録をするとマイページで自分の切断をコレクションしたり 問題を作って投稿したり、他ユーザーの問題を閲覧することができます。<br/>
@@ -90,6 +92,8 @@ const Hint = () => {
               切断結果が計算されるまで最大15秒ほどかかることがあります。<br/>
               切断した立体のそれぞれは右上の表示切替から選択できます。<br/>
               タイトルやメモを編集することができます。<br/>
+              切断面の形はフローチャートやドロップダウンメニューから選択して登録することができます。<br/>
+              体積のエリアで、立方体の一辺の長さを設定すると計算された体積を確認できます。<br/>
               切断結果は、<Link to="/history" className="text-blue-700 border-b-2">履歴ページ</Link>で切断ごとの「詳しく見る」から確認することができます。
             </span>
           </div>
@@ -205,6 +209,72 @@ const Hint = () => {
             </span>
           </div>
         </div>
+
+        <h2 className="text-md mt-8">------ 困ったときは ------</h2>
+
+        {/* 7 */}
+        <div id="accordion-collapse" data-accordion="collapse" className="mb-8">
+          <h2 id="accordion-collapse-heading-1">
+          <button type="button" className="flex items-center justify-between w-full mt-8 p-2 text-lg font-bold rtl:text-right focus:ring-gray-200 gap-3" 
+              onClick={() => setIsOpen7(!isOpen7)}
+              aria-expanded={isOpen7}
+              aria-controls="accordion-collapse-body-1"
+          >
+              <span>7. ロード中...から変化しない</span>
+              <FontAwesomeIcon icon={faCaretDown}className={`transition-transform ${isOpen7 ? "rotate-180" : ""}`}  />
+          </button>
+          </h2>
+          <div id="accordion-collapse-body-1"
+          className={`p-5 border bg-gray-100 border-gray-200 ${isOpen7 ? "" : "hidden"}`}
+          aria-labelledby="accordion-collapse-heading-1"
+          >
+            <span>
+            ご迷惑をおかけしております。
+            <br/><br/>
+            マイページや履歴で、「ロード中...」のまましばらく変化がない場合は<br/>
+            再度ログインしていただくことで改善する場合があります。
+            </span>
+          </div>
+        </div>
+
+        {/* 8 */}
+        <div id="accordion-collapse" data-accordion="collapse" className="mb-8">
+          <h2 id="accordion-collapse-heading-1">
+          <button type="button" className="flex items-center justify-between w-full mt-8 p-2 text-lg font-bold rtl:text-right focus:ring-gray-200 gap-3" 
+              onClick={() => setIsOpen8(!isOpen8)}
+              aria-expanded={isOpen8}
+              aria-controls="accordion-collapse-body-1"
+          >
+              <span>8. 切断面の色塗りがおかしい</span>
+              <FontAwesomeIcon icon={faCaretDown}className={`transition-transform ${isOpen8 ? "rotate-180" : ""}`}  />
+          </button>
+          </h2>
+          <div id="accordion-collapse-body-1"
+          className={`p-5 border bg-gray-100 border-gray-200 ${isOpen8 ? "" : "hidden"}`}
+          aria-labelledby="accordion-collapse-heading-1"
+          >
+            <span>
+            ご迷惑をおかけしております。
+            <br/><br/>
+            切断面が長方形になる時の切断面の赤色着色に異常が発生しており、只今調査中でございます。<br/>
+            切断自体は正しく行われていますので、赤色よりも切断面の形を優先してお考えください。
+            </span>
+          </div>
+        </div>
+
+        <span>
+          その他にお困りごとがありましたら、お手数ですが
+          <button
+          onClick={() => {
+            if (window.confirm("外部サイト(GoogleForm)を開きます。よろしいですか？")) {
+              window.open("https://docs.google.com/forms/d/e/1FAIpQLSeTAlvLt3XIjLtgSFMqPIl2YCPmkRY6w9IzRoawkxILrEiJ0w/viewform?usp=dialog", "_blank");
+            }
+          }}
+          className="text-blue-700 border-b-2">
+            お問い合わせ
+          </button>
+          よりご連絡ください。
+        </span>
       </div>
     </div>
   )

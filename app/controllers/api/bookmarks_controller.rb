@@ -22,7 +22,8 @@ class Api::BookmarksController < ApplicationController
         created_at: bookmarks.map(&:created_at),
         titles: bookmarks.map { |bookmark| bookmark.cut_cube.title },
         memos: bookmarks.map { |bookmark| bookmark.cut_cube.memo },
-        cut_face_names: bookmarks.map { |bookmark| bookmark.cut_cube.cut_face_name}
+        cut_face_names: bookmarks.map { |bookmark| bookmark.cut_cube.cut_face_name },
+        volume_ratios: bookmarks.map { |bookmark| bookmark.cut_cube.volume_ratio }
         }
       render json: { bookmarks: bookmarks_data }, status: :ok
     end

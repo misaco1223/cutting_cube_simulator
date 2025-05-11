@@ -22,13 +22,13 @@ def main():
 
     cut_id, points = parse_args()
     cube = create_cube()
-    objects = cut_cube(cube, points)
+    objects,ratio = cut_cube(cube, points)
 
     if len(objects) == 3:
-        print("切断完了: 立方体を分割しました")
-        for obj in objects:
-            print(f"オブジェクト名: {obj.name}, 型: {type(obj)}")
-        print("id:", cut_id, "points:", points)
+        # print("切断完了: 立方体を分割しました")
+        # for obj in objects:
+            # print(f"オブジェクト名: {obj.name}, 型: {type(obj)}")
+        # print("id:", cut_id, "points:", points)
 
         for obj in objects:
             obj.select_set(True)
@@ -38,6 +38,10 @@ def main():
 
         export_path = os.path.join(shared_dir, f"exported_cube_{cut_id}.glb")
         export_glb(export_path, objects)
+
+        ratio_export_path = os.path.join(shared_dir, f"ratio_{cut_id}.txt")
+        with open(ratio_export_path, 'w') as f:
+            f.write(str(ratio))
 
 
 if __name__ == "__main__":

@@ -37,7 +37,6 @@ const Home = () => {
           <p className="mb-2 text-sm ">4点以上選択すると、エラーが表示されます。不要な点を削除してください。</p>
           <br/>
           <p className="mb-2 text-sm ">切断点の選択が完了したら、切断するボタンを押してください。</p>
-          <p className="text-sm">立方体の一辺の長さを入力できるフォームが表示されますが、その機能は準備中です。</p>
         </div>
       )}
       <div className="w-full mx-auto px-5 mb-64">

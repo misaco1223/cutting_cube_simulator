@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const BookmarksCarousel= () => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { bookmarkIds, cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isLoaded, cutFaceNames } = useGetBookmarks();
+  const { bookmarkIds, cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, isLoaded, cutFaceNames, volumeRatios } = useGetBookmarks();
   const [showMoreButton, setShowMoreButton] = useState(false);
   const [ isOrbit, setIsOrbit ] = useState(false);
 
@@ -75,9 +75,12 @@ const BookmarksCarousel= () => {
         {bookmarkIds.slice(0,7).map((bookmarkId, index) => (
         <div key={bookmarkId} className="shrink-0">
           <div className="w-48 h-full border border-gray-200 p-2 rounded-lg shadow-md flex flex-grow flex-col justify-between ">
-          <div className="min-h-8">
+          <div className="min-h-8 space-x-2">
             {cutFaceNames[index] && (
               <span key={index} className="bg-blue-100 font-semibold text-gray-700 text-xs px-2 py-1"> {cutFaceNames[index]} </span>
+            )}
+            {volumeRatios[index] && (
+              <span key={index} className="bg-pink-100 font-semibold text-gray-700 text-xs px-2 py-1"> {volumeRatios[index]} </span>
             )}
           </div>
             <BookmarkCard

@@ -8,7 +8,7 @@ import * as THREE from "three";
 import { useAuth } from "../../../contexts/AuthContext"
 
 const CreateBoard = () => {
-  const { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, cutFaceNames} = useGetCutCubes();
+  const { cutCubeIds, glbUrls, cutPoints, createdAt, titles, memos, bookmarkIds, cutFaceNames, volumeRatios} = useGetCutCubes();
   const [cutCubeId, setCutCubeId] = useState<string | null>(null);
   const [question, setQuestion] = useState<string>("");
   const [answer, setAnswer] = useState<string>("");
@@ -33,6 +33,8 @@ const CreateBoard = () => {
   const selectedIndex = cutCubeIds.indexOf(cutCubeId || "");
   const selectedGlbUrl = selectedIndex !== -1 ? glbUrls[selectedIndex] : "";
   const selectedCutPoints: THREE.Vector3[] | [] = selectedIndex !== -1 ? cutPoints[selectedIndex] : [];
+  const selectedCutFaceName: string | null = selectedIndex !== -1 ? cutFaceNames[selectedIndex] : null;
+  const selectedVolumeRatio: string | null = selectedIndex !== -1 ? volumeRatios[selectedIndex] : null;
 
   if(!isLoggedIn) { return (
     <div className="m-4 p-4">
@@ -56,7 +58,9 @@ const CreateBoard = () => {
             titles={titles}
             memos={memos}
             createdAt={createdAt}
+            bookmarkIds={bookmarkIds}
             cutFaceNames={cutFaceNames}
+            volumeRatios={volumeRatios}
             onNext={() => navigate("/board/new/step2")}
           />} />
       <Route
@@ -73,6 +77,8 @@ const CreateBoard = () => {
             setExplanation={setExplanation} 
             tags={tags}
             setTags={setTags}
+            cutFaceName={selectedCutFaceName}
+            volumeRatio={selectedVolumeRatio}
             onNext={() => navigate("/board/new/step3")}
             onBack={() => navigate("/board/new/step1")}
           />

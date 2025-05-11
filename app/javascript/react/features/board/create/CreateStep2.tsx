@@ -18,11 +18,13 @@ interface CreateStep2Props {
   setExplanation: (e: string) => void;
   tags: string[];
   setTags: (e: string[]) => void;
+  cutFaceName? : string|null;
+  volumeRatio? : string|null;
   onNext: () => void;
   onBack: () => void;
 }
 
-const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnswer, explanation, setExplanation, tags, setTags, onNext, onBack }: CreateStep2Props) => {
+const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnswer, explanation, setExplanation, tags, setTags, cutFaceName, volumeRatio, onNext, onBack }: CreateStep2Props) => {
   const {pointsInfo, checkPointInfo } = useCheckPointsInfo();
   const [selectedGeometry, setSelectedGeometry] = useState<"all" | "geometry1" | "geometry2">("all");
   const [errorMessage, setErrorMessage] = useState("");
@@ -81,25 +83,75 @@ const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnsw
 
       {/* 問題文編集エリア */}
       <div className="my-4 items-center space-y-1">
-        <div className="flex space-x-2">
-          <h1 className="text-lg font-bold">問題</h1>
-          <div className="relative group">
-            <button onClick={toggleInfo}>
-              <FontAwesomeIcon icon={faCircleInfo} className="hover:text-gray-300 transition duration-300 my-auto"/>
-            </button>
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
-              {isInfoOpen ? "問題の入力方法を閉じる" : "問題の入力方法を開く"}
+        <div className="flex justify-between">
+          <div className="flex justify-start space-x-2">
+            <h1 className="text-lg font-bold">問題</h1>
+            <div className="relative group">
+              <button onClick={toggleInfo}>
+                <FontAwesomeIcon icon={faCircleInfo} className="hover:text-gray-300 transition duration-300 my-auto"/>
+              </button>
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+                {isInfoOpen ? "問題の入力方法を閉じる" : "問題の入力方法を開く"}
+              </div>
+            </div>
+            {isInfoOpen && (
+            <div className="absolute z-50 top-32 left-1/2 transform -translate-x-1/2 w-11/12 md:w-2/3 bg-white border border-gray-300 shadow-xl rounded-md p-6 text-sm leading-relaxed">
+              <span className="flex justify-end"><FontAwesomeIcon icon={faXmark} size="xl" onClick={toggleInfo}/></span>
+              <p className="mb-2 font-bold text-gray-800">問題の入力方法について</p>
+              <p className="mb-2 text-sm">切断点を入力したい時は 代わりに <b>[[切断点]]</b> と入力すれば、入力後に置き換えられます。</p>
+              <p className="mb-2 text-sm">(例) [[切断点]]と入力 → 頂点A, 辺BFを1:1に分ける点, 頂点C </p>
+            </div>
+            )}
+          </div>
+
+          {/*切断点情報*/}
+          <div className="flex justify-end">
+            <div className="relative group">
+                <button onClick={togglePoint} className="text-xs mr-5">
+                  切断情報を確認する <FontAwesomeIcon icon={faCaretDown}className={`transition-transform ${isPointOpen ? "rotate-180" : ""}`}  />
+                </button>
+                <div className={`absolute z-50 w-64 right-8 bg-white border border-gray-300 shadow-xl p-4 overflow-y-auto max-h-40 ${isPointOpen ? "": "hidden"}`}>
+                  <div className="flex justify-end mb-2">
+                    <span/>
+                    <FontAwesomeIcon icon={faXmark} size="xs" onClick={()=>setIsPointOpen(false)} className="flex justify-end"/>
+                  </div>
+                  <div className="text-xs">
+                    <p className="font-semibold">切断点</p>
+                    {pointsInfo.map((pointInfo, index) => (
+                      <div key={index} className="w-full px-4">
+                        {pointInfo.isVertex
+                        ? ( <div className="w-full flex space-x-2">
+                                <h3 className="my-auto">切断点 {index + 1}</h3>
+                                <span className="p-1 my-auto">頂点 {pointInfo.vertexLabel}</span>
+                            </div>
+                        ):( <div className="w-full flex space-x-2">
+                                <h3 className="my-auto">切断点 {index + 1}</h3>
+                                <span className="p-1 my-auto">辺 {pointInfo.edgeLabel}</span>
+                                <span className="my-auto text-center">{pointInfo.edgeRatio.left}</span>
+                                <span className="my-auto"> : </span>
+                                <span className="my-auto text-center">{pointInfo.edgeRatio.right}</span>
+                            </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  {cutFaceName && 
+                    <div className="mt-2 text-xs">
+                      <p className="font-semibold">切断面</p>
+                      <span className="px-4">{cutFaceName}</span>
+                    </div>
+                  }
+                  {volumeRatio && 
+                    <div className="mt-2 text-xs">
+                      <p className="font-semibold">体積比</p>
+                      <span className="px-4">{volumeRatio}</span>
+                    </div>
+                  }
+                </div>
             </div>
           </div>
-          {isInfoOpen && (
-          <div className="absolute z-50 top-32 left-1/2 transform -translate-x-1/2 w-11/12 md:w-2/3 bg-white border border-gray-300 shadow-xl rounded-md p-6 text-sm leading-relaxed">
-            <span className="flex justify-end"><FontAwesomeIcon icon={faXmark} size="xl" onClick={toggleInfo}/></span>
-            <p className="mb-2 font-bold text-gray-800">問題の入力方法について</p>
-            <p className="mb-2 text-sm">切断点を入力したい時は 代わりに <b>[[切断点]]</b> と入力すれば、入力後に置き換えられます。</p>
-            <p className="mb-2 text-sm">(例) [[切断点]]と入力 → 頂点A, 辺BFを1:1に分ける点, 頂点C </p>
-          </div>
-          )}
         </div>
+        {/*入力エリア*/}
         <div className="flex items-center space-x-2 w-full">
           <textarea
             value={question}
@@ -114,37 +166,11 @@ const CreateStep2 = ({ glbUrl, cutPoints, question, setQuestion, answer, setAnsw
       <div>
         {/*ボタン*/}
         <div className="flex justify-between mx-2 mb-2">
-          {/* 切断点情報 */}
-          <div className="text-sm flex justify-start my-auto">
-            <div className="relative group">
-              <button onClick={togglePoint} className="text-xs">
-                切断点を確認する <FontAwesomeIcon icon={faCaretDown}className={`transition-transform ${isPointOpen ? "rotate-180" : ""}`}  />
-              </button>
-              <div className={`absolute z-50 w-64 bg-white border border-gray-300 shadow-xl p-4 ${isPointOpen ? "": "hidden"}`}>
-                {pointsInfo.map((pointInfo, index) => (
-                  <div key={index} className="w-full px-4">
-                    {pointInfo.isVertex
-                    ? ( <div className="w-full flex space-x-2">
-                            <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
-                            <span className="p-1 my-auto">頂点 {pointInfo.vertexLabel}</span>
-                        </div>
-                    ):( <div className="w-full flex space-x-2">
-                            <h3 className="text-sm my-auto">切断点 {index + 1}</h3>
-                            <span className="p-1 my-auto">辺 {pointInfo.edgeLabel}</span>
-                            <span className="text-sm my-auto text-center">{pointInfo.edgeRatio.left}</span>
-                            <span className="my-auto"> : </span>
-                            <span className="text-sm my-auto text-center">{pointInfo.edgeRatio.right}</span>
-                        </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <span/>
           {/*モードとタブ*/}
-          <div className="md:flex justify-end space-x-4 space-y-1">
+          <div className="flex justify-end space-x-4 space-y-1">
             {/* 回転モード切り替えボタン */}
-            <div className="flex justify-end my-auto">
+            <div className="flex justify-end pt-2">
               {isOrbit ? (
               <div className="relative group">
                 <button onClick={()=> setIsOrbit(false)} className="flex">

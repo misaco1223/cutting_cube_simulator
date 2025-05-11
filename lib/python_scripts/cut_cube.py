@@ -2,6 +2,7 @@ import bpy
 import bmesh
 from mathutils import Vector
 import mathutils
+import math
 
 
 def convex_hull(verts):
@@ -17,6 +18,36 @@ def convex_hull(verts):
     # インデックスから並び替えた頂点を返す
     sorted_verts = [verts[i] for i in indices]
     return sorted_verts
+
+def calculate_volume(bm):
+    # すべての面を三角形化してbm.facesにする
+    bmesh.ops.triangulate(bm, faces=bm.faces[:])
+
+    # 全頂点の平均（重心）を計算
+    all_coords = [v.co for v in bm.verts]
+    if not all_coords:
+        return 0.0
+    center = sum(all_coords, Vector()) / len(all_coords)
+
+    total_volume = 0.0
+
+    for face in bm.faces:
+        # 三角形の時だけ進む
+        if len(face.verts) != 3:
+            continue 
+
+        # 三角形の頂点座標を取得
+        v1, v2, v3 = [v.co for v in face.verts]
+
+        # 三角錐の体積 = |(v1 - center) ⋅ ((v2 - center) × (v3 - center))| / 6
+        vec1 = v1 - center
+        vec2 = v2 - center
+        vec3 = v3 - center
+
+        volume = abs(vec1.dot(vec2.cross(vec3))) / 6.0
+        total_volume += volume
+
+    return total_volume
 
 def cut_cube(cube, points):
     point1, point2, point3 = points
@@ -92,6 +123,16 @@ def cut_cube(cube, points):
         bpy.ops.mesh.fill_holes(sides=0)  # 全ての穴を埋める
         bpy.ops.object.mode_set(mode='OBJECT')
     
+    # 体積計算
+    obj_volume = separated_objects[0]
+    bm_volume = bmesh.new()
+    bm_volume.from_mesh(obj_volume.data)
+    volume = calculate_volume(bm_volume)
+    bm_volume.free()
+    ratio = volume/8
+    print ("ratio:", ratio)
+
+    # 切断面のためにリスト化する
     unique_verts = list(bm_cut.verts)
 
     # 頂点の順番を整える
@@ -117,4 +158,4 @@ def cut_cube(cube, points):
     obj_cut = bpy.data.objects.new("Geometry003", mesh_cut)
     bpy.context.collection.objects.link(obj_cut)
 
-    return separated_objects + [obj_cut]
+    return (separated_objects + [obj_cut], ratio)
