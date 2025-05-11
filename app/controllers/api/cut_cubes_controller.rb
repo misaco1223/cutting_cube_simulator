@@ -68,7 +68,7 @@ class Api::CutCubesController < ApplicationController
         created_at: cut_cube.created_at,
         cut_face_name: nil,
         edge_length: nil,
-        volume_ratio: ratio,
+        volume_ratio: ratio
 
       }
 
